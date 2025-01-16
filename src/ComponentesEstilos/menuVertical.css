@@ -1,0 +1,8 @@
+#side-menu a {
+    text-decoration: none;
+}
+.bellon-offcanvas {
+    width: 300px !important;
+    padding-top: 20px;
+    background-color: #ecfafb !important;
+}

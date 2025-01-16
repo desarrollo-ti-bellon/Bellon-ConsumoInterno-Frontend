@@ -1,0 +1,45 @@
+/* Configuración general para la tarjeta */
+.card-container-flipped {
+    perspective: 1000px;
+    /* Necesario para crear el efecto 3D */
+}
+
+.card-flipped {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    /* Para permitir la rotación en 3D */
+    transition: transform 1s;  /* Tiempo de animación */
+}
+
+/* Lados de la tarjeta (frente y reverso) */
+.card-flipped .front,
+.card-flipped .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    /* Oculta el reverso cuando la tarjeta está volteada */
+}
+
+/* El reverso de la tarjeta debe estar rotado 180 grados en el eje X o Y */
+
+.card-flipped .backX {
+    transform: rotateX(360deg);
+}
+
+/* Clase para voltear la tarjeta verticalmente (en el eje X) */
+.card-flipped.flippedX {
+    transform: rotateX(360deg);
+}
+
+/* El reverso de la tarjeta en el eje Y */
+.card-flipped .backY {
+    transform: rotateY(360deg);
+}
+
+/* Clase para voltear la tarjeta horizontalmente (en el eje Y) */
+.card-flipped.flippedY {
+    transform: rotateY(360deg);
+}

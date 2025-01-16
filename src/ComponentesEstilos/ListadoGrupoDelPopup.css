@@ -1,0 +1,12 @@
+/* styles.css */
+.list-group-bellon-item-hover {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Transición suave */
+}
+
+.list-group-bellon-item-hover:hover {
+    background-color: #00b7c3;
+    /* Color de fondo cuando se pasa el mouse */
+    color: white;
+    /* Color de texto cuando se pasa el mouse */
+}
