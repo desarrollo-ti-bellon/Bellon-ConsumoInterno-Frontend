@@ -11,9 +11,10 @@ export default function ListadoSolicitudes() {
     const BotonesAcciones = (parametros) => {
         return (
             <>
-                <Button size='sm' variant='outline-primary' onClick={() => ver(parametros)}>     <Icon.EyeFill />  Ver</Button>
-                <Button size='sm' variant='outline-success' onClick={() => editar(parametros)}>  <Icon.PencilFill />  Editar</Button>
-                <Button size='sm' variant='outline-danger' onClick={() => eliminar(parametros)}> <Icon.Trash2Fill />  Eliminar</Button>
+                <Button title="ver solicitud" size='sm' variant='outline-primary' onClick={() => ver(parametros)}>     <Icon.EyeFill />   </Button>
+                <Button title="editar  solicitud" size='sm' variant='outline-primary' onClick={() => editar(parametros)}>  <Icon.PencilFill />  </Button>
+                <Button title="eliminar solicitud" size='sm' variant='outline-primary' onClick={() => eliminar(parametros)}> <Icon.Trash2Fill />  </Button>
+                <Button title="recuperar solicitud" size='sm' variant='outline-primary' onClick={() => recuperar(parametros)}> <Icon.ArrowCounterclockwise />  </Button>
             </>
         )
     }
