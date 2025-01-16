@@ -72,11 +72,11 @@ export default function InicioVista() {
                             {import.meta.env.VITE_APP_NOMBRE_APLICACION}
                         </h3>
                         <p className="text-muted fs-5 fst-italic d-none d-lg-block">
-                            Se gestionan las importaciones, incluyendo la recepción de
-                            mercancías y los procedimientos aduaneros.
+                            Se gestionan las solicitudes de consumos internos, incluyendo las solicitudes activas, rechazadas, registradas, agregadas con las
+                            mercancías que se solicitaron y el consumo que se hicieron.
                         </p>
                         <p className="text-muted fs-5 fs-md-4 fs-sm-3 fst-italic d-lg-none">
-                            Gestión de importaciones y aduanas.
+                            Gestión de Solicitudes De Consumos Internos.
                         </p>
                     </Carousel.Caption>
                 </Carousel.Item>
