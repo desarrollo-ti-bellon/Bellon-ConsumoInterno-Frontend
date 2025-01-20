@@ -4,9 +4,16 @@ import FormularioSolicitudes from "../../Modulos/SolicitudesActivas/Formulario/V
 
 export const rutas = [
     {
-        ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ACTIVAS,
+        ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
         componente: <SolicitudesPrincipal />,
-        nombre: 'Solicitudes Activas',
+        nombre: 'Solicitudes Nuevas',
+        icono: <Icon.Circle />,
+        grupo: 'Módulos'
+    },
+    {
+        ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
+        componente: <SolicitudesPrincipal />,
+        nombre: 'Solicitudes Pendientes',
         icono: <Icon.Circle />,
         grupo: 'Módulos'
     },
@@ -32,24 +39,18 @@ export const rutas = [
         grupo: 'Módulos'
     },
     {
-        ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_REGISTRADAS,
+        ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
         componente: <SolicitudesPrincipal />,
-        nombre: 'Solicitudes Registradas',
+        nombre: 'Solicitudes Confirmadas',
         icono: <Icon.Circle />,
         grupo: 'Módulos'
     },
-    // {
-    //     ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO,
-    //     componente: <FormularioSolicitudes />,
-    //     nombre: 'Formulario',
-    //     icono: <Icon.Circle />,
-    //     grupo: 'Fórmularios'
-    // },
     {
-        ruta: import.meta.env.VITE_APP_BELLON_HISTORICO_SOLICITUDES,
+        ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
         componente: <SolicitudesPrincipal />,
-        nombre: 'Histórico Solicitudes ',
-        icono: <Icon.JournalText />,
+        nombre: 'Solicitudes Terminadas',
+        icono: <Icon.Circle />,
         grupo: 'Históricos'
     },
+    
 ]
