@@ -38,10 +38,6 @@ const rutas = createBrowserRouter([
                 element: <SolicitudesPrincipal />,
             },
             {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
-                element: <SolicitudesPrincipal />,
-            },
-            {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
                 element: <SolicitudesPrincipal />,
             },
@@ -50,11 +46,15 @@ const rutas = createBrowserRouter([
                 element: <SolicitudesPrincipal />,
             },
             {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
                 element: <SolicitudesPrincipal />,
             },
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
+                element: <SolicitudesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
                 element: <SolicitudesPrincipal />,
             },
           
