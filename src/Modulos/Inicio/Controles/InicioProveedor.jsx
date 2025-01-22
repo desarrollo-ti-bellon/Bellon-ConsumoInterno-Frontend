@@ -17,17 +17,6 @@ export function InicioProveedor({ children }) {
 
     const [state, dispatch] = useReducer(inicioReducer, EstadoInicialInicio);
 
-    const cargarEstadosDeSolicitudes = async () => {
-        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
-        await obtenerDatos('Estado', '')
-            .then((res) => {
-                let json = res.data;
-                dispatch({ type: 'llenarTipoActividades', payload: json })
-            }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar los tipos de actividades.', tipo: 'warning' } })
-            })
-    }
-
     const cargarActividades = async () => {
 
         dispatch({ type: 'limpiarContadoresActividades' })
@@ -37,47 +26,26 @@ export function InicioProveedor({ children }) {
 
         dispatch({ type: 'obtenerNombreUsuario', payload: { nombre: account.name } })
 
-        await obtenerDatosConId('Solcitud/Cantidad', '')
+        let arrEstadosSolicitudes = [];
+        await obtenerDatos('EstadoSolicitud', '')
             .then((res) => {
-                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'solicitudes activas', cantidad: res.data, ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ACTIVAS, funcion: () => { return null } } })
+                arrEstadosSolicitudes = res.data ?? [];
             }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar VITE_APP_BELLON_SOLICITUDES_ACTIVAS.', tipo: 'warning' } })
-            })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar Estados de solicitudes.', tipo: 'warning' } });
+            });
 
-        await obtenerDatosConId('Solcitud/Cantidad', '')
-            .then((res) => {
-                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'solicitudes rechazadas', cantidad: res.data, ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS, funcion: () => { return null } } })
-            }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar VITE_APP_BELLON_SOLICITUDES_RECHAZADAS.', tipo: 'warning' } })
-            })
-
-        await obtenerDatosConId('Solcitud/Cantidad', '')
-            .then((res) => {
-                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'solicitudes aprobadas', cantidad: res.data, ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS, funcion: () => { return null } } })
-            }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar VITE_APP_BELLON_SOLICITUDES_APROBADAS.', tipo: 'warning' } })
-            })
-
-        await obtenerDatosConId('Solcitud/Cantidad', '')
-            .then((res) => {
-                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'solicitudes entregadas', cantidad: res.data, ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS, funcion: () => { return null } } })
-            }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar VITE_APP_BELLON_SOLICITUDES_ENTREGADAS.', tipo: 'warning' } })
-            })
-
-        await obtenerDatosConId('Solcitud/Cantidad', '')
-            .then((res) => {
-                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'solicitudes registradas', cantidad: res.data, ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_REGISTRADAS, funcion: () => { return null } } })
-            }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar SOLICITUDES_REGISTRADAS.', tipo: 'warning' } })
-            })
-
-        await obtenerDatos(`Notas/Cantidad?usuarioDestino=${usuarioDestino}`, '')
-            .then((res) => {
-                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'Notas Actuales', cantidad: res.data, ruta: '', funcion: () => dispatchNotas({ type: 'mostrarNotas', payload: { mostrar: true } }) } })
-            }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar la cantidad de notas.', tipo: 'warning' } })
-            })
+        for (const estadoSolicitud of arrEstadosSolicitudes) {
+            let baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS
+            try {
+                const res = await obtenerDatos('Solicitud/Cantidad?estadoSolicitudId=' + estadoSolicitud.id_estado_solicitud);
+                dispatch({
+                    type: 'llenarContadoresActividades',
+                    payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta.replace('nuevas', `${estadoSolicitud.descripcion.toLowerCase()}s`), funcion: () => { return null; } }
+                });
+            } catch (error) {
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar VITE_APP_BELLON_SOLICITUDES_ACTIVAS.', tipo: 'warning' } });
+            }
+        }
 
         await obtenerDatos(`Notas?usuarioDestino=${usuarioDestino}`, '')
             .then((res) => {
@@ -96,7 +64,6 @@ export function InicioProveedor({ children }) {
 
     useEffect(() => {
         cargarActividades();
-        cargarEstadosDeSolicitudes();
     }, [])
 
     useEffect(() => {
