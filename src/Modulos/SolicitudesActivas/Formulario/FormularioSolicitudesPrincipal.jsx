@@ -1,10 +1,11 @@
 import React from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
-import ListadoLinks from '../../../ComponentesGlobales/ListadoLinks'
-import FormularioSolicitudes from './Vistas/FormularioSolicitudes'
-import DetalleSolicitudes from './Vistas/DetalleSolicitudes'
-import { FormularioProveedor } from './Controles/FormularioContexto'
+import { Accordion, Col, Container, Row } from 'react-bootstrap'
+import UltimaActualizacionDeRegistros from '../../../ComponentesGlobales/UltimaActualizacionDeRegistros'
+import { FormularioContexto, FormularioProveedor } from './Controles/FormularioContexto'
 import ModalProductos from './Modales/ModalProductos'
+import BotonesAcciones from './Vistas/BotonesAcciones'
+import DetalleSolicitudes from './Vistas/DetalleSolicitudes'
+import FormularioSolicitudes from './Vistas/FormularioSolicitudes'
 
 export default function FormularioSolicitudesPrincipal() {
     return (
@@ -12,19 +13,40 @@ export default function FormularioSolicitudesPrincipal() {
             <Container fluid>
                 <Row>
                     <Col>
-                        <ListadoLinks />
+                        {/* <ListadoLinks /> */}
                         <ModalProductos />
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <FormularioSolicitudes />
+                        <BotonesAcciones />
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <DetalleSolicitudes />
+                        <hr />
+                        <UltimaActualizacionDeRegistros contexto={FormularioContexto} />
                     </Col>
+                </Row>
+                <Row>
+                    <Accordion defaultActiveKey={['formulario', 'lineas']} alwaysOpen flush>
+                        <Accordion.Item eventKey="formulario">
+                            <Accordion.Header>Formulario</Accordion.Header>
+                            <Accordion.Body>
+
+                                <FormularioSolicitudes />
+
+                            </Accordion.Body>
+                        </Accordion.Item>
+                        <Accordion.Item eventKey="lineas">
+                            <Accordion.Header>Lineas</Accordion.Header>
+                            <Accordion.Body>
+
+                                <DetalleSolicitudes />
+
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
                 </Row>
             </Container>
         </FormularioProveedor>
