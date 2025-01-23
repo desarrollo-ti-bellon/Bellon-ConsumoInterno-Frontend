@@ -1,42 +1,78 @@
-import React, { useState } from 'react'
-import { Button, Col, Container, Row } from 'react-bootstrap'
-import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla'
+import React, { useState } from 'react';
+import { Badge, Button, Col, Container, Row } from 'react-bootstrap';
+import * as Icon from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
+import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
+import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerRutaUrlActual } from '../../../FuncionesGlobales';
 import { useSolicitudes } from '../Controles/useSolicitudes';
-import * as Icon from 'react-bootstrap-icons'
+import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialSolicitudes';
 
 export default function ListadoSolicitudes() {
 
-    const { state, dispatch } = useSolicitudes()
+    const { state, dispatch, eliminarSolicitud, recuperarSolicitudes } = useSolicitudes()
+    const navegar = useNavigate();
+
+    const abrirFormulario = (parametros) => {
+        actualizarEstado(parametros)
+        dispatch({ type: 'mostrarModalAgregarSolicitud', payload: { mostrar: true } })
+    }
+
+    const actualizarEstado = (parametros) => {
+        navegar('', { state: parametros });
+    };
+
+    const BadgedEstadoSolicitud = (parametros) => {
+        return (
+            <Badge bg="primary">{parametros.data.estado_solicitud_descripcion ?? 'N/A'}</Badge>
+        )
+    }
+
+    const obtenerIdEstadoSolicitudPorModulo = () => {
+        const url = obtenerRutaUrlActual();
+        let estadoSolicitudId = null;
+        // Usar un objeto para mapear las rutas a los valores de estadoId
+        const estadoMap = {
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS]: 'nueva',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES]: 'pendiente',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS]: 'aprobada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS]: 'rechazada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS]: 'entregada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS]: 'confirmada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS]: 'terminada',
+        };
+
+        // Si la URL no coincide con ninguna, se asigna null
+        return estadoSolicitudId = estadoMap[url] || null;
+    }
 
     const BotonesAcciones = (parametros) => {
         return (
             <>
-                <Button title="ver solicitud" size='sm' variant='outline-primary' onClick={() => ver(parametros)}>     <Icon.EyeFill />   </Button>
-                <Button title="editar  solicitud" size='sm' variant='outline-primary' onClick={() => editar(parametros)}>  <Icon.PencilFill />  </Button>
-                <Button title="eliminar solicitud" size='sm' variant='outline-primary' onClick={() => eliminar(parametros)}> <Icon.Trash2Fill />  </Button>
-                <Button title="recuperar solicitud" size='sm' variant='outline-primary' onClick={() => recuperar(parametros)}> <Icon.ArrowCounterclockwise />  </Button>
+                <Button  title="ver solicitud" size='sm' variant='outline-primary' onClick={() => abrirFormulario(parametros.data)}>             <Icon.EyeFill />               </Button>
+                {/* <Button title="editar solicitud" size='sm' variant='outline-primary' onClick={() => abrirFormulario(parametros.data)}>       <Icon.PencilFill />            </Button> */}
+                {/* <Button title="eliminar solicitud" size='sm' variant='outline-primary' onClick={() => eliminar(parametros.data)}>   <Icon.Trash2Fill />            </Button> */}
+                {/* <Button title="recuperar solicitud" size='sm' variant='outline-primary' onClick={() => recuperar(parametros.data)}> <Icon.ArrowCounterclockwise /> </Button> */}
             </>
         )
     }
 
-    const [columnasSolicitudes] = useState([
-        { field: "id_solicitud", flex: 1 },
-        { field: "fecha_creado", flex: 1 },
-        { field: "comentario", flex: 1 },
-        { field: "creado_por", flex: 1 },
-        { field: "modificado_por", flex: 1 },
-        { field: "fecha_modificado", flex: 1 },
-        { field: "total", flex: 1 },
-        { field: "usuario_aprobador", flex: 1 },
-        { field: "id_departamento", flex: 1 },
-        { field: "usuario_despachador", flex: 1 },
-        { field: "usuario_asistente_control", flex: 1 },
-        { field: "usuario_asistente_contabilidad", flex: 1 },
-        { field: "estado_solicitud", flex: 1 },
-        { field: "acciones", cellRenderer: (e) => BotonesAcciones(e.value), flex: 1 },
+    const [columnas] = useState([
+        { headerName: "ID", field: "id_cabecera_solicitud", flex: 1, filter: true },
+        { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), flex: 1, filter: true },
+        { headerName: "Comentario", field: "comentario", flex: 1, filter: true },
+        { headerName: "Creado Por", field: "creado_por", flex: 1, filter: true },
+        { headerName: "Responsable", field: "usuario_responsable", flex: 1, filter: true },
+        { headerName: "Despachador", field: "usuario_despacho", flex: 1, filter: true },
+        { headerName: "Departamento", field: "id_departamento", flex: 1, filter: true },
+        { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, flex: 1, filter: true },
+        { headerName: "Clasificacion", field: "id_clasificacion", flex: 1, filter: true },
+        { headerName: "Sucursal", field: "id_sucursal", flex: 1, filter: true },
+        { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), flex: 1, filter: true },
+        { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, filter: true },
     ]);
 
     const mostrarAgregarNuevaSolicitud = () => {
+        navegar('', { state: null });
         dispatch({ type: 'mostrarModalAgregarSolicitud', payload: { mostrar: true } })
     }
 
@@ -45,15 +81,19 @@ export default function ListadoSolicitudes() {
             <Row>
                 <Col>
                     <div style={{ float: 'right' }}>
-                        <Button size='md' variant='primary' className='mb-2' onClick={() => mostrarAgregarNuevaSolicitud()}><Icon.Plus />Nuevo</Button>
+                        <Button hidden={obtenerIdEstadoSolicitudPorModulo() !== 'nueva'} size='md' variant='primary' className='mb-2' onClick={() => mostrarAgregarNuevaSolicitud()}><Icon.Plus />Nuevo</Button>
                     </div>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <AGGridTabla
-                        rowData={state.solicitudes}
-                        columnDefs={columnasSolicitudes}
+                        colDefs={columnas}
+                        rowData={state.listadoSolicitudes}
+                        rowSelection={rowSelection}
+                        pagination={pagination}
+                        paginationPageSize={paginationPageSize}
+                        paginationPageSizeSelector={paginationPageSizeSelector}
                         altura={window.innerHeight - 250}
                     />
                 </Col>
