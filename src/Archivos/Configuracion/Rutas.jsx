@@ -1,6 +1,8 @@
 import * as Icon from "react-bootstrap-icons"
 import SolicitudesPrincipal from "../../Modulos/SolicitudesActivas/SolicitudesPrincipal"
 import FormularioSolicitudes from "../../Modulos/SolicitudesActivas/Formulario/Vistas/FormularioSolicitudes"
+import ClasificacionesPrincipal from "../../Modulos/Clasificaciones/ClasificacionesPrincipal"
+import UsuariosPrincipal from "../../Modulos/Usuarios/UsuariosPrincipal"
 
 export const rutas = [
     {
@@ -52,5 +54,18 @@ export const rutas = [
         icono: <Icon.Circle />,
         grupo: 'Históricos'
     },
-    
+    {
+        ruta: import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
+        componente: <ClasificacionesPrincipal />,
+        nombre: 'Clasificaciones',
+        icono: <Icon.Nut />,
+        grupo: 'Configuraciones'
+    },
+    {
+        ruta: import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_USUARIOS,
+        componente: <UsuariosPrincipal />,
+        nombre: 'Usuarios',
+        icono: <Icon.Nut />,
+        grupo: 'Configuraciones'
+    }
 ]

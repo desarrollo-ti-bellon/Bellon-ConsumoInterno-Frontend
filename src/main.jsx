@@ -11,6 +11,8 @@ import PantallaPrincipal from './Modulos/PantallaPrincipal.jsx';
 import Inicio from './Modulos/Inicio/Inicio.jsx';
 import SolicitudesPrincipal from './Modulos/SolicitudesActivas/SolicitudesPrincipal.jsx';
 import FormularioSolicitudesPrincipal from './Modulos/SolicitudesActivas/Formulario/FormularioSolicitudesPrincipal.jsx';
+import ClasificacionesPrincipal from './Modulos/Clasificaciones/ClasificacionesPrincipal.jsx';
+import UsuariosPrincipal from './Modulos/Usuarios/UsuariosPrincipal.jsx';
 
 const esProduccion = (window.location.host.split(':')[0]) != 'localhost' ? true : false;
 if (esProduccion) {
@@ -57,7 +59,7 @@ const rutas = createBrowserRouter([
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
                 element: <SolicitudesPrincipal />,
             },
-          
+
 
             // VISTAS HISTORICOS
             {
@@ -77,6 +79,16 @@ const rutas = createBrowserRouter([
             {
                 path: import.meta.env.VITE_APP_BELLON_HISTORICO_SOLICITUDES_FORMULARIO,
                 element: <FormularioSolicitudesPrincipal />,
+            },
+
+            // VISTAS MANTENIMIENTOS
+            {
+                path: import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
+                element: <ClasificacionesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_USUARIOS,
+                element: <UsuariosPrincipal />,
             },
 
 
