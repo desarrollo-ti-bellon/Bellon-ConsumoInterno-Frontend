@@ -49,9 +49,6 @@ export default function ListadoSolicitudes() {
         return (
             <>
                 <Button  title="ver solicitud" size='sm' variant='outline-primary' onClick={() => abrirFormulario(parametros.data)}>             <Icon.EyeFill />               </Button>
-                {/* <Button title="editar solicitud" size='sm' variant='outline-primary' onClick={() => abrirFormulario(parametros.data)}>       <Icon.PencilFill />            </Button> */}
-                {/* <Button title="eliminar solicitud" size='sm' variant='outline-primary' onClick={() => eliminar(parametros.data)}>   <Icon.Trash2Fill />            </Button> */}
-                {/* <Button title="recuperar solicitud" size='sm' variant='outline-primary' onClick={() => recuperar(parametros.data)}> <Icon.ArrowCounterclockwise /> </Button> */}
             </>
         )
     }
