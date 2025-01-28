@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useUsuarioFormulario } from '../Controles/useUsuarioFormulario';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialUsuarioFormulario';
@@ -8,17 +7,20 @@ export default function DetalleUsuario() {
 
     const { state, dispatch } = useUsuarioFormulario();
 
-    const { dispatch: dispatchAlerta } = useAlerta();
-    const { dispatch: dispatchModalAlerta } = useModalAlerta();
-
     const [columnasProductos] = useState([
-        { headerName: 'Producto ID', field: "id_producto", flex: 1 },
-        { headerName: 'Descripcion', field: "descripcion", flex: 4 },
-        { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
-        { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1 },
-        { headerName: 'Cantidad', field: "cantidad", editable: inactivarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: quitarStylosColumnaFooter, flex: 1, },
-        { headerName: 'Nota', field: "nota", editable: inactivarCamposEditablesTabla, cellStyle: quitarStylosColumnaFooter, flex: 4 },
+        { headerName: "ID", field: "id_usuario_ci", flex: 1 },
+        { headerName: "Nombre", field: "nombre_usuario", flex: 2 },
+        { headerName: "Correo", field: "correo", flex: 2 },
+        { headerName: "Sucursal", field: "codigo_sucursal", flex: 1 },
+        { headerName: "Departamento", field: "codigo_departamento", flex: 1 },
+        { headerName: "limite", field: "limite", flex: 1 },
+        { headerName: "Posicion", field: "posicion_descripcion", flex: 1 },
+        { headerName: "Estado", field: "estado", flex: 1 },
     ]);
+
+    const llenarFormulario = (parametros) => {
+        dispatch({ type: 'llenarFormulario', payload: { formulario: parametros.data } });
+    }
 
     return (
         <>
@@ -29,6 +31,7 @@ export default function DetalleUsuario() {
                 pagination={pagination}
                 paginationPageSize={paginationPageSize}
                 paginationPageSizeSelector={paginationPageSizeSelector}
+                onCellClicked={llenarFormulario}
             />
         </>
     )

@@ -7,11 +7,23 @@ export const formularioUsuarioReducer = (state = EstadoInicialUsuarioFormulario,
     //ACCIONES DEL FORMULARIO 
     if (action.type === 'actualizarFormulario') {
         const { id, value } = action.payload
+        if (id === 'id_usuario') {
+            const datoUsuario = state.comboUsuarios.find(usuario => usuario.id_usuario === value) ?? null;
+            return { ...state, formulario: { ...state.formulario, [id]: value, nombre_usuario: datoUsuario?.nombre_completo ?? '', correo: datoUsuario?.correo_electronico ?? '' } }
+        }
+        if (id === 'codigo_sucursal') {
+            const datoSucursal = state.comboSucursales.find(sucursal => sucursal.codigo === value);
+            return { ...state, formulario: { ...state.formulario, [id]: value, id_sucursal: datoSucursal.id_valor_dimension } }
+        }
+        if (id === 'codigo_departamento') {
+            const datoDepartamento = state.comboDepartamentos.find(departamento => departamento.codigo === value) ?? null;
+            return { ...state, formulario: { ...state.formulario, [id]: value, id_departamento: datoDepartamento?.id_valor_dimension } }
+        }
         return { ...state, formulario: { ...state.formulario, [id]: value } }
     }
 
     if (action.type === 'limpiarFormulario') {
-        return { ...state, formulario: { ...EstadoInicialFormulario.formulario } }
+        return { ...state, formulario: { ...EstadoInicialUsuarioFormulario.formulario } }
     }
 
     if (action.type === 'limpiarProductosSeleccionados') {
@@ -27,45 +39,31 @@ export const formularioUsuarioReducer = (state = EstadoInicialUsuarioFormulario,
     }
 
     if (action.type === 'llenarLineas') {
-        return { ...state, lineas: action.payload.lineas }
-    }
-
-    if (action.type === 'actualizarCampoEnLineaSolicitud') {
-        const lineaId = action.payload.id;
-        const lineaActualizada = action.payload.linea;
-        const campoActualizado = action.payload.cantidad;
-        const lineas = state.lineas.map(linea => {
-            if (linea.id_linea_solicitud === lineaId) {
-                return { ...lineaActualizada, cantidad: campoActualizado };
-            }
-            return linea;
+        const copiarLineas = [...action.payload.lineas].map(linea => {
+            const posicionData = state.comboPosiciones.find(posicion => posicion.posicion_id === linea.posicion_id);
+            return { ...linea, posicion_descripcion: posicionData.descripcion };
         })
-        return { ...state, lineas: lineas }
+        return { ...state, lineas: copiarLineas }
     }
 
-    if (action.type === 'llenarProductosSeleccionados') {
-        return { ...state, productosSeleccionados: action.payload.productosSeleccionados }
+    if (action.type === 'llenarComboDepartamentos') {
+        return { ...state, comboDepartamentos: action.payload.comboDepartamentos }
+    }
+
+    if (action.type === 'llenarComboUsuarios') {
+        return { ...state, comboUsuarios: action.payload.comboUsuarios }
+    }
+
+    if (action.type === 'llenarComboSucursales') {
+        return { ...state, comboSucursales: action.payload.comboSucursales }
+    }
+
+    if (action.type === 'llenarComboPosiciones') {
+        return { ...state, comboPosiciones: action.payload.comboPosiciones }
     }
 
     if (action.type === 'inactivarCampos') {
         return { ...state, inactivarCampos: action.payload.campos }
-    }
-
-    //ACCIONES DE LOS MODALES
-    if (action.type === 'mostrarModalAgregarSolicitud') {
-        return { ...state, modalAgregarSolcitudes: action.payload.mostrar }
-    }
-
-    if (action.type === 'mostrarModalAgregarProductos') {
-        return { ...state, modalAgregarProductos: action.payload.mostrar }
-    }
-
-    if (action.type === 'llenarProductos') {
-        return { ...state, listadoProductos: action.payload.productos }
-    }
-
-    if (action.type === 'llenarEstadosSolicitudes') {
-        return { ...state, comboEstadoSolicitudes: action.payload.estadosSolicitudes }
     }
 
     return state;
