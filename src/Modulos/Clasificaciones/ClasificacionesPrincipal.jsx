@@ -10,7 +10,7 @@ export default function ClasificacionesPrincipal() {
 
     return (
         <FormularioClasificacionProveedor>
-            <Container>
+            <Container fluid>
                 <Row>
                     <Col>
                         <ListadoLinks />
