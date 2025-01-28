@@ -1,9 +1,10 @@
-import { createContext, useEffect, useReducer } from "react"
+import { createContext, useEffect, useReducer, useRef } from "react"
 import { useLocation } from "react-router-dom"
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
 import { EstadoInicialClasificacionFormulario } from "../Modelos/EstadoInicialClasificacionFormulario"
 import { formularioClasificacionReducer } from "./formularioClasificacionReducer"
+import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
 
 export const FormularioClasificacionContexto = createContext(null)
 
@@ -14,36 +15,87 @@ export const FormularioClasificacionProveedor = ({ children }) => {
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
     const formData = useLocation();
+    const tiempoFuera = useRef(null)
+
+    const cargarClasificacionesERP = async () => {
+        try {
+            const res = await obtenerDatos(`Clasificacion/ERP`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarClasificaciones', payload: { clasificaciones: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las clasificaciones`, tipo: 'warning' } });
+        }
+    }
+
+    const cargarClasificaciones = async () => {
+        try {
+            const res = await obtenerDatos(`Clasificacion`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarLineas', payload: { lineas: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las clasificaciones`, tipo: 'warning' } });
+        }
+    }
 
     const cargarDatosIniciales = async () => {
         dispatchCargandoInformacion({ action: 'mostrarCargandoInformacion' })
+        await cargarClasificacionesERP();
+        await cargarClasificaciones();
         dispatchCargandoInformacion({ action: 'limpiarCargandoInformacion' })
     }
 
-    const guardar = async () => {
+    const guardar = () => {
         console.log('guardar', state.formulario)
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
-        // enviarDatos('Solicitud', state.formulario)
-        //     .then((res) => {
-        //         let json = res.data;
-        //         dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
-        //         dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
-        //         dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
-        //         dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
-        //     })
-        //     .catch((err) => {
-        //         dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
-        //     })
-        //     .finally(() => {
-        //         dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
-        //     })
+        enviarDatos('Clasificacion', state.formulario)
+            .then((res) => {
+                let json = res.data;
+                cargarClasificaciones();
+                dispatch({ type: 'limpiarFormulario', payload: { formulario: json } })
+                dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
+                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+            })
+            .catch((err) => {
+                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+            })
+            .finally(() => {
+                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+                dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
+            })
     }
 
     useEffect(() => {
+        cargarDatosIniciales();
+        dispatch({
+            type: 'inactivarCampos', payload: {
+                campos: {
+                    ...state.inactivarCampos,
+                    campo_id_clasificacion: true,
+                    campo_id_grupo_cont_producto_general: true,
+                    campo_codigo_clasificacion: false,
+                    campo_descripcion: false,
+                    campo_estado: false
+                }
+            }
+        })
+    }, [])
+
+    useEffect(() => {
         if (state.validadoFormulario) {
-            guardar();
+            tiempoFuera.current = setTimeout(() => {
+                guardar();
+            }, 2000)
+            return () => {
+                clearTimeout(tiempoFuera.current);
+            }
         }
-    }, [state.validadoFormulario])
+    }, [state.formulario, state.validadoFormulario])
 
     return (
         <FormularioClasificacionContexto.Provider value={{ state, dispatch, guardar }}>

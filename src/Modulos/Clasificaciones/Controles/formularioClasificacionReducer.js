@@ -2,16 +2,17 @@ import { EstadoInicialClasificacionFormulario } from "../Modelos/EstadoInicialCl
 
 export const formularioClasificacionReducer = (state = EstadoInicialClasificacionFormulario, action) => {
 
-    console.log('solicitudesReducer', action)
-
-    //ACCIONES DEL FORMULARIO 
     if (action.type === 'actualizarFormulario') {
         const { id, value } = action.payload
+        if (id === 'codigo_clasificacion') {
+            const clasificacion = state.comboClasificaciones.find(clasificacion => clasificacion.codigo === value);
+            return { ...state, formulario: { ...state.formulario, [id]: value, ['id_grupo_cont_producto_general']: clasificacion.id_grupo_cont_producto_general ?? null } }
+        }
         return { ...state, formulario: { ...state.formulario, [id]: value } }
     }
 
     if (action.type === 'limpiarFormulario') {
-        return { ...state, formulario: { ...EstadoInicialFormulario.formulario } }
+        return { ...state, formulario: { ...EstadoInicialClasificacionFormulario.formulario } }
     }
 
     if (action.type === 'limpiarProductosSeleccionados') {
@@ -30,42 +31,12 @@ export const formularioClasificacionReducer = (state = EstadoInicialClasificacio
         return { ...state, lineas: action.payload.lineas }
     }
 
-    if (action.type === 'actualizarCampoEnLineaSolicitud') {
-        const lineaId = action.payload.id;
-        const lineaActualizada = action.payload.linea;
-        const campoActualizado = action.payload.cantidad;
-        const lineas = state.lineas.map(linea => {
-            if (linea.id_linea_solicitud === lineaId) {
-                return { ...lineaActualizada, cantidad: campoActualizado };
-            }
-            return linea;
-        })
-        return { ...state, lineas: lineas }
-    }
-
-    if (action.type === 'llenarProductosSeleccionados') {
-        return { ...state, productosSeleccionados: action.payload.productosSeleccionados }
+    if (action.type === 'llenarClasificaciones') {
+        return { ...state, comboClasificaciones: action.payload.clasificaciones }
     }
 
     if (action.type === 'inactivarCampos') {
         return { ...state, inactivarCampos: action.payload.campos }
-    }
-
-    //ACCIONES DE LOS MODALES
-    if (action.type === 'mostrarModalAgregarSolicitud') {
-        return { ...state, modalAgregarSolcitudes: action.payload.mostrar }
-    }
-
-    if (action.type === 'mostrarModalAgregarProductos') {
-        return { ...state, modalAgregarProductos: action.payload.mostrar }
-    }
-
-    if (action.type === 'llenarProductos') {
-        return { ...state, listadoProductos: action.payload.productos }
-    }
-
-    if (action.type === 'llenarEstadosSolicitudes') {
-        return { ...state, comboEstadoSolicitudes: action.payload.estadosSolicitudes }
     }
 
     return state;

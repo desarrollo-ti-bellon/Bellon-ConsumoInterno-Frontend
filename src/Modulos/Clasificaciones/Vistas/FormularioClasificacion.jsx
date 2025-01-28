@@ -1,14 +1,33 @@
 import React from 'react';
 import { useClasificacionFormulario } from '../Controles/useClasificacionFormulario';
-import { Col, Form, Row } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 
 export default function FormularioClasificacion() {
 
     const { state, dispatch } = useClasificacionFormulario();
+    const {
+        id_clasificacion,
+        id_grupo_cont_producto_general,
+        codigo_clasificacion,
+        descripcion,
+        estado,
+    } = state.formulario;
+
+    const {
+        campo_id_clasificacion,
+        campo_id_grupo_cont_producto_general,
+        campo_codigo_clasificacion,
+        campo_descripcion,
+        campo_estado,
+    } = state.inactivarCampos;
 
     const actualizarFormulario = (e) => {
         const { id, value } = e.target
-        dispatch({ type: 'actualizarFormulario', payload: { id, value } })
+        if (id === 'estado') {
+            dispatch({ type: 'actualizarFormulario', payload: { id, value: e.target.checked } })
+        } else {
+            dispatch({ type: 'actualizarFormulario', payload: { id, value } })
+        }
         enviar();
     }
 
@@ -32,186 +51,68 @@ export default function FormularioClasificacion() {
 
                 <Row className="mb-2">
 
-                    <Form.Group as={Col} md="4" controlId="id_solicitud">
-                        <Form.Label>ID Solicitud</Form.Label>
+                    <Form.Group as={Col} md="2" controlId="id_clasificacion">
+                        <Form.Label>ID</Form.Label>
                         <Form.Control
                             type="text"
-                            value={id_cabecera_solicitud || ''}
-                            disabled={campo_id_cabecera_solicitud}
-                        />
-                    </Form.Group>
-
-                    <Form.Group as={Col} md="4" controlId="fecha_creado">
-                        <Form.Label>Fecha Creado</Form.Label>
-                        <Form.Control
-                            type="date"
-                            defaultValue={formateadorDeFechas(fecha_creado)}
-                            disabled={campo_fecha_creado}
-                        />
-                    </Form.Group>
-
-                    <Form.Group as={Col} md="4" controlId="creado_por">
-                        <Form.Label>Creado Por</Form.Label>
-                        <Form.Control
-                            type="text"
-                            defaultValue={creado_por}
-                            disabled={campo_creado_por}
-
-                        />
-                    </Form.Group>
-
-                </Row>
-
-                <Row className="mb-2">
-
-                    <Form.Group as={Col} md="4" controlId="usuario_responsable">
-                        <Form.Label>Usuario Aprobador</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={usuario_responsable}
+                            value={id_clasificacion}
                             onChange={actualizarFormulario}
-                            isValid={usuario_responsable}
-                            isInvalid={!usuario_responsable}
-                            disabled={campo_usuario_responsable}
+                            disabled={campo_id_clasificacion}
                         />
-                        <Form.Control.Feedback type="invalid">
-                            El usuario aprobador es obligatorio.
-                        </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group as={Col} md="4" controlId="id_departamento">
-                        <Form.Label>Departamento</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={id_departamento}
-                            onChange={actualizarFormulario}
-                            isValid={id_departamento}
-                            isInvalid={!id_departamento}
-                            disabled={campo_id_departamento}
-                            required
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            El departamento es obligatorio.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group as={Col} md="4" controlId="usuario_despacho">
-                        <Form.Label>Usuario Despachador</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={usuario_despacho}
-                            onChange={actualizarFormulario}
-                            isValid={usuario_despacho}
-                            isInvalid={!usuario_despacho}
-                            disabled={campo_usuario_despacho}
-                            required
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            El usuario despachador es obligatorio.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                </Row>
-
-                <Row className="mb-2">
-
-                    {/* 
-                                <Form.Group as={Col} md="4" controlId="usuario_asistente_control">
-                                    <Form.Label>Usuario Asistente Control</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        value={usuario_asistente_control}
-                                        onChange={actualizarFormulario}
-                                        isValid={usuario_asistente_control}
-                                        isInvalid={!usuario_asistente_control}
-                                        required
-                                        disabled={campo_usuario_asistente_control}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        El usuario asistente control es obligatorio.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-
-                                <Form.Group as={Col} md="4" controlId="usuario_asistente_contabilidad">
-                                    <Form.Label>Usuario Asistente Contabilidad</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        value={usuario_asistente_contabilidad}
-                                        onChange={actualizarFormulario}
-                                        isValid={usuario_asistente_contabilidad}
-                                        isInvalid={!usuario_asistente_contabilidad}
-                                        required
-                                        disabled={campo_usuario_asistente_contabilidad}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        El usuario asistente contabilidad es obligatorio.
-                                    </Form.Control.Feedback>
-                                </Form.Group> 
-                            */}
-
-                </Row>
-
-                <Row className="mb-2">
-                    <Form.Group as={Col} md="4" controlId="id_estado_solicitud">
-                        <Form.Label>Estado Solicitud</Form.Label>
+                    <Form.Group as={Col} md="4" controlId="codigo_clasificacion">
+                        <Form.Label>Clasificacion</Form.Label>
                         <Form.Select
-                            value={id_estado_solicitud}
+                            value={codigo_clasificacion}
                             onChange={actualizarFormulario}
-                            // isValid={id_estado_solicitud}
-                            isInvalid={!id_estado_solicitud}
-                            disabled={campo_id_estado_solicitud}
+                            isValid={codigo_clasificacion}
+                            isInvalid={!codigo_clasificacion}
+                            disabled={campo_codigo_clasificacion}
                             required
                         >
-                            <option value={''}>
-                                Por favor seleccione ...
-                            </option>
+                            <option value={''}> Por favor seleccione ... </option>
                             {
-                                state.comboEstadoSolicitudes.map(estado_solicitud => {
+                                state.comboClasificaciones?.map(clasificacion => {
                                     return (
-                                        <option key={estado_solicitud.id_estado_solicitud} value={estado_solicitud.id_estado_solicitud}>
-                                            [{estado_solicitud.id_estado_solicitud}] {estado_solicitud.descripcion}
+                                        <option key={clasificacion.codigo} value={clasificacion.codigo}>
+                                            [{clasificacion.codigo}] {clasificacion.descripcion}
                                         </option>
                                     )
                                 })
                             }
                         </Form.Select>
                         <Form.Control.Feedback type="invalid">
-                            El estado de la solicitud es obligatorio.
+                            El campo de clasificacion es obligatorio.
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group as={Col} md="4" controlId="total">
-                        <Form.Label>Total</Form.Label>
+                    <Form.Group as={Col} md="4" controlId="descripcion">
+                        <Form.Label>Descripcion</Form.Label>
                         <Form.Control
                             type="text"
-                            value={total || ''}
+                            value={descripcion}
                             onChange={actualizarFormulario}
-                            isValid={total}
-                            isInvalid={total < 0}
-                            disabled={campo_total}
+                            isValid={descripcion}
+                            isInvalid={!descripcion}
+                            disabled={campo_descripcion}
                             required
                         />
                         <Form.Control.Feedback type="invalid">
-                            El campo "Total" es obligatorio.
+                            El campo descripción es obligatorio.
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group as={Col} md="4" controlId="comentario">
-                        <Form.Label>Comentario</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            rows={1}
-                            value={comentario}
+                    <Form.Group as={Col} md="2" className="mb-3" controlId="estado">
+                        <Form.Label>Estado</Form.Label>
+                        <Form.Switch
+                            className="form-switch-lg"
                             onChange={actualizarFormulario}
-                            isValid={comentario}
-                            isInvalid={!comentario}
-                            disabled={campo_comentario}
-                            required
+                            checked={estado}
+                            disabled={campo_estado}
                         />
-                        <Form.Control.Feedback type="invalid">
-                            El comentario es obligatorio.
-                        </Form.Control.Feedback>
                     </Form.Group>
+
                 </Row>
 
                 <Button id="enviarFormulario" hidden variant="primary" type="submit">

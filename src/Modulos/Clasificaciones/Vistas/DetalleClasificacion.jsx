@@ -13,13 +13,15 @@ export default function DetalleClasificacion() {
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
 
     const [columnasProductos] = useState([
-        { headerName: 'Producto ID', field: "id_producto", flex: 1 },
-        { headerName: 'Descripcion', field: "descripcion", flex: 4 },
-        { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
-        { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1 },
-        { headerName: 'Cantidad', field: "cantidad", flex: 1, },
-        { headerName: 'Nota', field: "nota", flex: 1 },
+        { headerName: 'ID', field: "id_clasificacion", flex: 1 },
+        { headerName: 'Codigo Clasificacion', field: "codigo_clasificacion", flex: 2 },
+        { headerName: 'Descripción', field: "descripcion", flex: 8 },
+        { headerName: 'Estado', field: "estado", flex: 1, }
     ]);
+
+    const llenarFormulario = (parametros) => {
+        dispatch({ type: 'llenarFormulario', payload: { formulario: parametros.data } })
+    }
 
     return (
         <>
@@ -30,6 +32,7 @@ export default function DetalleClasificacion() {
                 pagination={pagination}
                 paginationPageSize={paginationPageSize}
                 paginationPageSizeSelector={paginationPageSizeSelector}
+                onCellClicked={llenarFormulario}
             />
         </>
     )

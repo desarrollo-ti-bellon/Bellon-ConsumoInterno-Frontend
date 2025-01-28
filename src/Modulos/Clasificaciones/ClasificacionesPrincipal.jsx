@@ -1,9 +1,10 @@
 import React from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Accordion, Col, Container, Row } from 'react-bootstrap'
 import ListadoLinks from '../../ComponentesGlobales/ListadoLinks'
 import FormularioClasificacion from './Vistas/FormularioClasificacion'
 import DetalleClasificacion from './Vistas/DetalleClasificacion'
-import { FormularioClasificacionProveedor } from './Controles/FormularioClasificacionContexto'
+import { FormularioClasificacionContexto, FormularioClasificacionProveedor } from './Controles/FormularioClasificacionContexto'
+import UltimaActualizacionDeRegistros from '../../ComponentesGlobales/UltimaActualizacionDeRegistros'
 
 export default function ClasificacionesPrincipal() {
 
@@ -17,12 +18,31 @@ export default function ClasificacionesPrincipal() {
                 </Row>
                 <Row>
                     <Col>
-                        <FormularioClasificacion />
+                        <UltimaActualizacionDeRegistros contexto={FormularioClasificacionContexto} />
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <DetalleClasificacion />
+
+                        <Accordion defaultActiveKey={['formulario', 'lineas']} alwaysOpen flush>
+                            <Accordion.Item eventKey="formulario">
+                                <Accordion.Header>Formulario</Accordion.Header>
+                                <Accordion.Body>
+
+                                    <FormularioClasificacion />
+
+                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="lineas">
+                                <Accordion.Header>Lineas</Accordion.Header>
+                                <Accordion.Body>
+
+                                    <DetalleClasificacion />
+
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Accordion>
+
                     </Col>
                 </Row>
             </Container>
