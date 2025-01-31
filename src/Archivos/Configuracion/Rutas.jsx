@@ -1,7 +1,6 @@
 import * as Icon from "react-bootstrap-icons"
-import SolicitudesPrincipal from "../../Modulos/SolicitudesActivas/SolicitudesPrincipal"
-import FormularioSolicitudes from "../../Modulos/SolicitudesActivas/Formulario/Vistas/FormularioSolicitudes"
 import ClasificacionesPrincipal from "../../Modulos/Clasificaciones/ClasificacionesPrincipal"
+import SolicitudesPrincipal from "../../Modulos/SolicitudesActivas/SolicitudesPrincipal"
 import UsuariosPrincipal from "../../Modulos/Usuarios/UsuariosPrincipal"
 
 export const rutas = [
