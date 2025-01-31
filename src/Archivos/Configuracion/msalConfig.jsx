@@ -2,10 +2,9 @@ import { PublicClientApplication } from "@azure/msal-browser";
 
 const MSAL_CONFIG = {
     auth: {
-        clientId: "098eff14-5488-4ad7-a4aa-e18793006b13",
+        clientId: "0b33347c-fd66-4cea-b9aa-209ce898a790",
         authority: "https://login.microsoftonline.com/bellon1.onmicrosoft.com",
         redirectUri: window.location.origin
-        // redirectUri: "https://bellon-liquidacion-frontend-cqgaahcvhecje6d7.eastus2-01.azurewebsites.net/"
     },
     cache: {
         cacheLocation: "localStorage",
@@ -18,7 +17,7 @@ const LOGIN_REQUEST = {
 };
 
 const TOKEN_REQUEST = {
-    scopes: ["api://49159368-e34c-4c12-948f-9b2ab6c8c9fa/App.Liquidacion", "User.Read"]
+    scopes: ["api://16c9b077-ae12-442b-b1e5-98beca9b6845/App.ConsumoInterno", "User.Read"]
 };
 
 const GRAPH_CONFIG = {

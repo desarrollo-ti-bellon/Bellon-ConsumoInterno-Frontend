@@ -41,7 +41,10 @@ export const formularioUsuarioReducer = (state = EstadoInicialUsuarioFormulario,
     if (action.type === 'llenarLineas') {
         const copiarLineas = [...action.payload.lineas].map(linea => {
             const posicionData = state.comboPosiciones.find(posicion => posicion.posicion_id === linea.posicion_id);
-            return { ...linea, posicion_descripcion: posicionData.descripcion };
+            if (posicionData) {
+                return { ...linea, posicion_descripcion: posicionData.descripcion };
+            }
+            return linea;
         })
         return { ...state, lineas: copiarLineas }
     }
@@ -60,6 +63,10 @@ export const formularioUsuarioReducer = (state = EstadoInicialUsuarioFormulario,
 
     if (action.type === 'llenarComboPosiciones') {
         return { ...state, comboPosiciones: action.payload.comboPosiciones }
+    }
+
+    if (action.type === 'llenarComboAprobadores') {
+        return { ...state, comboUsuariosAprobadores: action.payload.comboUsuariosAprobadores }
     }
 
     if (action.type === 'inactivarCampos') {

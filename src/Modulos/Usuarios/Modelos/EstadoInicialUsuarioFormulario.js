@@ -32,7 +32,6 @@ export const EstadoInicialUsuarioFormulario = {
     comboUsuarios: [],
     comboSucursales: [],
     comboPosiciones: [],
-  
 }
 
 export const pagination = true;

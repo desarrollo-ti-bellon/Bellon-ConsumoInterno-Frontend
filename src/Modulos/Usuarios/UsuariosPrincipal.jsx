@@ -4,6 +4,8 @@ import ListadoLinks from '../../ComponentesGlobales/ListadoLinks'
 import { FormularioUsuarioContexto, FormularioUsuarioProveedor } from './Controles/FormularioUsuarioProveedor'
 import DetalleUsuario from './Vistas/DetalleUsuario'
 import FormularioUsuario from './Vistas/FormularioUsuario'
+import UltimaActualizacionDeRegistros from '../../ComponentesGlobales/UltimaActualizacionDeRegistros'
+import ModalAlerta from '../../ComponentesGlobales/ModalAlerta'
 
 export default function UsuariosPrincipal() {
 
@@ -12,7 +14,13 @@ export default function UsuariosPrincipal() {
             <Container fluid>
                 <Row>
                     <Col>
-                        <ListadoLinks contexto={FormularioUsuarioContexto} />
+                        <ListadoLinks />
+                        <ModalAlerta />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <UltimaActualizacionDeRegistros contexto={FormularioUsuarioContexto} />
                     </Col>
                 </Row>
                 <Row>

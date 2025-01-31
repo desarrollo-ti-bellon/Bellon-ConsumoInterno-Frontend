@@ -5,6 +5,7 @@ import { EstadoInicialUsuarioFormulario } from "../Modelos/EstadoInicialUsuarioF
 import { formularioUsuarioReducer } from "./formularioUsuarioReducer"
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta"
 import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
+import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
 
 export const FormularioUsuarioContexto = createContext(null)
 
@@ -14,6 +15,7 @@ export const FormularioUsuarioProveedor = ({ children }) => {
 
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
+    const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const tiempoFuera = useRef();
     const formData = useLocation();
 
@@ -76,6 +78,7 @@ export const FormularioUsuarioProveedor = ({ children }) => {
             if (res.status !== 204) {
                 json = res.data;
             }
+            // console.log('cargarUsuariosCI', json);
             dispatch({ type: 'llenarLineas', payload: { lineas: json } });
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las Posiciones`, tipo: 'warning' } });
@@ -94,15 +97,25 @@ export const FormularioUsuarioProveedor = ({ children }) => {
 
     const guardar = () => {
         console.log('guardar', state.formulario)
+
+        if (state.formulario.id_usuario_ci === null) {
+            const existeUsuario = state.lineas.find(linea => linea.id_usuario === state.formulario.id_usuario)
+            console.log('existeUsuario =>', existeUsuario);
+            if (existeUsuario) {
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: 'No se puede agregar este usuario porque ha sido agregada con esta posicion.<hr/> <ul>' + existeUsuario.id_usuario_ci + '</ul>', tamano: 'md' } })
+                return;
+            }
+        }
+
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('UsuariosCI', state.formulario)
             .then((res) => {
                 let json = res.data;
+                cargarUsuariosCI();
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
-                dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
+                dispatch({ type: 'limpiarFormulario' })
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
                 dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
-                cargarUsuariosCI();
             })
             .catch((err) => {
                 dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
