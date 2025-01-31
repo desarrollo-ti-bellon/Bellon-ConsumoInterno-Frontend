@@ -27,7 +27,7 @@ export function InicioProveedor({ children }) {
         dispatch({ type: 'obtenerNombreUsuario', payload: { nombre: account.name } })
 
         let arrEstadosSolicitudes = [];
-        await obtenerDatos('EstadoSolicitud', '')
+        await obtenerDatos('EstadoSolicitud', null)
             .then((res) => {
                 arrEstadosSolicitudes = res.data ?? [];
             }).catch(() => {
@@ -37,17 +37,17 @@ export function InicioProveedor({ children }) {
         for (const estadoSolicitud of arrEstadosSolicitudes) {
             let baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS
             try {
-                const res = await obtenerDatos('Solicitud/Cantidad?estadoSolicitudId=' + estadoSolicitud.id_estado_solicitud);
+                const res = await obtenerDatos('Solicitud/Cantidad?estadoSolicitudId=' + estadoSolicitud.id_estado_solicitud, null);
                 dispatch({
                     type: 'llenarContadoresActividades',
                     payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta.replace('nuevas', `${estadoSolicitud.descripcion.toLowerCase()}s`), funcion: () => { return null; } }
                 });
             } catch (error) {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar VITE_APP_BELLON_SOLICITUDES_ACTIVAS.', tipo: 'warning' } });
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar VITE_APP_BELLON_SOLICITUDES_NUEVAS.', tipo: 'warning' } });
             }
         }
 
-        await obtenerDatos(`Notas?usuarioDestino=${usuarioDestino}`, '')
+        await obtenerDatos(`Notas?usuarioDestino=${usuarioDestino}`, null)
             .then((res) => {
                 let json = []
                 if (res.status === 200) {
@@ -70,7 +70,6 @@ export function InicioProveedor({ children }) {
         const validarCargaNotas = state.actividades.find(actividad => actividad.titulo === 'Notas Actuales');
         if (validarCargaNotas) {
             if (stateNotas.notas.length !== validarCargaNotas.cantidad) {
-                console.log('entro aqui')
                 cargarActividades();
             }
         }
