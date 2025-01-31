@@ -238,6 +238,12 @@ export const FormularioProveedor = ({ children }) => {
     }
 
     const pasarLineasDelModalAlDetalle = () => {
+
+        if (state.productosSeleccionados.length == 0) {
+            dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debe seleccionar al menos un producto', tipo: 'warning' } });
+            return;
+        }
+
         const lineas = state.productosSeleccionados.map(producto => {
             return {
                 id_linea_solicitud: producto.id_linea_solicitud ?? null,
@@ -254,6 +260,7 @@ export const FormularioProveedor = ({ children }) => {
                 nota: ""
             }
         })
+
         guardarLineas(lineas);
     }
 

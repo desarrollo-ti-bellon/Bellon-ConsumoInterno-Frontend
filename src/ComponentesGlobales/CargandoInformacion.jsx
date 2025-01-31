@@ -1,9 +1,16 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Modal, Spinner } from "react-bootstrap";
 import { cargandoInformacionContexto } from "../ControlesGlobales/CargandoInformacion/cargandoInformacionProveedor";
 
 export default function CargandoInformacion() {
+
     const { state, dispatch } = useContext(cargandoInformacionContexto);
+
+    useEffect(() => {
+        if (!state.mostrar) {
+            return;
+        }
+    })
 
     return (
         <Modal
