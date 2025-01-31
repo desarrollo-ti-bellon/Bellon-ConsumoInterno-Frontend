@@ -2,7 +2,7 @@ import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 
 export const formularioReducer = (state = EstadoInicialFormulario, action) => {
 
-    console.log('solicitudesReducer', action)
+    console.log(action)
 
     //ACCIONES DEL FORMULARIO 
     if (action.type === 'actualizarFormulario') {
@@ -51,6 +51,10 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
         return { ...state, inactivarCampos: action.payload.campos }
     }
 
+    if (action.type === 'camposRequeridos') {
+        return { ...state, camposRequeridos: action.payload.campos }
+    }
+
     //ACCIONES DE LOS MODALES
     if (action.type === 'mostrarModalAgregarSolicitud') {
         return { ...state, modalAgregarSolcitudes: action.payload.mostrar }
@@ -64,8 +68,36 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
         return { ...state, listadoProductos: action.payload.productos }
     }
 
-    if (action.type === 'llenarEstadosSolicitudes') {
+    if (action.type === 'llenarComboEstadosSolicitudes') {
         return { ...state, comboEstadoSolicitudes: action.payload.estadosSolicitudes }
+    }
+
+    if (action.type === 'llenarComboDepartamentos') {
+        return { ...state, comboDepartamentos: action.payload.comboDepartamentos }
+    }
+
+    if (action.type === 'llenarComboUsuarios') {
+        return { ...state, comboUsuarios: action.payload.comboUsuarios }
+    }
+
+    if (action.type === 'llenarComboUsuariosCI') {
+        return { ...state, comboUsuariosCI: action.payload.comboUsuariosCI }
+    }
+
+    if (action.type === 'llenarComboSucursales') {
+        return { ...state, comboSucursales: action.payload.comboSucursales }
+    }
+
+    if (action.type === 'llenarComboClasificaciones') {
+        return { ...state, comboClasificaciones: action.payload.comboClasificaciones }
+    }
+
+    if (action.type === 'llenarComboPosiciones') {
+        return { ...state, comboPosiciones: action.payload.comboPosiciones }
+    }
+
+    if (action.type === 'llenarComboUsuariosAprobadores') {
+        return { ...state, comboUsuariosAprobadores: action.payload.comboUsuariosAprobadores }
     }
 
     return state;
