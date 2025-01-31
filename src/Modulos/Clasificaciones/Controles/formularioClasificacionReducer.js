@@ -3,10 +3,10 @@ import { EstadoInicialClasificacionFormulario } from "../Modelos/EstadoInicialCl
 export const formularioClasificacionReducer = (state = EstadoInicialClasificacionFormulario, action) => {
 
     if (action.type === 'actualizarFormulario') {
-        const { id, value } = action.payload
+        const { id, value } = action.payload;
         if (id === 'codigo_clasificacion') {
             const clasificacion = state.comboClasificaciones.find(clasificacion => clasificacion.codigo === value);
-            return { ...state, formulario: { ...state.formulario, [id]: value, ['id_grupo_cont_producto_general']: clasificacion.id_grupo_cont_producto_general ?? null } }
+            return { ...state, formulario: { ...state.formulario, [id]: value, ['id_grupo_cont_producto_general']: clasificacion.id_grupo_cont_producto_general ?? null, descripcion: clasificacion.descripcion }, validadoFormulario: false }
         }
         return { ...state, formulario: { ...state.formulario, [id]: value } }
     }

@@ -5,6 +5,7 @@ import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInfor
 import { EstadoInicialClasificacionFormulario } from "../Modelos/EstadoInicialClasificacionFormulario"
 import { formularioClasificacionReducer } from "./formularioClasificacionReducer"
 import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
+import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
 
 export const FormularioClasificacionContexto = createContext(null)
 
@@ -14,6 +15,8 @@ export const FormularioClasificacionProveedor = ({ children }) => {
 
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
+    const { dispatch: dispatchModalAlerta } = useModalAlerta();
+
     const formData = useLocation();
     const tiempoFuera = useRef(null)
 
@@ -52,12 +55,22 @@ export const FormularioClasificacionProveedor = ({ children }) => {
 
     const guardar = () => {
         console.log('guardar', state.formulario)
+
+        if (state.formulario.id_clasificacion === null) {
+            const existeClasificacion = state.lineas.find(linea => linea.id_grupo_cont_producto_general === state.formulario.id_grupo_cont_producto_general)
+            console.log('existeClasificacion=>', existeClasificacion);
+            if (existeClasificacion) {
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: 'No se puede agregar esta clasificación porque ha sido agregada con esta decripción.<hr/> <ul>' + existeClasificacion.descripcion + '</ul>', tamano: 'md' } })
+                return;
+            }
+        }
+
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Clasificacion', state.formulario)
             .then((res) => {
                 let json = res.data;
                 cargarClasificaciones();
-                dispatch({ type: 'limpiarFormulario', payload: { formulario: json } })
+                dispatch({ type: 'limpiarFormulario' })
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
                 dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
             })

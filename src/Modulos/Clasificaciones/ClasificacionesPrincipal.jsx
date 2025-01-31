@@ -5,6 +5,7 @@ import FormularioClasificacion from './Vistas/FormularioClasificacion'
 import DetalleClasificacion from './Vistas/DetalleClasificacion'
 import { FormularioClasificacionContexto, FormularioClasificacionProveedor } from './Controles/FormularioClasificacionContexto'
 import UltimaActualizacionDeRegistros from '../../ComponentesGlobales/UltimaActualizacionDeRegistros'
+import ModalAlerta from '../../ComponentesGlobales/ModalAlerta'
 
 export default function ClasificacionesPrincipal() {
 
@@ -14,6 +15,7 @@ export default function ClasificacionesPrincipal() {
                 <Row>
                     <Col>
                         <ListadoLinks />
+                        <ModalAlerta />
                     </Col>
                 </Row>
                 <Row>
