@@ -1,7 +1,10 @@
 export const EstadoInicialSolicitudes = {
     listadoSolicitudes: [],
     modalAgregarSolicitudes: false,
-    comboEstadosSolicitudes: []
+    comboEstadosSolicitudes: [],
+    sucursales: [],
+    departamentos: [],
+    clasificaciones: []
 } 
 
 export const pagination = true;

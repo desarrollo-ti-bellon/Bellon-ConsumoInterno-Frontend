@@ -55,16 +55,17 @@ export default function ListadoSolicitudes() {
 
     const [columnas] = useState([
         { headerName: "ID", field: "id_cabecera_solicitud", flex: 1, filter: true },
+        { headerName: "No Documento", field: "no_documento", flex: 1, filter: true },
         { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), flex: 1, filter: true },
-        { headerName: "Comentario", field: "comentario", flex: 1, filter: true },
         { headerName: "Creado Por", field: "creado_por", flex: 1, filter: true },
         { headerName: "Responsable", field: "usuario_responsable", flex: 1, filter: true },
         { headerName: "Despachador", field: "usuario_despacho", flex: 1, filter: true },
-        { headerName: "Departamento", field: "id_departamento", flex: 1, filter: true },
+        { headerName: "Departamento", field: "departamento", flex: 1, filter: true },
         { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, flex: 1, filter: true },
-        { headerName: "Clasificacion", field: "id_clasificacion", flex: 1, filter: true },
-        { headerName: "Sucursal", field: "id_sucursal", flex: 1, filter: true },
+        { headerName: "Clasificacion", field: "clasificacion", flex: 1, filter: true },
+        { headerName: "Sucursal", field: "sucursal", flex: 1, filter: true },
         { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), flex: 1, filter: true },
+        { headerName: "Comentario", field: "comentario", flex: 1, filter: true },
         { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, filter: true },
     ]);
 

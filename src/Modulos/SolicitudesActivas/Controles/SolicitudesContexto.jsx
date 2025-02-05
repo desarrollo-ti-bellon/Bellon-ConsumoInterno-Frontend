@@ -69,9 +69,51 @@ export const SolicitudesProveedor = ({ children }) => {
         }
     }
 
+    const cargarDepartamentos = async () => {
+        try {
+            const res = await obtenerDatos(`Departamento`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarDatos', payload: { propiedad: 'departamentos', valor: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando los departamentos', tipo: 'warning' } });
+        }
+    }
+
+    const cargarClasificaciones = async () => {
+        try {
+            const res = await obtenerDatos(`Clasificacion`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarDatos', payload: { propiedad: 'clasificaciones', valor: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando las clasificaciones', tipo: 'warning' } });
+        }
+    }
+
+    const cargarSucursales = async () => {
+        try {
+            const res = await obtenerDatos(`Sucursal`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarDatos', payload: { propiedad: 'sucursales', valor: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando las sucursales', tipo: 'warning' } });
+        }
+    }
+
     const cargarDatosIniciales = async () => {
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' });
         await cargarEstadosSolicitudes();
+        await cargarDepartamentos();
+        await cargarClasificaciones();
+        await cargarSucursales();
         await cargarSolicitudes();
         dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' });
     }
@@ -81,6 +123,7 @@ export const SolicitudesProveedor = ({ children }) => {
     }
 
     const recuperar = (id) => {
+        // dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mensaje: 'Esta seguro que quiere recuperar este consumo interno?', funcionEjecutar: action.payload.funcionEjecutar } })
         obtenerDatosConId('',)
     }
 

@@ -15,7 +15,7 @@ export default function DetalleSolicitudes() {
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const gridRef = useRef(null);
 
-    const nuevaSolicitud = state.formulario.id_cabecera_solicitud === null;
+    const nuevaSolicitud = state.formulario.id_cabecera_solicitud == null;
     const inactivarCamposEditablesTabla = nuevaSolicitud;
 
     const campoEdicionEstilos = !inactivarCamposEditablesTabla ? {} : {
@@ -35,7 +35,7 @@ export default function DetalleSolicitudes() {
     };
 
     const [columnasProductos] = useState([
-        { headerName: 'Producto ID', field: "id_producto", flex: 1 },
+        { headerName: 'Producto ID', field: "no_producto", flex: 1 },
         { headerName: 'Descripcion', field: "descripcion", flex: 4 },
         { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
         { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },

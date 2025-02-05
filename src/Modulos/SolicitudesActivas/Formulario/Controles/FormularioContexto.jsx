@@ -283,6 +283,7 @@ export const FormularioProveedor = ({ children }) => {
                     campos: {
                         ...state.inactivarCampos,
                         campo_id_cabecera_solicitud: true,
+                        campo_no_documento: true,
                         campo_fecha_creado: true,
                         campo_creado_por: true,
                         campo_id_departamento: true,
@@ -316,6 +317,7 @@ export const FormularioProveedor = ({ children }) => {
                         campos: {
                             ...state.inactivarCampos,
                             campo_id_cabecera_solicitud: true,
+                            campo_no_documento: true,
                             campo_fecha_creado: true,
                             campo_creado_por: true,
                             campo_id_departamento: true,
@@ -340,6 +342,7 @@ export const FormularioProveedor = ({ children }) => {
                         campos: {
                             ...state.camposRequeridos,
                             requerido_id_cabecera_solicitud: false,
+                            requerido__no_documento: false,
                             requerido_fecha_creado: false,
                             requerido_creado_por: false,
                             requerido_id_departamento: false,

@@ -7,9 +7,9 @@ import * as Icon from "react-bootstrap-icons"
 export default function FormularioSolicitudes() {
 
     const { state, dispatch, delegarResponsable } = useFormulario();
-    const { id_cabecera_solicitud, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, usuario_asistente_control, usuario_asistente_contabilidad, id_estado_solicitud, id_clasificacion, id_sucursal, fecha_modificado, modificado_por, comentario, total } = state.formulario;
-    const { campo_id_cabecera_solicitud, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_usuario_asistente_control, campo_usuario_asistente_contabilidad, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_fecha_modificado, campo_modificado_por, campo_comentario, campo_total } = state.inactivarCampos;
-    const { requerido_id_cabecera_solicitud, requerido_fecha_creado, requerido_creado_por, requerido_id_departamento, requerido_usuario_despacho, requerido_usuario_responsable, requerido_usuario_asistente_control, requerido_usuario_asistente_contabilidad, requerido_id_estado_solicitud, requerido_id_clasificacion, requerido_id_sucursal, requerido_fecha_modificado, requerido_modificado_por, requerido_comentario, requerido_total } = state.camposRequeridos;
+    const { id_cabecera_solicitud, no_documento, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, usuario_asistente_control, usuario_asistente_contabilidad, id_estado_solicitud, id_clasificacion, id_sucursal, fecha_modificado, modificado_por, comentario, total } = state.formulario;
+    const { campo_id_cabecera_solicitud, campo_no_documento, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_usuario_asistente_control, campo_usuario_asistente_contabilidad, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_fecha_modificado, campo_modificado_por, campo_comentario, campo_total } = state.inactivarCampos;
+    const { requerido_id_cabecera_solicitud, requerido_no_documento, requerido_fecha_creado, requerido_creado_por, requerido_id_departamento, requerido_usuario_despacho, requerido_usuario_responsable, requerido_usuario_asistente_control, requerido_usuario_asistente_contabilidad, requerido_id_estado_solicitud, requerido_id_clasificacion, requerido_id_sucursal, requerido_fecha_modificado, requerido_modificado_por, requerido_comentario, requerido_total } = state.camposRequeridos;
 
     useEffect(() => {
         dispatch({ type: 'limpiarFormulario' })
@@ -47,8 +47,8 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>ID Solicitud</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    value={id_cabecera_solicitud || ''}
-                                    disabled={campo_id_cabecera_solicitud}
+                                    value={no_documento || ''}
+                                    disabled={campo_no_documento}
                                 />
                             </Form.Group>
 
