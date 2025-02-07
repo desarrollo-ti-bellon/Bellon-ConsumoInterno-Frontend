@@ -1,6 +1,6 @@
 export const EstadoInicialFormulario = {
     formulario: {
-        id_cabecera_solicitud: 0,
+        id_cabecera_solicitud: null,
         no_documento: "",
         fecha_creado: "",
         comentario: "",
