@@ -270,9 +270,15 @@ export const FormularioProveedor = ({ children }) => {
                 return
             }
             setContador(contador + 1);
-            dispatch({ type: 'actualizarFormulario', payload: { id: 'usuario_responsable', value: state.comboUsuariosAprobadores[contador].nombre_usuario } })
         }
     }
+
+    useEffect(() => {
+        if (contador !== 0) {
+            dispatch({ type: 'actualizarFormulario', payload: { id: 'usuario_responsable', value: state.comboUsuariosAprobadores[contador]?.nombre_usuario ?? '' } })
+            dispatch({ type: 'actualizarFormulario', payload: { id: 'id_usuario_responsable', value: state.comboUsuariosAprobadores[contador]?.id_usuario_ci ?? 0 } })
+        }
+    }, [contador])
 
     useEffect(() => {
         cargarDatosIniciales();
@@ -285,19 +291,23 @@ export const FormularioProveedor = ({ children }) => {
                         campo_id_cabecera_solicitud: true,
                         campo_no_documento: true,
                         campo_fecha_creado: true,
+                        campo_comentario: true,
                         campo_creado_por: true,
-                        campo_id_departamento: true,
-                        campo_usuario_despacho: true,
                         campo_usuario_responsable: true,
+                        campo_usuario_despacho: true,
                         campo_usuario_asistente_control: true,
                         campo_usuario_asistente_contabilidad: true,
+                        campo_id_departamento: true,
                         campo_id_estado_solicitud: true,
                         campo_id_clasificacion: true,
                         campo_id_sucursal: true,
                         campo_fecha_modificado: true,
                         campo_modificado_por: true,
-                        campo_comentario: true,
                         campo_total: true,
+                        campo_id_usuario_responsable: true,
+                        campo_id_usuario_despacho: true,
+                        campo_id_usuario_asistente_inventario: true,
+                        campo_id_usuario_asistente_contabilidad: true
                     }
                 }
             });
@@ -319,10 +329,8 @@ export const FormularioProveedor = ({ children }) => {
                             campo_id_cabecera_solicitud: true,
                             campo_no_documento: true,
                             campo_fecha_creado: true,
-                            campo_creado_por: true,
                             campo_id_departamento: true,
                             campo_usuario_despacho: true,
-                            campo_usuario_responsable: true,
                             campo_usuario_asistente_control: false,
                             campo_usuario_asistente_contabilidad: false,
                             campo_id_estado_solicitud: true,
@@ -330,8 +338,15 @@ export const FormularioProveedor = ({ children }) => {
                             campo_id_sucursal: true,
                             campo_fecha_modificado: false,
                             campo_modificado_por: false,
+                            campo_total: true,
                             campo_comentario: false,
-                            campo_total: true
+                            campo_creado_por: true,
+                            campo_usuario_responsable: true,
+                            campo_usuario_despacho: true,
+                            campo_id_usuario_responsable: true,
+                            campo_id_usuario_despacho: true,
+                            campo_id_usuario_asistente_inventario: true,
+                            campo_id_usuario_asistente_contabilidad: true
                         }
                     }
                 });
@@ -342,12 +357,10 @@ export const FormularioProveedor = ({ children }) => {
                         campos: {
                             ...state.camposRequeridos,
                             requerido_id_cabecera_solicitud: false,
-                            requerido__no_documento: false,
+                            requerido_no_documento: false,
                             requerido_fecha_creado: false,
-                            requerido_creado_por: false,
                             requerido_id_departamento: false,
                             requerido_usuario_despacho: false,
-                            requerido_usuario_responsable: false,
                             requerido_usuario_asistente_control: false,
                             requerido_usuario_asistente_contabilidad: false,
                             requerido_id_estado_solicitud: false,
@@ -355,8 +368,15 @@ export const FormularioProveedor = ({ children }) => {
                             requerido_id_sucursal: false,
                             requerido_fecha_modificado: false,
                             requerido_modificado_por: false,
+                            requerido_total: false,
                             requerido_comentario: false,
-                            requerido_total: false
+                            requerido_creado_por: false,
+                            requerido_usuario_responsable: false,
+                            requerido_usuario_despacho: false,
+                            requerido_id_usuario_responsable: false,
+                            requerido_id_usuario_despacho: false,
+                            requerido_id_usuario_asistente_inventario: false,
+                            requerido_id_usuario_asistente_contabilidad: false
                         }
                     }
                 });
