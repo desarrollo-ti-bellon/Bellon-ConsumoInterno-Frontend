@@ -63,6 +63,7 @@ export const EstadoInicialFormulario = {
         requerido_id_usuario_asistente_inventario: true,
         requerido_id_usuario_asistente_contabilidad: true
     },
+    limiteAprobacion: 0,
     ultimaActualizacionDeRegistro: 'ninguna',
     lineas: [],
     validadoFormulario: false,
