@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer, useRef, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { useAlerta } from "../../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
 import { enviarDatos, guardarDatosEnLocalStorage, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual } from "../../../../FuncionesGlobales"
@@ -18,19 +18,20 @@ export const FormularioProveedor = ({ children }) => {
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
     const formData = useLocation();
     const navegar = useNavigate();
+    const [locacion] = useSearchParams();
     const tiempoFuera = useRef(null)
     const [contador, setContador] = useState(0);
 
     const obtenerIdEstadoSolicitudPorModulo = () => {
         const url = obtenerRutaUrlActual();
         const estadoMap = {
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS]: 'nueva',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES]: 'pendiente',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS]: 'aprobada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS]: 'rechazada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS]: 'entregada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS]: 'confirmada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS]: 'terminada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO]: 'nueva',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO]: 'pendiente',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO]: 'aprobada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO]: 'rechazada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO]: 'entregada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO]: 'confirmada',
+            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO]: 'terminada',
         };
         return estadoMap[url] || null;
     }
@@ -46,8 +47,18 @@ export const FormularioProveedor = ({ children }) => {
                 const json = res.data;
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
                 dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
+                // Buscar el usuario aprobador
+                const usuarioAprobador = state.comboUsuariosAprobadores?.find(usuario => usuario.id_usuario_ci == json.id_usuario_responsable);
+
+                // Si se encuentra el usuario, definimos el limite
+                if (usuarioAprobador) {
+                    definirLimiteAprobacion(usuarioAprobador.limite);  // Usamos el operador de coalescencia nula (??) para evitar undefined
+                } else {
+                    console.log('Usuario aprobador no encontrado');
+                    definirLimiteAprobacion(0);  // Definimos un valor predeterminado de 0 si el usuario no es encontrado
+                }
             }).catch((err) => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando la solicitud #${2}`, tipo: 'warning' } });
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando la solicitud #${formData.state.id_cabecera_solicitud}`, tipo: 'warning' } });
             })
     }
 
@@ -150,9 +161,9 @@ export const FormularioProveedor = ({ children }) => {
                 json = res.data;
             }
             // dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
+            // dispatch({ type: 'llenarComboUsuariosCI', payload: { comboUsuariosCI: json } });
             dispatch({ type: 'actualizarFormulario', payload: { id: 'id_departamento', value: json.id_departamento } })
             dispatch({ type: 'actualizarFormulario', payload: { id: 'id_sucursal', value: json.id_sucursal } })
-            // dispatch({ type: 'llenarComboUsuariosCI', payload: { comboUsuariosCI: json } });
             cargarUsuariosAprobadoresPorDepartamentos(json.id_departamento);
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las Posiciones`, tipo: 'warning' } });
@@ -255,15 +266,6 @@ export const FormularioProveedor = ({ children }) => {
         guardarLineas(lineas);
     }
 
-    const delegarResponsable = () => {
-        if (state.comboUsuariosAprobadores) {
-            if ((contador + 1) > state.comoUsuariosAprobadores.length) {
-                setContador(0);
-            }
-            setContador(contador + 1);
-        }
-    }
-
     const cargarPerfilUsuarioLogueado = async () => {
         try {
             return await obtenerDatos(`UsuariosCI/Correo?correo=${obtenerNombreUsuarioLoggeado()}`, null)
@@ -285,7 +287,6 @@ export const FormularioProveedor = ({ children }) => {
     }
 
     const cargarDatosIniciales = async () => {
-        dispatchCargandoInformacion({ action: 'mostrarCargandoInformacion' })
         await cargarPerfilUsuarioLogueado();
         await cargarEstadosSolicitudes();
         await cargarDepartamentos();
@@ -295,8 +296,6 @@ export const FormularioProveedor = ({ children }) => {
         await cargarUsuariosCI();
         await cargarClasificaciones();
         await cargarUsuariosCIConCorreo();
-        await cargarSolicitudPorId();
-        dispatchCargandoInformacion({ action: 'limpiarCargandoInformacion' })
     }
 
     const validarFormulario = () => {
@@ -315,16 +314,111 @@ export const FormularioProveedor = ({ children }) => {
         dispatch({ type: 'actualizarFormulario', payload: { id, value } })
     }
 
-    useEffect(() => {
-        if (contador !== 0) {
-            dispatch({ type: 'actualizarFormulario', payload: { id: 'usuario_responsable', value: state.comboUsuariosAprobadores[contador]?.nombre_usuario ?? '' } })
-            dispatch({ type: 'actualizarFormulario', payload: { id: 'id_usuario_responsable', value: state.comboUsuariosAprobadores[contador]?.id_usuario_ci ?? 0 } })
+    const delegarResponsable = () => {
+        if (!state.comboUsuariosAprobadores) {
+            return;
         }
+        setContador(contador + 1);
+    }
+
+    const definirLimiteAprobacion = (limite) => {
+        dispatch({ type: 'difinirLimite', payload: { limiteAprobacion: limite ?? 0 } });
+    }
+
+    /* CONTROLANDO LA DELEGACION DEL LIMITE */
+    useEffect(() => {
+        if (contador >= state.comboUsuariosAprobadores.length) {
+            setContador(0);
+        }
+        actualizarFormulario('id_usuario_responsable', state.comboUsuariosAprobadores[contador]?.id_usuario_ci ?? 0);
+        actualizarFormulario('usuario_responsable', state.comboUsuariosAprobadores[contador]?.nombre_usuario ?? '');
+        definirLimiteAprobacion(state.comboUsuariosAprobadores[contador]?.limite ?? 0);
     }, [contador])
 
-    useEffect(() => {
-        cargarDatosIniciales();
+    const cargarDatos = async () => {
+        dispatchCargandoInformacion({ action: 'mostrarCargandoInformacion' })
+        await cargarDatosIniciales();
+
+        // MODO ESCRITURA O MODO VER
         if (formData.state) {
+            await cargarSolicitudPorId();
+            const accion = locacion.get('accion');
+
+            if (accion === 'editar') {
+                dispatch({
+                    type: 'inactivarCampos',
+                    payload: {
+                        campos: {
+                            ...state.inactivarCampos,
+                            campo_id_cabecera_solicitud: true,
+                            campo_no_documento: true,
+                            campo_fecha_creado: true,
+                            campo_comentario: false,
+                            campo_creado_por: true,
+                            campo_usuario_responsable: true,
+                            campo_usuario_despacho: true,
+                            campo_usuario_asistente_control: true,
+                            campo_usuario_asistente_contabilidad: true,
+                            campo_id_departamento: false,
+                            campo_id_estado_solicitud: false,
+                            campo_id_clasificacion: false,
+                            campo_id_sucursal: false,
+                            campo_fecha_modificado: true,
+                            campo_modificado_por: true,
+                            campo_total: true,
+                            campo_id_usuario_responsable: true,
+                            campo_id_usuario_despacho: true,
+                            campo_id_usuario_asistente_inventario: true,
+                            campo_id_usuario_asistente_contabilidad: true,
+                        }
+                    }
+                });
+            }
+
+            if (accion === 'ver') {
+                dispatch({
+                    type: 'inactivarCampos',
+                    payload: {
+                        campos: {
+                            ...state.inactivarCampos,
+                            campo_id_cabecera_solicitud: true,
+                            campo_no_documento: true,
+                            campo_fecha_creado: true,
+                            campo_id_departamento: true,
+                            campo_usuario_despacho: true,
+                            campo_usuario_asistente_control: true,
+                            campo_usuario_asistente_contabilidad: true,
+                            campo_id_estado_solicitud: true,
+                            campo_id_clasificacion: true,
+                            campo_id_sucursal: true,
+                            campo_fecha_modificado: true,
+                            campo_modificado_por: true,
+                            campo_total: true,
+                            campo_comentario: true,
+                            campo_creado_por: true,
+                            campo_usuario_responsable: true,
+                            campo_usuario_despacho: true,
+                            campo_id_usuario_responsable: true,
+                            campo_id_usuario_despacho: true,
+                            campo_id_usuario_asistente_inventario: true,
+                            campo_id_usuario_asistente_contabilidad: true
+                        }
+                    }
+                });
+            }
+
+        }
+
+        // MODO LECTURA O MODO NUEVO
+        if (!formData.state) {
+            const habilitarCampos = (obtenerIdEstadoSolicitudPorModulo() === 'nueva');
+            if (habilitarCampos) {
+                // LLENAR FORMULARIO
+                dispatch({ type: 'actualizarFormulario', payload: { id: 'fecha_creado', value: obtenerFechaActual() } })
+                dispatch({ type: 'actualizarFormulario', payload: { id: 'creado_por', value: obtenerNombreUsuarioLoggeado() } })
+                dispatch({ type: 'actualizarFormulario', payload: { id: 'id_estado_solicitud', value: 1 } })
+            }
+
             dispatch({
                 type: 'inactivarCampos',
                 payload: {
@@ -333,97 +427,67 @@ export const FormularioProveedor = ({ children }) => {
                         campo_id_cabecera_solicitud: true,
                         campo_no_documento: true,
                         campo_fecha_creado: true,
-                        campo_comentario: true,
-                        campo_creado_por: true,
-                        campo_usuario_responsable: true,
-                        campo_usuario_despacho: true,
-                        campo_usuario_asistente_control: true,
-                        campo_usuario_asistente_contabilidad: true,
-                        campo_id_departamento: true,
-                        campo_id_estado_solicitud: true,
-                        campo_id_clasificacion: true,
-                        campo_id_sucursal: true,
+                        campo_id_departamento: false,
+                        campo_usuario_despacho: false,
+                        campo_usuario_asistente_control: false,
+                        campo_usuario_asistente_contabilidad: false,
+                        campo_id_estado_solicitud: false,
+                        campo_id_clasificacion: false,
+                        campo_id_sucursal: false,
                         campo_fecha_modificado: true,
                         campo_modificado_por: true,
                         campo_total: true,
-                        campo_id_usuario_responsable: true,
+                        campo_comentario: false,
+                        campo_creado_por: true,
+                        campo_usuario_responsable: true,
+                        campo_usuario_despacho: true,
+                        campo_id_usuario_responsable: false,
                         campo_id_usuario_despacho: true,
                         campo_id_usuario_asistente_inventario: true,
-                        campo_id_usuario_asistente_contabilidad: true,
+                        campo_id_usuario_asistente_contabilidad: true
                     }
                 }
             });
-        } else {
-            const habilitarCampos = (obtenerIdEstadoSolicitudPorModulo() === 'nueva');
-            if (habilitarCampos) {
-                // LLENAR FORMULARIO
-
-                dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: 'ninguna' } })
-                dispatch({ type: 'actualizarFormulario', payload: { id: 'fecha_creado', value: obtenerFechaActual() } })
-                dispatch({ type: 'actualizarFormulario', payload: { id: 'creado_por', value: obtenerNombreUsuarioLoggeado() } })
-                dispatch({ type: 'actualizarFormulario', payload: { id: 'id_estado_solicitud', value: 1 } })
-
-                dispatch({
-                    type: 'inactivarCampos',
-                    payload: {
-                        campos: {
-                            ...state.inactivarCampos,
-                            campo_id_cabecera_solicitud: true,
-                            campo_no_documento: true,
-                            campo_fecha_creado: false,
-                            campo_id_departamento: false,
-                            campo_usuario_despacho: false,
-                            campo_usuario_asistente_control: false,
-                            campo_usuario_asistente_contabilidad: false,
-                            campo_id_estado_solicitud: false,
-                            campo_id_clasificacion: false,
-                            campo_id_sucursal: false,
-                            campo_fecha_modificado: false,
-                            campo_modificado_por: false,
-                            campo_total: true,
-                            campo_comentario: false,
-                            campo_creado_por: true,
-                            campo_usuario_responsable: true,
-                            campo_usuario_despacho: false,
-                            campo_id_usuario_responsable: false,
-                            campo_id_usuario_despacho: false,
-                            campo_id_usuario_asistente_inventario: false,
-                            campo_id_usuario_asistente_contabilidad: false
-                        }
-                    }
-                });
-
-                dispatch({
-                    type: 'camposRequeridos',
-                    payload: {
-                        campos: {
-                            ...state.camposRequeridos,
-                            requerido_id_cabecera_solicitud: false,
-                            requerido_no_documento: false,
-                            requerido_fecha_creado: false,
-                            requerido_id_departamento: false,
-                            requerido_usuario_despacho: false,
-                            requerido_usuario_asistente_control: false,
-                            requerido_usuario_asistente_contabilidad: false,
-                            requerido_id_estado_solicitud: false,
-                            requerido_id_clasificacion: true,
-                            requerido_id_sucursal: false,
-                            requerido_fecha_modificado: false,
-                            requerido_modificado_por: false,
-                            requerido_total: false,
-                            requerido_comentario: false,
-                            requerido_creado_por: false,
-                            requerido_usuario_responsable: false,
-                            requerido_usuario_despacho: false,
-                            requerido_id_usuario_responsable: false,
-                            requerido_id_usuario_despacho: false,
-                            requerido_id_usuario_asistente_inventario: false,
-                            requerido_id_usuario_asistente_contabilidad: false
-                        }
-                    }
-                });
-            }
         }
+
+        //CAMPOS REQUERIDOS
+        dispatch({
+            type: 'camposRequeridos',
+            payload: {
+                campos: {
+                    ...state.camposRequeridos,
+                    requerido_id_cabecera_solicitud: false,
+                    requerido_no_documento: false,
+                    requerido_fecha_creado: false,
+                    requerido_id_departamento: false,
+                    requerido_usuario_despacho: false,
+                    requerido_usuario_asistente_control: false,
+                    requerido_usuario_asistente_contabilidad: false,
+                    requerido_id_estado_solicitud: false,
+                    requerido_id_clasificacion: true,
+                    requerido_id_sucursal: false,
+                    requerido_fecha_modificado: false,
+                    requerido_modificado_por: false,
+                    requerido_total: false,
+                    requerido_comentario: false,
+                    requerido_creado_por: false,
+                    requerido_usuario_responsable: false,
+                    requerido_usuario_despacho: false,
+                    requerido_id_usuario_responsable: false,
+                    requerido_id_usuario_despacho: false,
+                    requerido_id_usuario_asistente_inventario: false,
+                    requerido_id_usuario_asistente_contabilidad: false
+                }
+            }
+        });
+
+        // ACTUALIZAR ULTIMA ACTUALIZACION DE REGISTRO
+        dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: 'ninguna' } })
+        dispatchCargandoInformacion({ action: 'limpiarCargandoInformacion' })
+    }
+
+    useEffect(() => {
+        cargarDatos();
     }, [])
 
     useEffect(() => {
