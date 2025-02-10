@@ -100,5 +100,9 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
         return { ...state, comboUsuariosAprobadores: action.payload.comboUsuariosAprobadores }
     }
 
+    if (action.type === 'difinirLimite') {
+        return { ...state, limiteAprobacion: action.payload.limiteAprobacion }
+    }
+
     return state;
 }
