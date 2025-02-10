@@ -12,15 +12,6 @@ export default function ListadoSolicitudes() {
     const { state, dispatch, eliminarSolicitud, recuperarSolicitudes } = useSolicitudes()
     const navegar = useNavigate();
 
-    const abrirFormulario = (parametros) => {
-        actualizarEstado(parametros)
-        dispatch({ type: 'mostrarModalAgregarSolicitud', payload: { mostrar: true } })
-    }
-
-    const actualizarEstado = (parametros) => {
-        navegar('', { state: parametros });
-    };
-
     const BadgedEstadoSolicitud = (parametros) => {
         return (
             <Badge bg="primary">{parametros.data.estado_solicitud_descripcion ?? 'N/A'}</Badge>
@@ -48,7 +39,8 @@ export default function ListadoSolicitudes() {
     const BotonesAcciones = (parametros) => {
         return (
             <>
-                <Button  title="ver solicitud" size='sm' variant='outline-primary' onClick={() => abrirFormulario(parametros.data)}>             <Icon.EyeFill />               </Button>
+                <Button title="Editar solicitud" size='sm' variant='outline-primary' onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>
+                <Button title="Ver solicitud" size='sm' variant='outline-primary' onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>
             </>
         )
     }
@@ -69,17 +61,12 @@ export default function ListadoSolicitudes() {
         { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, filter: true },
     ]);
 
-    const mostrarAgregarNuevaSolicitud = () => {
-        navegar('', { state: null });
-        dispatch({ type: 'mostrarModalAgregarSolicitud', payload: { mostrar: true } })
-    }
-
     return (
         <Container fluid>
             <Row>
                 <Col>
                     <div style={{ float: 'right' }}>
-                        <Button hidden={obtenerIdEstadoSolicitudPorModulo() !== 'nueva'} size='md' variant='primary' className='mb-2' onClick={() => mostrarAgregarNuevaSolicitud()}><Icon.Plus />Nuevo</Button>
+                        <Button hidden={obtenerIdEstadoSolicitudPorModulo() !== 'nueva'} size='md' variant='primary' className='mb-2' onClick={() => navegar('formulario', { state: null })}><Icon.Plus />Nuevo</Button>
                     </div>
                 </Col>
             </Row>
