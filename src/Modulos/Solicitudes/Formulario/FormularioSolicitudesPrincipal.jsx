@@ -6,6 +6,8 @@ import ModalProductos from './Modales/ModalProductos'
 import BotonesAcciones from './Vistas/BotonesAcciones'
 import DetalleSolicitudes from './Vistas/DetalleSolicitudes'
 import FormularioSolicitudes from './Vistas/FormularioSolicitudes'
+import ListadoLinks from '../../../ComponentesGlobales/ListadoLinks'
+import CambiarAccionFormulario from '../../../ComponentesGlobales/CambiarAccionFormulario'
 
 export default function FormularioSolicitudesPrincipal() {
     return (
@@ -13,12 +15,13 @@ export default function FormularioSolicitudesPrincipal() {
             <Container fluid>
                 <Row>
                     <Col>
-                        {/* <ListadoLinks /> */}
+                        <ListadoLinks />
                         <ModalProductos />
                     </Col>
                 </Row>
                 <Row>
                     <Col>
+                        <CambiarAccionFormulario />
                         <BotonesAcciones />
                     </Col>
                 </Row>
