@@ -34,7 +34,7 @@ const rutas = createBrowserRouter([
                 element: <Inicio />,
             },
 
-            // VISTAS PRINCIPALES
+            // VISTAS SOLICITUDES ACTIVAS
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
                 element: <SolicitudesPrincipal />,
@@ -61,7 +61,7 @@ const rutas = createBrowserRouter([
             },
 
 
-            // VISTAS HISTORICOS
+            // VISTAS HISTORICOS (CONSUMOS INTERNOS YA REALIZADOS)
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
                 element: <SolicitudesPrincipal />,
@@ -70,27 +70,27 @@ const rutas = createBrowserRouter([
             // FORMULARIO DE SOLICITUDES 
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO,
-                element: <SolicitudesPrincipal />,
+                element: <FormularioSolicitudesPrincipal />,
             },
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO,
-                element: <SolicitudesPrincipal />,
+                element: <FormularioSolicitudesPrincipal />,
             },
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO,
-                element: <SolicitudesPrincipal />,
+                element: <FormularioSolicitudesPrincipal />,
             },
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO,
-                element: <SolicitudesPrincipal />,
+                element: <FormularioSolicitudesPrincipal />,
             },
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO,
-                element: <SolicitudesPrincipal />,
+                element: <FormularioSolicitudesPrincipal />,
             },
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO,
-                element: <SolicitudesPrincipal />,
+                element: <FormularioSolicitudesPrincipal />,
             },
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO,
