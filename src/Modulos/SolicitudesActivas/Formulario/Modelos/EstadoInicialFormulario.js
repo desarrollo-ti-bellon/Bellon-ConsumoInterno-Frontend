@@ -15,9 +15,9 @@ export const EstadoInicialFormulario = {
         id_sucursal: "",
         total: 0,
         id_usuario_responsable: 0,
-        id_usuario_despacho: 0,
-        id_usuario_asistente_inventario: 0,
-        id_usuario_asistente_contabilidad: 0,
+        id_usuario_despacho: null,
+        id_usuario_asistente_inventario: null,
+        id_usuario_asistente_contabilidad: null,
     },
     inactivarCampos: {
         campo_id_cabecera_solicitud: true,

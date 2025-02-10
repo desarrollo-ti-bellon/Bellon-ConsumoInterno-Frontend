@@ -1,10 +1,11 @@
 import { createContext, useEffect, useReducer, useRef, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useAlerta } from "../../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
-import { enviarDatos, obtenerDatos, obtenerDatosConId, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual } from "../../../../FuncionesGlobales"
+import { enviarDatos, guardarDatosEnLocalStorage, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual } from "../../../../FuncionesGlobales"
 import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 import { formularioReducer } from "./formularioReducer"
+import { useModalAlerta } from "../../../../ControlesGlobales/ModalAlerta/useModalAlerta"
 
 export const FormularioContexto = createContext(null)
 
@@ -13,8 +14,10 @@ export const FormularioProveedor = ({ children }) => {
     const [state, dispatch] = useReducer(formularioReducer, EstadoInicialFormulario)
 
     const { dispatch: dispatchAlerta } = useAlerta();
+    const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
     const formData = useLocation();
+    const navegar = useNavigate();
     const tiempoFuera = useRef(null)
     const [contador, setContador] = useState(0);
 
@@ -176,26 +179,13 @@ export const FormularioProveedor = ({ children }) => {
             if (res.status !== 204) {
                 json = res.data;
             }
-            dispatch({ type: 'llenarComboUsuariosAprobadores', payload: { comboUsuariosAprobadores: json } });
             setContador(0);
-            dispatch({ type: 'actualizarFormulario', payload: { id: 'usuario_responsable', value: json[0].nombre_usuario } })
+            dispatch({ type: 'llenarComboUsuariosAprobadores', payload: { comboUsuariosAprobadores: json } });
+            actualizarFormulario('id_usuario_responsable', json[0].id_usuario_ci)
+            actualizarFormulario('usuario_responsable', json[0].nombre_usuario)
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las UsuariosCI/Departamento`, tipo: 'warning' } });
         }
-    }
-
-    const cargarDatosIniciales = async () => {
-        dispatchCargandoInformacion({ action: 'mostrarCargandoInformacion' })
-        await cargarEstadosSolicitudes();
-        await cargarDepartamentos();
-        await cargarUsuarios();
-        await cargarSucursales();
-        await cargarPosiciones();
-        await cargarUsuariosCI();
-        await cargarClasificaciones();
-        await cargarUsuariosCIConCorreo();
-        await cargarSolicitudPorId();
-        dispatchCargandoInformacion({ action: 'limpiarCargandoInformacion' })
     }
 
     const guardar = async () => {
@@ -215,6 +205,7 @@ export const FormularioProveedor = ({ children }) => {
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
             })
+        noValidarFormulario();
     }
 
     const guardarLineas = async (parametros) => {
@@ -266,11 +257,62 @@ export const FormularioProveedor = ({ children }) => {
 
     const delegarResponsable = () => {
         if (state.comboUsuariosAprobadores) {
-            if ((contador + 1) > state.comboUsuariosAprobadores.length) {
-                return
+            if ((contador + 1) > state.comoUsuariosAprobadores.length) {
+                setContador(0);
             }
             setContador(contador + 1);
         }
+    }
+
+    const cargarPerfilUsuarioLogueado = async () => {
+        try {
+            return await obtenerDatos(`UsuariosCI/Correo?correo=${obtenerNombreUsuarioLoggeado()}`, null)
+                .then((res) => {
+                    let json = null;
+                    if (res.status != 204) {
+                        json = res.data;
+                        guardarDatosEnLocalStorage('perfilUsuarioLogueado', JSON.stringify(json))
+                    } else {
+                        dispatchModalAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'No se ha encontrado el perfil del usuario logueado!', tipo: 'warning' } });
+                        setTimeout(() => {
+                            navegar('/403')
+                        }, 3000);
+                    }
+                })
+        } catch (error) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las Posiciones`, tipo: 'warning' } });
+        }
+    }
+
+    const cargarDatosIniciales = async () => {
+        dispatchCargandoInformacion({ action: 'mostrarCargandoInformacion' })
+        await cargarPerfilUsuarioLogueado();
+        await cargarEstadosSolicitudes();
+        await cargarDepartamentos();
+        await cargarUsuarios();
+        await cargarSucursales();
+        await cargarPosiciones();
+        await cargarUsuariosCI();
+        await cargarClasificaciones();
+        await cargarUsuariosCIConCorreo();
+        await cargarSolicitudPorId();
+        dispatchCargandoInformacion({ action: 'limpiarCargandoInformacion' })
+    }
+
+    const validarFormulario = () => {
+        dispatch({ type: 'validarFormulario', payload: { validadoFormulario: true } })
+    }
+
+    const noValidarFormulario = () => {
+        dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
+    }
+
+    const limpiarFormulario = () => {
+        dispatch({ type: 'limpiarFormulario' })
+    }
+
+    const actualizarFormulario = (id, value) => {
+        dispatch({ type: 'actualizarFormulario', payload: { id, value } })
     }
 
     useEffect(() => {
@@ -307,7 +349,7 @@ export const FormularioProveedor = ({ children }) => {
                         campo_id_usuario_responsable: true,
                         campo_id_usuario_despacho: true,
                         campo_id_usuario_asistente_inventario: true,
-                        campo_id_usuario_asistente_contabilidad: true
+                        campo_id_usuario_asistente_contabilidad: true,
                     }
                 }
             });
@@ -317,7 +359,7 @@ export const FormularioProveedor = ({ children }) => {
                 // LLENAR FORMULARIO
 
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: 'ninguna' } })
-                dispatch({ type: 'actualizarFormulario', payload: { id: 'fecha_creado', value: new Date().toISOString().split('T')[0] } })
+                dispatch({ type: 'actualizarFormulario', payload: { id: 'fecha_creado', value: obtenerFechaActual() } })
                 dispatch({ type: 'actualizarFormulario', payload: { id: 'creado_por', value: obtenerNombreUsuarioLoggeado() } })
                 dispatch({ type: 'actualizarFormulario', payload: { id: 'id_estado_solicitud', value: 1 } })
 
@@ -328,25 +370,25 @@ export const FormularioProveedor = ({ children }) => {
                             ...state.inactivarCampos,
                             campo_id_cabecera_solicitud: true,
                             campo_no_documento: true,
-                            campo_fecha_creado: true,
-                            campo_id_departamento: true,
-                            campo_usuario_despacho: true,
+                            campo_fecha_creado: false,
+                            campo_id_departamento: false,
+                            campo_usuario_despacho: false,
                             campo_usuario_asistente_control: false,
                             campo_usuario_asistente_contabilidad: false,
-                            campo_id_estado_solicitud: true,
+                            campo_id_estado_solicitud: false,
                             campo_id_clasificacion: false,
-                            campo_id_sucursal: true,
+                            campo_id_sucursal: false,
                             campo_fecha_modificado: false,
                             campo_modificado_por: false,
                             campo_total: true,
                             campo_comentario: false,
                             campo_creado_por: true,
                             campo_usuario_responsable: true,
-                            campo_usuario_despacho: true,
-                            campo_id_usuario_responsable: true,
-                            campo_id_usuario_despacho: true,
-                            campo_id_usuario_asistente_inventario: true,
-                            campo_id_usuario_asistente_contabilidad: true
+                            campo_usuario_despacho: false,
+                            campo_id_usuario_responsable: false,
+                            campo_id_usuario_despacho: false,
+                            campo_id_usuario_asistente_inventario: false,
+                            campo_id_usuario_asistente_contabilidad: false
                         }
                     }
                 });
@@ -409,7 +451,7 @@ export const FormularioProveedor = ({ children }) => {
     }, [state.formulario, state.validadoFormulario])
 
     return (
-        <FormularioContexto.Provider value={{ state, dispatch, guardar, guardarLineas, pasarLineasDelModalAlDetalle, obtenerIdEstadoSolicitudPorModulo, delegarResponsable }}>
+        <FormularioContexto.Provider value={{ state, dispatch, guardar, guardarLineas, pasarLineasDelModalAlDetalle, obtenerIdEstadoSolicitudPorModulo, delegarResponsable, actualizarFormulario, validarFormulario, noValidarFormulario, limpiarFormulario }}>
             {children}
         </FormularioContexto.Provider>
     )

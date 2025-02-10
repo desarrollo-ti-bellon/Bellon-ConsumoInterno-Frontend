@@ -6,20 +6,19 @@ import * as Icon from "react-bootstrap-icons"
 
 export default function FormularioSolicitudes() {
 
-    const { state, dispatch, delegarResponsable } = useFormulario();
+    const { state, dispatch, delegarResponsable, validarFormulario: validarFormularioReducer, noValidarFormulario, actualizarFormulario, limpiarFormulario } = useFormulario();
     const { id_cabecera_solicitud, no_documento, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, usuario_asistente_control, usuario_asistente_contabilidad, id_estado_solicitud, id_clasificacion, id_sucursal, comentario, total } = state.formulario;
     const { campo_id_cabecera_solicitud, campo_no_documento, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_usuario_asistente_control, campo_usuario_asistente_contabilidad, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_comentario, campo_total } = state.inactivarCampos;
     const { requerido_id_cabecera_solicitud, requerido_no_documento, requerido_fecha_creado, requerido_creado_por, requerido_id_departamento, requerido_usuario_despacho, requerido_usuario_responsable, requerido_usuario_asistente_control, requerido_usuario_asistente_contabilidad, requerido_id_estado_solicitud, requerido_id_clasificacion, requerido_id_sucursal, requerido_comentario, requerido_total } = state.camposRequeridos;
 
     useEffect(() => {
-        dispatch({ type: 'limpiarFormulario' })
+        limpiarFormulario();
+        noValidarFormulario();
     }, [])
 
-    const actualizarFormulario = (e) => {
-        const { id, value } = e.target
-        dispatch({ type: 'actualizarFormulario', payload: { id, value } })
+    useEffect(() => {
         enviar();
-    }
+    }, [state.formulario])
 
     const enviar = () => {
         document.getElementById('enviarFormulario').click()
@@ -28,10 +27,10 @@ export default function FormularioSolicitudes() {
     const validarFormulario = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
+        noValidarFormulario();
         const form = e.currentTarget;
         if (form.checkValidity()) {
-            dispatch({ type: 'validarFormulario', payload: { validadoFormulario: true } })
+            validarFormularioReducer();
         }
     }
 
@@ -78,7 +77,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Estado Solicitud</Form.Label>
                                 <Form.Select
                                     value={id_estado_solicitud}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={id_estado_solicitud}
                                     isInvalid={requerido_id_estado_solicitud && !id_estado_solicitud}
                                     disabled={campo_id_estado_solicitud}
@@ -104,7 +103,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Departamento</Form.Label>
                                 <Form.Select
                                     value={id_departamento}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={id_departamento}
                                     isInvalid={requerido_id_departamento && !id_departamento}
                                     disabled={campo_id_departamento}
@@ -130,7 +129,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Sucursal</Form.Label>
                                 <Form.Select
                                     value={id_sucursal}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={id_sucursal}
                                     isInvalid={requerido_id_sucursal && !id_sucursal}
                                     disabled={campo_id_sucursal}
@@ -160,7 +159,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Clasificaciones</Form.Label>
                                 <Form.Select
                                     value={id_clasificacion}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={id_clasificacion}
                                     isInvalid={requerido_id_clasificacion && !id_clasificacion}
                                     disabled={campo_id_clasificacion}
@@ -187,7 +186,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Control
                                     type="text"
                                     value={usuario_responsable}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={usuario_responsable}
                                     isInvalid={requerido_usuario_responsable && !usuario_responsable}
                                     disabled={campo_usuario_responsable}
@@ -211,7 +210,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Control
                                     type="text"
                                     value={usuario_asistente_contabilidad}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={usuario_asistente_contabilidad}
                                     isInvalid={requerido_usuario_responsable && !usuario_asistente_contabilidad}
                                     disabled={campo_usuario_asistente_contabilidad}
@@ -227,7 +226,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Control
                                     type="text"
                                     value={usuario_asistente_control}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={usuario_asistente_control}
                                     isInvalid={requerido_usuario_asistente_control && !usuario_asistente_control}
                                     disabled={campo_usuario_asistente_control}
@@ -243,7 +242,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Control
                                     type="text"
                                     value={usuario_despacho}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={usuario_despacho}
                                     isInvalid={requerido_usuario_despacho && !usuario_despacho}
                                     disabled={campo_usuario_despacho}
@@ -263,7 +262,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Control
                                     type="text"
                                     value={total || ''}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={!isNaN(total)}
                                     isInvalid={total < 0}
                                     disabled={campo_total}
@@ -280,7 +279,7 @@ export default function FormularioSolicitudes() {
                                     as="textarea"
                                     rows={1}
                                     value={comentario}
-                                    onChange={actualizarFormulario}
+                                    onChange={(e) => actualizarFormulario(e.target.id, e.target.value)}
                                     isValid={comentario}
                                     isInvalid={requerido_comentario && !comentario}
                                     disabled={campo_comentario}
