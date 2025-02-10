@@ -8,7 +8,8 @@ axios.interceptors.response.use(
     (response) => response, // Pasar las respuestas exitosas directamente
     (error) => {
         if (error.response && error.response.status === 401) {
-            cerrarAcceso();
+            // cerrarAcceso();
+            refrescarToken();
             setTimeout(() => {
                 location.href = '/'
             }, 2000);
