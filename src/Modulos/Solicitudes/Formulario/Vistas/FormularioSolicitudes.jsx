@@ -193,7 +193,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Usuario Aprobador</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    value={usuario_responsable}
+                                    value={usuario_responsable || ''}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
@@ -231,7 +231,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Asistente Contabilidad</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    value={usuario_asistente_contabilidad}
+                                    value={usuario_asistente_contabilidad || ''}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
@@ -250,7 +250,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Asistente Control</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    value={usuario_asistente_control}
+                                    value={usuario_asistente_control || ''}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
@@ -269,7 +269,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Asistente Despacho</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    value={usuario_despacho}
+                                    value={usuario_despacho || ''}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
