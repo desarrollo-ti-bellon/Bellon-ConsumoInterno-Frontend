@@ -2,8 +2,10 @@ import * as Icon from "react-bootstrap-icons"
 import ClasificacionesPrincipal from "../../Modulos/Clasificaciones/ClasificacionesPrincipal"
 import SolicitudesPrincipal from "../../Modulos/SolicitudesActivas/SolicitudesPrincipal"
 import UsuariosPrincipal from "../../Modulos/Usuarios/UsuariosPrincipal"
+import FormularioSolicitudesPrincipal from "../../Modulos/SolicitudesActivas/Formulario/FormularioSolicitudesPrincipal"
 
 export const rutas = [
+    // PANTALLAS DE CONSULTAS SEGUN EL PERFIL DEL USUARIO LOGUEADO
     {
         ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
         componente: <SolicitudesPrincipal />,
@@ -53,6 +55,8 @@ export const rutas = [
         icono: <Icon.Circle />,
         grupo: 'Históricos'
     },
+
+    // MANTENIMIENTOS DE USUARIOS APARECEN SEGUN EL PERFIL DEL USUARIO 
     {
         ruta: import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
         componente: <ClasificacionesPrincipal />,

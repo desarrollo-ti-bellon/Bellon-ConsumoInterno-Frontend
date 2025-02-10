@@ -67,19 +67,36 @@ const rutas = createBrowserRouter([
                 element: <SolicitudesPrincipal />,
             },
 
-
-            // VISTAS PRINCIPALES-FORMULARIOS 
+            // FORMULARIO DE SOLICITUDES 
             {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO,
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO,
+                element: <SolicitudesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO,
+                element: <SolicitudesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO,
+                element: <SolicitudesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO,
+                element: <SolicitudesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO,
+                element: <SolicitudesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO,
+                element: <SolicitudesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO,
                 element: <FormularioSolicitudesPrincipal />,
             },
 
-
-            // VISTAS HISTORICOS-FORMULARIOS 
-            {
-                path: import.meta.env.VITE_APP_BELLON_HISTORICO_SOLICITUDES_FORMULARIO,
-                element: <FormularioSolicitudesPrincipal />,
-            },
 
             // VISTAS MANTENIMIENTOS
             {
