@@ -1,8 +1,8 @@
 import * as Icon from "react-bootstrap-icons"
 import ClasificacionesPrincipal from "../../Modulos/Clasificaciones/ClasificacionesPrincipal"
-import SolicitudesPrincipal from "../../Modulos/SolicitudesActivas/SolicitudesPrincipal"
+import SolicitudesPrincipal from "../../Modulos/Solicitudes/SolicitudesPrincipal"
 import UsuariosPrincipal from "../../Modulos/Usuarios/UsuariosPrincipal"
-import FormularioSolicitudesPrincipal from "../../Modulos/SolicitudesActivas/Formulario/FormularioSolicitudesPrincipal"
+import FormularioSolicitudesPrincipal from "../../Modulos/Solicitudes/Formulario/FormularioSolicitudesPrincipal"
 
 export const rutas = [
     // PANTALLAS DE CONSULTAS SEGUN EL PERFIL DEL USUARIO LOGUEADO

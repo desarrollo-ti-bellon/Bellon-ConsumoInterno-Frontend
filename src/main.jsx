@@ -9,8 +9,8 @@ import Estado404 from './ComponentesGlobales/Estado404.jsx';
 import EstadoError from './ComponentesGlobales/EstadoError.jsx';
 import PantallaPrincipal from './Modulos/PantallaPrincipal.jsx';
 import Inicio from './Modulos/Inicio/Inicio.jsx';
-import SolicitudesPrincipal from './Modulos/SolicitudesActivas/SolicitudesPrincipal.jsx';
-import FormularioSolicitudesPrincipal from './Modulos/SolicitudesActivas/Formulario/FormularioSolicitudesPrincipal.jsx';
+import SolicitudesPrincipal from './Modulos/Solicitudes/SolicitudesPrincipal.jsx';
+import FormularioSolicitudesPrincipal from './Modulos/Solicitudes/Formulario/FormularioSolicitudesPrincipal.jsx';
 import ClasificacionesPrincipal from './Modulos/Clasificaciones/ClasificacionesPrincipal.jsx';
 import UsuariosPrincipal from './Modulos/Usuarios/UsuariosPrincipal.jsx';
 
