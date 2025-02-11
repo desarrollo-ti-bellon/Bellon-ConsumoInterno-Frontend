@@ -277,6 +277,13 @@ export const tipoDocumento = (ruta) => {
         [import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES]: 'LIQ',
         [import.meta.env.VITE_APP_BELLON_LIQUIDACIONES_FORMULARIO]: 'LIQ',
         [import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO]: 'LIQ',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS]: 'CIN',
     };
     return mapping[ruta] || ''; // Retorna el valor asociado o '' si no existe
 }
