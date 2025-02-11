@@ -15,6 +15,7 @@ import { ModalConfirmacionProveedor } from '../ControlesGlobales/ModalConfirmaci
 import { ModalErrorRedireccionProveedor } from '../ControlesGlobales/ModalErrorRedireccion/ModalErrorRedireccionProveedor'
 import { NotasProveedor } from '../ControlesGlobales/Notas/NotasProveedor'
 import { TiempoFueraProveedor } from '../ControlesGlobales/TiempoFuera/TiempoFueraProveedor'
+import ModalAlerta from '../ComponentesGlobales/ModalAlerta'
 
 export default function PantallaPrincipal() {
     return (
@@ -36,6 +37,7 @@ export default function PantallaPrincipal() {
                                                     <Alertas />
                                                     <CargandoInformacion />
                                                     <ModalConfirmacion />
+                                                    <ModalAlerta />
                                                     {/* ------------------- */}
                                                 </Col>
                                             </Row>
