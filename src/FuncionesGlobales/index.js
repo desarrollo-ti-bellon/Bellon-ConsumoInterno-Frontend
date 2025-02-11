@@ -6,21 +6,28 @@ moment.locale(import.meta.env.VITE_APP_LOCALE_MOMENT);
 
 axios.interceptors.response.use(
     (response) => response, // Pasar las respuestas exitosas directamente
-    (error) => {
+    async (error) => {
         if (error.response && error.response.status === 401) {
-            // cerrarAcceso();
-            refrescarToken();
-            setTimeout(() => {
-                location.href = '/'
-            }, 2000);
+            try {
+                await refrescarToken(); // Asume que refrescarToken actualiza el token en localStorage
+                const obtenerToken = obtenerDatosDelLocalStorage(localStorageNombre);
+                axios.defaults.headers.common[
+                    "Authorization"
+                ] = `Bearer ${obtenerToken.accessToken}`;
+                // Reintentar la petición original con el nuevo token
+                return axios(error.config);
+            } catch (refreshError) {
+                // Manejar el error de refresco de token si es necesario
+                return Promise.reject(refreshError);
+            }
         }
         if (error.response && error.response.status === 403) {
             setTimeout(() => {
-                location.href = '/403'
+                location.href = "/403";
             }, 500);
         }
-        if (error.toJSON().message === 'Network Error') {
-            alert("No hay conexión con el servidor, por favor verifique e intentelo de nuevo")
+        if (error.toJSON().message === "Network Error") {
+            alert("No hay conexión con el servidor, por favor verifique e intentelo de nuevo");
         }
         return Promise.reject(error); // Propagar otros errores
     }
