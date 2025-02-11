@@ -1,13 +1,13 @@
 import React from 'react'
 import { Accordion, Col, Container, Row } from 'react-bootstrap'
+import CambiarAccionFormulario from '../../../ComponentesGlobales/CambiarAccionFormulario'
+import ListadoLinks from '../../../ComponentesGlobales/ListadoLinks'
 import UltimaActualizacionDeRegistros from '../../../ComponentesGlobales/UltimaActualizacionDeRegistros'
 import { FormularioContexto, FormularioProveedor } from './Controles/FormularioContexto'
 import ModalProductos from './Modales/ModalProductos'
 import BotonesAcciones from './Vistas/BotonesAcciones'
 import DetalleSolicitudes from './Vistas/DetalleSolicitudes'
 import FormularioSolicitudes from './Vistas/FormularioSolicitudes'
-import ListadoLinks from '../../../ComponentesGlobales/ListadoLinks'
-import CambiarAccionFormulario from '../../../ComponentesGlobales/CambiarAccionFormulario'
 
 export default function FormularioSolicitudesPrincipal() {
     return (
