@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import * as Icon from "react-bootstrap-icons";
 import { formateadorDeFechas, formatoCantidad, formatoMoneda } from "../../../../FuncionesGlobales";
 import { useFormulario } from "../Controles/useFormulario";
-import { useEffect } from "react";
-import * as Icon from "react-bootstrap-icons"
 
 export default function FormularioSolicitudes() {
 
@@ -208,7 +208,7 @@ export default function FormularioSolicitudes() {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} md="4">
+                            <Form.Group as={Col} md="2">
                                 <Form.Label>Usuario Aprobador</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -218,9 +218,14 @@ export default function FormularioSolicitudes() {
                                     disabled
                                 />
                                 <Form.Control.Feedback type="invalid">
-                                    Se supero el limite definido del usuario responsable
+                                    Limite superado del usuario responsable
                                 </Form.Control.Feedback>
-                                <Button variant="primary" onClick={delegarResponsable}> <Icon.ArrowUp /> Delegar </Button>
+                            </Form.Group>
+
+                            <Form.Group as={Col} md="2">
+                                <div style={{ marginTop: '30px' }}>
+                                    <Button variant="primary" onClick={() => { delegarResponsable(); enviar(); }}> <Icon.ArrowUp /> Delegar </Button>
+                                </div>
                             </Form.Group>
 
                         </Row>
@@ -292,7 +297,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Total</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    value={total || ''}
+                                    defaultValue={formatoMoneda(total, 2, '')}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
