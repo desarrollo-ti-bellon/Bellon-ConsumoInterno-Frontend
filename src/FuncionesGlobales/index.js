@@ -294,3 +294,16 @@ export const tipoDocumento = (ruta) => {
     };
     return mapping[ruta] || ''; // Retorna el valor asociado o '' si no existe
 }
+
+export function quitarFormularioDeLaUrl(url) {
+    // Encuentra el índice de "formulario" en la URL
+    const indiceFormulario = url.indexOf('/formulario');
+
+    // Si "formulario" existe en la URL, corta todo desde allí hacia adelante
+    if (indiceFormulario !== -1) {
+        return url.substring(0, indiceFormulario);
+    }
+
+    // Si no se encuentra "/formulario", retorna la URL original
+    return url;
+}
