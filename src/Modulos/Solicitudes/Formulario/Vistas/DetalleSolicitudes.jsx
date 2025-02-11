@@ -11,13 +11,12 @@ import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelectio
 
 export default function DetalleSolicitudes() {
 
-    const { state, dispatch, guardarLineas } = useFormulario();
+    const { state, dispatch, guardarLineas, eliminaLinea } = useFormulario();
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const gridRef = useRef(null);
     const [locacion] = useSearchParams();
-    const nuevaSolicitud = (!state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') !== 'ver');
-    const inactivarCamposEditablesTabla = nuevaSolicitud;
+    const [inactivarCamposEditablesTabla, setInactivarCamposEditablesTabla] = useState(true);
 
     const campoEdicionEstilos = !inactivarCamposEditablesTabla ? {} : {
         backgroundColor: "#f2f2f2",
@@ -35,6 +34,15 @@ export default function DetalleSolicitudes() {
         gridRef.current = ref.current;
     };
 
+    const BotonesAcciones = (parametros) => {
+        const linea = parametros.data;
+        return (
+            <>
+                {!linea.acciones && (<Button title="Eliminar linea" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => eliminaLinea(linea.id_linea_solicitud)}> <Icon.Trash /> </Button>)}
+            </>
+        )
+    }
+
     const [columnasProductos] = useState([
         { headerName: 'Producto ID', field: "no_producto", flex: 1 },
         { headerName: 'Descripcion', field: "descripcion", flex: 4 },
@@ -43,6 +51,7 @@ export default function DetalleSolicitudes() {
         { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
         { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
         { headerName: 'Nota', field: "nota", editable: inactivarCamposEditablesTabla, cellStyle: quitarStylosColumnaFooter, flex: 4 },
+        { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
 
     const mostrarAgregarProductos = () => {
@@ -59,6 +68,11 @@ export default function DetalleSolicitudes() {
         document.addEventListener("click", obtenerEventoFueraTabla);
         return () => document.removeEventListener("click", obtenerEventoFueraTabla);
     }, [obtenerEventoFueraTabla]);
+
+    useEffect(() => {
+        const nuevaSolicitud = (state.formulario.id_cabecera_solicitud !== null && !locacion.get('accion'));
+        setInactivarCamposEditablesTabla(nuevaSolicitud);
+    },[])
 
     const cambioElValorEnLaTabla = (params) => {
 
@@ -120,7 +134,7 @@ export default function DetalleSolicitudes() {
             <Row>
                 <Col>
                     <div style={{ float: 'right', marginBottom: 5 }}>
-                        <Button disabled={nuevaSolicitud} size='md' variant='primary' onClick={() => mostrarAgregarProductos()}><Icon.Plus />Agregar Productos</Button>
+                        <Button disabled={inactivarCamposEditablesTabla} size='md' variant='primary' onClick={() => mostrarAgregarProductos()}><Icon.Plus />Agregar Productos</Button>
                     </div>
                 </Col>
             </Row>
