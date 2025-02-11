@@ -3,6 +3,7 @@ import { Badge, Button, Col, Container, Row } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
+import { useNotas } from '../../../ControlesGlobales/Notas/useNotas';
 import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerRutaUrlActual } from '../../../FuncionesGlobales';
 import { useSolicitudes } from '../Controles/useSolicitudes';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialSolicitudes';
@@ -11,12 +12,21 @@ export default function ListadoSolicitudes() {
 
     const { state, dispatch, eliminarSolicitud, recuperarSolicitudes } = useSolicitudes()
     const navegar = useNavigate();
+    const { dispatch: dispatchNotas } = useNotas();
 
     const BadgedEstadoSolicitud = (parametros) => {
         return (
             <Badge bg="primary">{parametros.data.estado_solicitud_descripcion ?? 'N/A'}</Badge>
         )
     }
+
+    const hacerNota = (parametros) => {
+        console.log(parametros);
+        dispatchNotas({ type: "mostrarNotas", payload: { mostrar: true } });
+        dispatchNotas({ type: 'mostrarFormularioNotas', payload: { mostrarFormulario: true } });
+        dispatchNotas({ type: "actualizarFormulario", payload: { id: 'no_documento', value: parametros.no_documento } });
+        dispatchNotas({ type: "actualizarFormulario", payload: { id: 'id_documento', value: parametros.id_cabecera_solicitud } });
+    };
 
     const obtenerIdEstadoSolicitudPorModulo = () => {
         const url = obtenerRutaUrlActual();
@@ -39,8 +49,9 @@ export default function ListadoSolicitudes() {
     const BotonesAcciones = (parametros) => {
         return (
             <>
-                <Button title="Editar solicitud" size='sm' variant='outline-primary' onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>
-                <Button title="Ver solicitud" size='sm' variant='outline-primary' onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>
+                <Button title="Editar solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>
+                <Button title="Ver solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>
+                <Button title="Poner nota" size='sm' variant="outline-primary" style={{ marginLeft: 5 }} onClick={() => hacerNota(parametros.data)} > {" "} <Icon.JournalBookmarkFill size={15} />{" "} </Button>
             </>
         )
     }
