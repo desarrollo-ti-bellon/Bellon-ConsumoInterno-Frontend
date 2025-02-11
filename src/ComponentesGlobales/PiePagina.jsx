@@ -6,7 +6,7 @@ export default function PiePagina({ backgroundClass = "bg-light" }) {
         <Navbar className={backgroundClass} fixed={"bottom"}>
             <Container fluid>
                 <Navbar.Brand className="fw-medium">
-                    Copyright © 2024 {import.meta.env.VITE_APP_EMPRESA_NOMBRE}
+                    Copyright © {new Date().getFullYear()} {import.meta.env.VITE_APP_EMPRESA_NOMBRE}
                 </Navbar.Brand>
             </Container>
         </Navbar>
