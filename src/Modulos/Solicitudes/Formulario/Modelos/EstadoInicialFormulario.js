@@ -1,7 +1,6 @@
 export const EstadoInicialFormulario = {
     formulario: {
         id_cabecera_solicitud: null,
-        no_serie_id: 0,
         no_documento: "",
         fecha_creado: "",
         creado_por: "",
@@ -13,15 +12,12 @@ export const EstadoInicialFormulario = {
         id_estado_solicitud: null,
         id_clasificacion: null,
         id_sucursal: "",
-        fecha_modificado: "",
-        modificado_por: "",
         comentario: "",
         total: 0,
         id_usuario_responsable: null,
         id_usuario_despacho: null,
         id_usuario_asistente_inventario: null,
         id_usuario_asistente_contabilidad: null,
-        lineas: []
     },
     inactivarCampos: {
         campo_id_cabecera_solicitud: true,
