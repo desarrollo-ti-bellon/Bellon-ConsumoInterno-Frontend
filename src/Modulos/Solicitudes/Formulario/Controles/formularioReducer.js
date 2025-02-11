@@ -27,7 +27,11 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
     }
 
     if (action.type === 'llenarLineas') {
-        return { ...state, lineas: action.payload.lineas }
+        let copiaLineas = [...action.payload.lineas] ?? [];
+        copiaLineas.forEach(linea => {
+            linea.total = linea.cantidad * linea.precio_unitario;
+        });
+        return { ...state, lineas: copiaLineas }
     }
 
     if (action.type === 'actualizarCampoEnLineaSolicitud') {
