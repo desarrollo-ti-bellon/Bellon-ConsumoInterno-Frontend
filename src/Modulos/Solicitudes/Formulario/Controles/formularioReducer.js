@@ -59,6 +59,10 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
         return { ...state, camposRequeridos: action.payload.campos }
     }
 
+    if (action.type === 'cambiarEstadoGeneral') {
+        return { ...state, [action.payload.id]: action.payload.value }
+    }
+
     //ACCIONES DE LOS MODALES
     if (action.type === 'mostrarModalAgregarSolicitud') {
         return { ...state, modalAgregarSolcitudes: action.payload.mostrar }
