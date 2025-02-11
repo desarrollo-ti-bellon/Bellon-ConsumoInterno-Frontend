@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
+import { useSearchParams } from 'react-router-dom';
 import AGGridTabla from '../../../../ComponentesGlobales/AGGridTabla';
-import { useFormulario } from '../Controles/useFormulario';
-import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialFormulario';
-import { formatoCantidad, formatoMoneda } from '../../../../FuncionesGlobales';
 import { useAlerta } from '../../../../ControlesGlobales/Alertas/useAlerta';
 import { useModalAlerta } from '../../../../ControlesGlobales/ModalAlerta/useModalAlerta';
+import { formatoCantidad, formatoMoneda } from '../../../../FuncionesGlobales';
+import { useFormulario } from '../Controles/useFormulario';
+import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialFormulario';
 
 export default function DetalleSolicitudes() {
 
@@ -14,8 +15,8 @@ export default function DetalleSolicitudes() {
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const gridRef = useRef(null);
-
-    const nuevaSolicitud = state.formulario.id_cabecera_solicitud == null;
+    const [locacion] = useSearchParams();
+    const nuevaSolicitud = (!state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') !== 'ver');
     const inactivarCamposEditablesTabla = nuevaSolicitud;
 
     const campoEdicionEstilos = !inactivarCamposEditablesTabla ? {} : {
@@ -37,9 +38,10 @@ export default function DetalleSolicitudes() {
     const [columnasProductos] = useState([
         { headerName: 'Producto ID', field: "no_producto", flex: 1 },
         { headerName: 'Descripcion', field: "descripcion", flex: 4 },
+        { headerName: 'Cantidad', field: "cantidad", editable: inactivarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: quitarStylosColumnaFooter, flex: 1, },
         { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
         { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
-        { headerName: 'Cantidad', field: "cantidad", editable: inactivarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: quitarStylosColumnaFooter, flex: 1, },
+        { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
         { headerName: 'Nota', field: "nota", editable: inactivarCamposEditablesTabla, cellStyle: quitarStylosColumnaFooter, flex: 4 },
     ]);
 
@@ -99,6 +101,20 @@ export default function DetalleSolicitudes() {
         }
     }
 
+    const calcularTotales = (parametros = []) => {
+        const total = parametros.reduce((total, fila) => total + fila.total, 0);
+        const cantidad = parametros.reduce((cantidad, fila) => cantidad + fila.cantidad, 0);
+        const no_producto = parametros.length;
+        return [
+            {
+                acciones: true,
+                no_producto,
+                cantidad,
+                total,
+            }
+        ];
+    };
+
     return (
         <>
             <Row>
@@ -119,6 +135,7 @@ export default function DetalleSolicitudes() {
                         paginationPageSize={paginationPageSize}
                         paginationPageSizeSelector={paginationPageSizeSelector}
                         onCellValueChanged={cambioElValorEnLaTabla}
+                        datosPieTabla={calcularTotales(state.lineas)}
                     />
                 </Col>
             </Row>
