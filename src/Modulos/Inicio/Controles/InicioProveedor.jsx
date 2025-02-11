@@ -47,7 +47,14 @@ export function InicioProveedor({ children }) {
             }
         }
 
-        await obtenerDatos(`Notas?usuarioDestino=${usuarioDestino}`, null)
+        await obtenerDatos(`Notas/Cantidad?usuarioDestino=${usuarioDestino}`, '')
+            .then((res) => {
+                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'Notas Actuales', cantidad: res.data, ruta: '', funcion: () => dispatchNotas({ type: 'mostrarNotas', payload: { mostrar: true } }) } })
+            }).catch(() => {
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar la cantidad de notas.', tipo: 'warning' } })
+            })
+
+        await obtenerDatos(`Notas?usuarioDestino=${usuarioDestino}`, '')
             .then((res) => {
                 let json = []
                 if (res.status === 200) {
@@ -59,7 +66,6 @@ export function InicioProveedor({ children }) {
             }).finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
             })
-
     }
 
     useEffect(() => {
