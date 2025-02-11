@@ -1,18 +1,17 @@
 import { createContext, useEffect, useReducer, useRef, useState } from "react"
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import { useAlerta } from "../../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
-import { enviarDatos, guardarDatosEnLocalStorage, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual } from "../../../../FuncionesGlobales"
+import { useModalAlerta } from "../../../../ControlesGlobales/ModalAlerta/useModalAlerta"
+import { eliminarDatosConId, enviarDatos, guardarDatosEnLocalStorage, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual, quitarFormularioDeLaUrl } from "../../../../FuncionesGlobales"
 import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 import { formularioReducer } from "./formularioReducer"
-import { useModalAlerta } from "../../../../ControlesGlobales/ModalAlerta/useModalAlerta"
 
 export const FormularioContexto = createContext(null)
 
 export const FormularioProveedor = ({ children }) => {
 
     const [state, dispatch] = useReducer(formularioReducer, EstadoInicialFormulario)
-
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
@@ -47,16 +46,6 @@ export const FormularioProveedor = ({ children }) => {
                 const json = res.data;
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
                 dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
-                // Buscar el usuario aprobador
-                const usuarioAprobador = state.comboUsuariosAprobadores?.find(usuario => usuario.id_usuario_ci == json.id_usuario_responsable);
-
-                // Si se encuentra el usuario, definimos el limite
-                if (usuarioAprobador) {
-                    definirLimiteAprobacion(usuarioAprobador.limite);  // Usamos el operador de coalescencia nula (??) para evitar undefined
-                } else {
-                    console.log('Usuario aprobador no encontrado');
-                    definirLimiteAprobacion(0);  // Definimos un valor predeterminado de 0 si el usuario no es encontrado
-                }
             }).catch((err) => {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando la solicitud #${formData.state.id_cabecera_solicitud}`, tipo: 'warning' } });
             })
@@ -73,7 +62,7 @@ export const FormularioProveedor = ({ children }) => {
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando los estados de las solicitudes`, tipo: 'warning' } });
         }
-    };
+    }
 
     const cargarProductos = async () => {
         try {
@@ -86,7 +75,7 @@ export const FormularioProveedor = ({ children }) => {
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando los Productos`, tipo: 'warning' } });
         }
-    };
+    }
 
     const cargarDepartamentos = async () => {
         try {
@@ -162,8 +151,8 @@ export const FormularioProveedor = ({ children }) => {
             }
             // dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
             // dispatch({ type: 'llenarComboUsuariosCI', payload: { comboUsuariosCI: json } });
-            dispatch({ type: 'actualizarFormulario', payload: { id: 'id_departamento', value: json.id_departamento } })
-            dispatch({ type: 'actualizarFormulario', payload: { id: 'id_sucursal', value: json.id_sucursal } })
+            actualizarFormulario('id_departamento', json.id_departamento)
+            actualizarFormulario('id_sucursal', json.id_sucursal)
             cargarUsuariosAprobadoresPorDepartamentos(json.id_departamento);
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las Posiciones`, tipo: 'warning' } });
@@ -192,14 +181,20 @@ export const FormularioProveedor = ({ children }) => {
             }
             setContador(0);
             dispatch({ type: 'llenarComboUsuariosAprobadores', payload: { comboUsuariosAprobadores: json } });
-            actualizarFormulario('id_usuario_responsable', json[0].id_usuario_ci)
-            actualizarFormulario('usuario_responsable', json[0].nombre_usuario)
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las UsuariosCI/Departamento`, tipo: 'warning' } });
         }
     }
 
     const guardar = async () => {
+
+        if ((state.lineas.length > 0) && (state.formulario.total > state.limiteAprobacion)) {
+            dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: left;">El total de la solicitud supera el límite de aprobación, por favor delega la solicitud a otra persona.</b>', mostrar: true, tamano: 'md' } })
+            cargarSolicitudPorId();
+            noValidarFormulario();
+            return;
+        }
+
         console.log('guardar', state.formulario)
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Solicitud/Cabecera', state.formulario)
@@ -209,6 +204,7 @@ export const FormularioProveedor = ({ children }) => {
                 dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
                 dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+                cambioEstadoSolicitud();
             })
             .catch((err) => {
                 dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
@@ -217,6 +213,19 @@ export const FormularioProveedor = ({ children }) => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
             })
         noValidarFormulario();
+    }
+
+    const cambiarEstadoSolicitud = (estado) => {
+        dispatch({ type: 'cambiarEstadoGeneral', payload: { id: 'estadoCambiado', value: estado } })
+    }
+
+    const cambioEstadoSolicitud = (estado) => {
+        if (state.estadoCambiado) {
+            setTimeout(() => {
+                navegar(quitarFormularioDeLaUrl(formData.pathname))
+            }, 3000);
+        }
+        cambiarEstadoSolicitud(false)
     }
 
     const guardarLineas = async (parametros) => {
@@ -230,6 +239,25 @@ export const FormularioProveedor = ({ children }) => {
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
                 dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
                 dispatch({ type: 'limpiarProductosSeleccionados' })
+                dispatch({ type: 'mostrarModalAgregarProductos', payload: { mostrar: false } })
+            })
+            .catch((err) => {
+                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+            })
+            .finally(() => {
+                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+            })
+    }
+
+    const eliminaLinea = async (parametros) => {
+        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
+        eliminarDatosConId('Solicitud/Linea', parametros)
+            .then((res) => {
+                const json = res.data;
+                dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
+                dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
+                dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
+                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
             })
             .catch((err) => {
                 dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
@@ -341,6 +369,7 @@ export const FormularioProveedor = ({ children }) => {
 
         // MODO ESCRITURA O MODO VER
         if (formData.state) {
+
             await cargarSolicitudPorId();
             const accion = locacion.get('accion');
 
@@ -359,10 +388,10 @@ export const FormularioProveedor = ({ children }) => {
                             campo_usuario_despacho: true,
                             campo_usuario_asistente_control: true,
                             campo_usuario_asistente_contabilidad: true,
-                            campo_id_departamento: false,
-                            campo_id_estado_solicitud: false,
+                            campo_id_departamento: true,
+                            campo_id_estado_solicitud: true,
                             campo_id_clasificacion: false,
-                            campo_id_sucursal: false,
+                            campo_id_sucursal: true,
                             campo_fecha_modificado: true,
                             campo_modificado_por: true,
                             campo_total: true,
@@ -385,7 +414,6 @@ export const FormularioProveedor = ({ children }) => {
                             campo_no_documento: true,
                             campo_fecha_creado: true,
                             campo_id_departamento: true,
-                            campo_usuario_despacho: true,
                             campo_usuario_asistente_control: true,
                             campo_usuario_asistente_contabilidad: true,
                             campo_id_estado_solicitud: true,
@@ -409,14 +437,14 @@ export const FormularioProveedor = ({ children }) => {
 
         }
 
-        // MODO LECTURA O MODO NUEVO
+        // MODO NUEVO
         if (!formData.state) {
             const habilitarCampos = (obtenerIdEstadoSolicitudPorModulo() === 'nueva');
             if (habilitarCampos) {
                 // LLENAR FORMULARIO
-                dispatch({ type: 'actualizarFormulario', payload: { id: 'fecha_creado', value: obtenerFechaActual() } })
-                dispatch({ type: 'actualizarFormulario', payload: { id: 'creado_por', value: obtenerNombreUsuarioLoggeado() } })
-                dispatch({ type: 'actualizarFormulario', payload: { id: 'id_estado_solicitud', value: 1 } })
+                actualizarFormulario('fecha_creado', obtenerFechaActual())
+                actualizarFormulario('creado_por', obtenerNombreUsuarioLoggeado())
+                actualizarFormulario('id_estado_solicitud', 1)
             }
 
             dispatch({
@@ -427,13 +455,12 @@ export const FormularioProveedor = ({ children }) => {
                         campo_id_cabecera_solicitud: true,
                         campo_no_documento: true,
                         campo_fecha_creado: true,
-                        campo_id_departamento: false,
-                        campo_usuario_despacho: false,
+                        campo_id_departamento: true,
                         campo_usuario_asistente_control: false,
                         campo_usuario_asistente_contabilidad: false,
-                        campo_id_estado_solicitud: false,
+                        campo_id_estado_solicitud: true,
                         campo_id_clasificacion: false,
-                        campo_id_sucursal: false,
+                        campo_id_sucursal: true,
                         campo_fecha_modificado: true,
                         campo_modificado_por: true,
                         campo_total: true,
@@ -514,8 +541,29 @@ export const FormularioProveedor = ({ children }) => {
         }
     }, [state.formulario, state.validadoFormulario])
 
+    useEffect(() => {
+        if (!formData.state && state.comboUsuariosAprobadores) {
+            const usuarioAprobador = state.comboUsuariosAprobadores[0] ?? [];
+            console.log('es nuevo ==> ', usuarioAprobador.id_usuario_ci, usuarioAprobador.nombre_usuario, usuarioAprobador.limite)
+            actualizarFormulario('id_usuario_responsable', usuarioAprobador.id_usuario_ci ?? '');
+            actualizarFormulario('usuario_responsable', usuarioAprobador.nombre_usuario ?? '');
+            dispatch({ type: 'cambiarEstadoGeneral', payload: { id: 'limiteAprobacion', value: usuarioAprobador.limite ?? 0 } })
+        }
+    }, [state.comboUsuariosAprobadores])
+
+    useEffect(() => {
+        //ACTUALIZANDO EL LIMITE DEL  COMBO DE USUARIOS APROBADORES
+        const usuarioAprobador = state.comboUsuariosAprobadores.find(usuario => usuario.id_usuario_ci === state.formulario.id_usuario_responsable) ?? [];
+        if (usuarioAprobador) {
+            definirLimiteAprobacion(usuarioAprobador.limite);
+        } else {
+            console.log('Usuario aprobador no encontrado');
+            definirLimiteAprobacion(0);
+        }
+    }, [state.formulario])
+
     return (
-        <FormularioContexto.Provider value={{ state, dispatch, guardar, guardarLineas, pasarLineasDelModalAlDetalle, obtenerIdEstadoSolicitudPorModulo, delegarResponsable, actualizarFormulario, validarFormulario, noValidarFormulario, limpiarFormulario }}>
+        <FormularioContexto.Provider value={{ state, dispatch, guardar, guardarLineas, eliminaLinea, cambiarEstadoSolicitud, pasarLineasDelModalAlDetalle, obtenerIdEstadoSolicitudPorModulo, delegarResponsable, actualizarFormulario, validarFormulario, noValidarFormulario, limpiarFormulario }}>
             {children}
         </FormularioContexto.Provider>
     )
