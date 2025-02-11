@@ -57,19 +57,19 @@ export default function ListadoSolicitudes() {
     }
 
     const [columnas] = useState([
-        { headerName: "ID", field: "id_cabecera_solicitud", flex: 1, filter: true },
-        { headerName: "No Documento", field: "no_documento", flex: 1, filter: true },
-        { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), flex: 1, filter: true },
-        { headerName: "Creado Por", field: "creado_por", flex: 1, filter: true },
-        { headerName: "Responsable", field: "usuario_responsable", flex: 1, filter: true },
-        { headerName: "Despachador", field: "usuario_despacho", flex: 1, filter: true },
-        { headerName: "Departamento", field: "departamento", flex: 1, filter: true },
-        { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, flex: 1, filter: true },
-        { headerName: "Clasificacion", field: "clasificacion", flex: 1, filter: true },
-        { headerName: "Sucursal", field: "sucursal", flex: 1, filter: true },
-        { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), flex: 1, filter: true },
-        { headerName: "Comentario", field: "comentario", flex: 1, filter: true },
-        { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, filter: true },
+        { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, },
+        { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1 },
+        { headerName: "No Documento", field: "no_documento", filter: true, flex: 1 },
+        { headerName: "Creado Por", field: "creado_por", filter: true, flex: 1 },
+        { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1 },
+        { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1 },
+        { headerName: "Departamento", field: "departamento", filter: true, flex: 1 },
+        { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, filter: true, flex: 1 },
+        { headerName: "Clasificacion", field: "clasificacion", filter: true, flex: 1 },
+        { headerName: "Sucursal", field: "sucursal", filter: true, flex: 1 },
+        { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1 },
+        { headerName: "Comentario", field: "comentario", filter: true, flex: 1 },
+        { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), filter: true, flex: 1 },
     ]);
 
     return (
