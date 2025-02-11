@@ -15,7 +15,6 @@ export default function UsuariosPrincipal() {
                 <Row>
                     <Col>
                         <ListadoLinks />
-                        <ModalAlerta />
                     </Col>
                 </Row>
                 <Row>

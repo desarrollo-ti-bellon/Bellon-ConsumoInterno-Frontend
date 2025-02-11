@@ -15,7 +15,6 @@ export default function ClasificacionesPrincipal() {
                 <Row>
                     <Col>
                         <ListadoLinks />
-                        <ModalAlerta />
                     </Col>
                 </Row>
                 <Row>
