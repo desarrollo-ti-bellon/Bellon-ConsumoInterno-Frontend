@@ -7,7 +7,7 @@ import { useModalAlerta } from '../../../../ControlesGlobales/ModalAlerta/useMod
 
 export default function BotonesAcciones() {
 
-    const { state, dispatch, guardar, actualizarFormulario, cambiarEstadoSolicitud, obtenerIdEstadoSolicitudPorModulo } = useFormulario();
+    const { state, dispatch, guardar, actualizarFormulario, cambiarEstadoSolicitud, obtenerIdEstadoSolicitudPorModulo, enviar } = useFormulario();
     const [estadoSolicitud, setEstadoSolicitud] = useState(null);
     const { dispatch: dispatchModalConfirmacion } = useModalConfirmacion();
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
@@ -46,6 +46,7 @@ export default function BotonesAcciones() {
 
         if (acciones[accion]) {
             actualizarFormulario('id_estado_solicitud', acciones[accion]);
+            enviar();
         } else {
             console.error(`Acción '${accion}' no válida.`);
         }
