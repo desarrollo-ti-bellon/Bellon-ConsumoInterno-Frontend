@@ -294,28 +294,7 @@ export const FormularioProveedor = ({ children }) => {
         guardarLineas(lineas);
     }
 
-    const cargarPerfilUsuarioLogueado = async () => {
-        try {
-            return await obtenerDatos(`UsuariosCI/Correo?correo=${obtenerNombreUsuarioLoggeado()}`, null)
-                .then((res) => {
-                    let json = null;
-                    if (res.status != 204) {
-                        json = res.data;
-                        guardarDatosEnLocalStorage('perfilUsuarioLogueado', JSON.stringify(json))
-                    } else {
-                        dispatchModalAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'No se ha encontrado el perfil del usuario logueado!', tipo: 'warning' } });
-                        setTimeout(() => {
-                            navegar('/403')
-                        }, 3000);
-                    }
-                })
-        } catch (error) {
-            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las Posiciones`, tipo: 'warning' } });
-        }
-    }
-
     const cargarDatosIniciales = async () => {
-        await cargarPerfilUsuarioLogueado();
         await cargarEstadosSolicitudes();
         await cargarDepartamentos();
         await cargarUsuarios();
