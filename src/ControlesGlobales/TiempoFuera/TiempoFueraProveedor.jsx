@@ -1,8 +1,8 @@
-import React, { createContext, useEffect, useRef, useState } from 'react'
-import { autoAcceso, obtenerDatosDelLocalStorage } from '../../FuncionesGlobales';
+import React, { createContext, useEffect, useRef, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import * as Icon from 'react-bootstrap-icons'
+import * as Icon from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import { autoAcceso, obtenerDatosDelLocalStorage } from '../../FuncionesGlobales';
 
 export const tiempoFueraContext = createContext(null)
 
@@ -11,6 +11,7 @@ export function TiempoFueraProveedor({ children }) {
     const timeoutRef = useRef();
     const [mostrarModalTiempoFuera, setMostrarModalTiempoFuera] = useState(false);
     const navegar = useNavigate()
+
     useEffect(() => {
         const handleWindowEvents = () => {
             clearTimeout(timeoutRef.current);
@@ -19,8 +20,8 @@ export function TiempoFueraProveedor({ children }) {
                 setMostrarModalTiempoFuera(true);
             }, 300000); // 5 minutos de inactividad
 
-            if(!obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE)) {
-                autoAcceso().finally(()=>{
+            if (!obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE)) {
+                autoAcceso().finally(() => {
                     console.log('hubo un error, se perdió la sesión, intentando restaurar.')
                 })
             }
