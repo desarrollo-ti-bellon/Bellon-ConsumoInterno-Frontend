@@ -6,7 +6,7 @@ import { useFormulario } from "../Controles/useFormulario";
 
 export default function FormularioSolicitudes() {
 
-    const { state, dispatch, delegarResponsable, validarFormulario: validarFormularioReducer, noValidarFormulario, actualizarFormulario, limpiarFormulario } = useFormulario();
+    const { state, dispatch, delegarResponsable, validarFormulario: validarFormularioReducer, noValidarFormulario, actualizarFormulario, limpiarFormulario, enviar } = useFormulario();
     const { id_cabecera_solicitud, no_documento, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, usuario_asistente_control, usuario_asistente_contabilidad, id_estado_solicitud, id_clasificacion, id_sucursal, comentario, total } = state.formulario;
     const { campo_id_cabecera_solicitud, campo_no_documento, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_usuario_asistente_control, campo_usuario_asistente_contabilidad, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_comentario, campo_total } = state.inactivarCampos;
     const { requerido_id_cabecera_solicitud, requerido_no_documento, requerido_fecha_creado, requerido_creado_por, requerido_id_departamento, requerido_usuario_despacho, requerido_usuario_responsable, requerido_usuario_asistente_control, requerido_usuario_asistente_contabilidad, requerido_id_estado_solicitud, requerido_id_clasificacion, requerido_id_sucursal, requerido_comentario, requerido_total } = state.camposRequeridos;
@@ -15,10 +15,6 @@ export default function FormularioSolicitudes() {
         limpiarFormulario();
         noValidarFormulario();
     }, [])
-
-    const enviar = () => {
-        document.getElementById('enviarFormulario').click()
-    }
 
     const validarFormulario = (e) => {
         e.preventDefault();
@@ -72,7 +68,7 @@ export default function FormularioSolicitudes() {
                             <Form.Group as={Col} md="4" controlId="id_estado_solicitud">
                                 <Form.Label>Estado Solicitud</Form.Label>
                                 <Form.Select
-                                    value={id_estado_solicitud}
+                                    value={id_estado_solicitud || ''}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
@@ -101,7 +97,7 @@ export default function FormularioSolicitudes() {
                             <Form.Group as={Col} md="4" controlId="id_departamento">
                                 <Form.Label>Departamento</Form.Label>
                                 <Form.Select
-                                    value={id_departamento}
+                                    value={id_departamento || ''}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
@@ -130,7 +126,7 @@ export default function FormularioSolicitudes() {
                             <Form.Group as={Col} md="4" controlId="id_sucursal">
                                 <Form.Label>Sucursal</Form.Label>
                                 <Form.Select
-                                    value={id_sucursal}
+                                    value={id_sucursal || ''}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
@@ -163,7 +159,7 @@ export default function FormularioSolicitudes() {
                             <Form.Group as={Col} md="4" controlId="id_clasificacion">
                                 <Form.Label>Clasificaciones</Form.Label>
                                 <Form.Select
-                                    value={id_clasificacion}
+                                    value={id_clasificacion || ''}
                                     onChange={(e) => {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
@@ -224,7 +220,10 @@ export default function FormularioSolicitudes() {
 
                             <Form.Group as={Col} md="2">
                                 <div style={{ marginTop: '30px' }}>
-                                    <Button variant="primary" onClick={() => { delegarResponsable(); enviar(); }}> <Icon.ArrowUp /> Delegar </Button>
+                                    <Button variant="primary" onClick={() => {
+                                        delegarResponsable();
+                                        enviar();
+                                    }}> <Icon.ArrowUp /> Delegar </Button>
                                 </div>
                             </Form.Group>
 
