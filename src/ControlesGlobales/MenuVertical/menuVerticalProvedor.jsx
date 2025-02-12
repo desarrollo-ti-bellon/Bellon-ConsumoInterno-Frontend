@@ -7,6 +7,7 @@ import { menuVerticalReducer } from "./menuVerticalReducer";
 export const menuVerticalContexto = createContext(null);
 
 export default function MenuVerticalProveedor({ children }) {
+
     const [state, dispatch] = useReducer(menuVerticalReducer, estadoInicialMenuVertical)
 
     const cargarPerfilUsuarioLogueado = async () => {
