@@ -17,7 +17,6 @@ export const FormularioUsuarioProveedor = ({ children }) => {
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const tiempoFuera = useRef();
-    const formData = useLocation();
 
     const cargarDepartamentos = async () => {
         try {
