@@ -332,6 +332,10 @@ export const FormularioProveedor = ({ children }) => {
         dispatch({ type: 'difinirLimite', payload: { limiteAprobacion: limite ?? 0 } });
     }
 
+    const enviar = () => {
+        document.getElementById('enviarFormulario').click()
+    }
+
     /* CONTROLANDO LA DELEGACION DEL LIMITE */
     useEffect(() => {
         if (contador >= state.comboUsuariosAprobadores.length) {
@@ -542,7 +546,7 @@ export const FormularioProveedor = ({ children }) => {
     }, [state.formulario])
 
     return (
-        <FormularioContexto.Provider value={{ state, dispatch, guardar, guardarLineas, eliminaLinea, cambiarEstadoSolicitud, pasarLineasDelModalAlDetalle, obtenerIdEstadoSolicitudPorModulo, delegarResponsable, actualizarFormulario, validarFormulario, noValidarFormulario, limpiarFormulario }}>
+        <FormularioContexto.Provider value={{ state, dispatch, guardar, guardarLineas, eliminaLinea, cambiarEstadoSolicitud, pasarLineasDelModalAlDetalle, obtenerIdEstadoSolicitudPorModulo, delegarResponsable, actualizarFormulario, validarFormulario, noValidarFormulario, limpiarFormulario, enviar }}>
             {children}
         </FormularioContexto.Provider>
     )
