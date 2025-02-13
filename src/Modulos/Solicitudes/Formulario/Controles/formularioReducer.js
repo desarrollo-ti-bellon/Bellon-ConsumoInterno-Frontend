@@ -112,5 +112,9 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
         return { ...state, limiteAprobacion: action.payload.limiteAprobacion }
     }
 
+    if (action.type === 'actualizarUltimaActualizacionDeRegistro') {
+        return { ...state, ultimaActualizacionDeRegistro: action.payload.ultimaActualizacionDeRegistro }
+    }
+
     return state;
 }
