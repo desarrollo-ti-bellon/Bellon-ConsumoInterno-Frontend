@@ -3,6 +3,7 @@ import { Button, Container } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useModalConfirmacion } from "../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
+import { obtenerRutaUrlActual } from "../FuncionesGlobales";
 
 export default function CambiarAccionFormulario() {
 
@@ -52,6 +53,17 @@ export default function CambiarAccionFormulario() {
                 setBloquearAcciones(true);
             }
         }
+        const ruta = obtenerRutaUrlActual();
+        const rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO
+        ];
+        const validarOcultarBotones = rutas.includes(ruta);
+        setOcultarBotones(validarOcultarBotones);
     }, []);
 
     return (
