@@ -3,25 +3,13 @@ import { rutas as rutasModulos } from "../../Archivos/Configuracion/Rutas";
 import { guardarDatosEnLocalStorage, obtenerDatos, obtenerDatosDelLocalStorage, obtenerNombreUsuarioLoggeado } from "../../FuncionesGlobales";
 import { estadoInicialMenuVertical } from "./menuVerticalModel";
 import { menuVerticalReducer } from "./menuVerticalReducer";
+import { useModalAlerta } from "../ModalAlerta/useModalAlerta";
 
 export const menuVerticalContexto = createContext(null);
 
 export default function MenuVerticalProveedor({ children }) {
 
     const [state, dispatch] = useReducer(menuVerticalReducer, estadoInicialMenuVertical)
-
-    const cargarPerfilUsuarioLogueado = async () => {
-        return await obtenerDatos(`UsuariosCI/Correo?correo=${obtenerNombreUsuarioLoggeado()}`, null)
-            .then((res) => {
-                const json = res.data;
-                console.log('cargarPerfilUsuarioLogueado', json)
-                guardarDatosEnLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO, JSON.stringify(json))
-            }).catch((err) => {
-                console.log('Error ', err)
-            }).finally(() => {
-                console.log('carga de datos finalizada')
-            })
-    }
 
     const regularRutasDelPerfilUsuarioLogueado = () => {
 
@@ -94,7 +82,6 @@ export default function MenuVerticalProveedor({ children }) {
     }
 
     const cargarDatos = async () => {
-        await cargarPerfilUsuarioLogueado();
         regularRutasDelPerfilUsuarioLogueado(rutasModulos);
     }
 
