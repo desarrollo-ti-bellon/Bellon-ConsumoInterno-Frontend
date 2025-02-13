@@ -71,6 +71,7 @@ export const refrescarToken = async () => {
 export const cerrarAcceso = async () => {
     PUBLIC_CLIENT_APPLICATION.logoutRedirect();
     eliminarDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
+    eliminarDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO);
 };
 
 //CONTROLAR TOKEN Y AUTORIZACIONES DEL LS CENTRAL
