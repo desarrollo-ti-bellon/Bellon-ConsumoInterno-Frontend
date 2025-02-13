@@ -47,9 +47,28 @@ export default function ListadoSolicitudes() {
     }
 
     const BotonesAcciones = (parametros) => {
+
+        const ruta = obtenerRutaUrlActual();
+        const rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO,
+        ];
+
+        const condicion = rutas.includes(ruta);
         return (
             <>
-                <Button title="Editar solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>
+                { !condicion && (<Button title="Editar solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>)}
                 <Button title="Ver solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>
                 <Button title="Poner nota" size='sm' variant="outline-primary" style={{ marginLeft: 5 }} onClick={() => hacerNota(parametros.data)} > {" "} <Icon.JournalBookmarkFill size={15} />{" "} </Button>
             </>
