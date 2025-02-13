@@ -10,7 +10,6 @@ export function TiempoFueraProveedor({ children }) {
 
     const timeoutRef = useRef();
     const [mostrarModalTiempoFuera, setMostrarModalTiempoFuera] = useState(false);
-    const navegar = useNavigate()
 
     useEffect(() => {
         const handleWindowEvents = () => {
