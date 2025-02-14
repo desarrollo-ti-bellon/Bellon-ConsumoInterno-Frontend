@@ -59,7 +59,7 @@ export default function FormularioClasificacion() {
                         <Form.Label>ID</Form.Label>
                         <Form.Control
                             type="text"
-                            value={id_clasificacion || ''}
+                            defaultValue={id_clasificacion || ''}
                             onChange={actualizarFormulario}
                             disabled={campo_id_clasificacion}
                         />
