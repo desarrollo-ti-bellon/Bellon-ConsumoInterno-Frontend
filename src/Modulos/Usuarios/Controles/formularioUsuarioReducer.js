@@ -13,11 +13,15 @@ export const formularioUsuarioReducer = (state = EstadoInicialUsuarioFormulario,
         }
         if (id === 'codigo_sucursal') {
             const datoSucursal = state.comboSucursales.find(sucursal => sucursal.codigo === value);
-            return { ...state, formulario: { ...state.formulario, [id]: value, id_sucursal: datoSucursal.id_valor_dimension } }
+            return { ...state, formulario: { ...state.formulario, [id]: value, id_sucursal: datoSucursal.id_valor_dimension ?? '' } }
         }
         if (id === 'codigo_departamento') {
             const datoDepartamento = state.comboDepartamentos.find(departamento => departamento.codigo === value) ?? null;
-            return { ...state, formulario: { ...state.formulario, [id]: value, id_departamento: datoDepartamento?.id_valor_dimension } }
+            return { ...state, formulario: { ...state.formulario, [id]: value, id_departamento: datoDepartamento?.id_valor_dimension ?? '' } }
+        }
+        if (id === 'codigo_almacen') {
+            const datoAlmacen = state.comboAlmacenes.find(almacen => almacen.codigo === value) ?? null;
+            return { ...state, formulario: { ...state.formulario, [id]: value, id_almacen: datoAlmacen?.id_almacen ?? '' } }
         }
         return { ...state, formulario: { ...state.formulario, [id]: value } }
     }
@@ -67,6 +71,10 @@ export const formularioUsuarioReducer = (state = EstadoInicialUsuarioFormulario,
 
     if (action.type === 'llenarComboAprobadores') {
         return { ...state, comboUsuariosAprobadores: action.payload.comboUsuariosAprobadores }
+    }
+
+    if (action.type === 'llenarComboAlmacenes') {
+        return { ...state, comboAlmacenes: action.payload.comboAlmacenes }
     }
 
     if (action.type === 'inactivarCampos') {
