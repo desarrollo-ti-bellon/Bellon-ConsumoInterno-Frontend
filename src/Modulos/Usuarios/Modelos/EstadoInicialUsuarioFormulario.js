@@ -10,7 +10,9 @@ export const EstadoInicialUsuarioFormulario = {
         id_departamento: "",
         limite: 0,
         posicion_id: 0,
-        estado: true
+        estado: true,
+        id_almacen: "",
+        codigo_almacen: ""
     },
     inactivarCampos: {
         campo_id_usuario_ci: true,
@@ -24,6 +26,8 @@ export const EstadoInicialUsuarioFormulario = {
         campo_limite: true,
         campo_posicion_id: true,
         campo_estado: true,
+        campo_almacen_id: true,
+        campo_codigo_almacen: true
     },
     ultimaActualizacionDeRegistro: 'ninguna',
     lineas: [],
@@ -32,6 +36,7 @@ export const EstadoInicialUsuarioFormulario = {
     comboUsuarios: [],
     comboSucursales: [],
     comboPosiciones: [],
+    comboAlmacenes: [],
 }
 
 export const pagination = true;
