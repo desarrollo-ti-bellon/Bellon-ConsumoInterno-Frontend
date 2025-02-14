@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useUsuarioFormulario } from '../Controles/useUsuarioFormulario';
 
 export default function FormularioUsuario() {
 
     const { state, dispatch } = useUsuarioFormulario();
-    const { id_usuario_ci, id_usuario, nombre_usuario, correo, codigo_sucursal, id_sucursal, codigo_departamento, id_departamento, limite, posicion_id, estado, } = state.formulario;
-    const { campo_id_usuario_ci, campo_id_usuario, campo_nombre_usuario, campo_correo, campo_codigo_sucursal, campo_id_sucursal, campo_codigo_departamento, campo_id_departamento, campo_limite, campo_posicion_id, campo_estado } = state.inactivarCampos;
+    const { id_usuario_ci, id_usuario, nombre_usuario, correo, codigo_sucursal, id_sucursal, codigo_departamento, id_departamento, limite, posicion_id, estado, almacen_id, codigo_almacen } = state.formulario;
+    const { campo_id_usuario_ci, campo_id_usuario, campo_nombre_usuario, campo_correo, campo_codigo_sucursal, campo_id_sucursal, campo_codigo_departamento, campo_id_departamento, campo_limite, campo_posicion_id, campo_estado, campo_almacen_id, campo_codigo_almacen } = state.inactivarCampos;
+   
 
     const actualizarFormulario = (e) => {
         const { id, value } = e.target
@@ -15,14 +16,14 @@ export default function FormularioUsuario() {
         } else {
             dispatch({ type: 'actualizarFormulario', payload: { id, value } })
         }
-        enviar();
+        validarFormulario();
     }
 
-    const enviar = () => {
+    const validarFormulario = () => {
         document.getElementById('enviarFormulario').click()
     }
 
-    const validarFormulario = (e) => {
+    const enviar = (e) => {
         e.preventDefault();
         e.stopPropagation();
         dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
@@ -32,9 +33,13 @@ export default function FormularioUsuario() {
         }
     }
 
+    useEffect(() => {
+        validarFormulario();
+    }, [state.formulario])
+
     return (
         <>
-            <Form noValidate onSubmit={validarFormulario}>
+            <Form noValidate onSubmit={enviar}>
 
                 <Row className="mb-2">
 
@@ -42,7 +47,7 @@ export default function FormularioUsuario() {
                         <Form.Label>ID</Form.Label>
                         <Form.Control
                             type="text"
-                            value={id_usuario_ci}
+                            defaultValue={id_usuario_ci || ''}
                             disabled={campo_id_usuario_ci}
                         />
                     </Form.Group>
@@ -171,7 +176,7 @@ export default function FormularioUsuario() {
 
                 <Row className="mb-2">
 
-                    <Form.Group as={Col} md="4" controlId="posicion_id">
+                    <Form.Group as={Col} md="3" controlId="posicion_id">
                         <Form.Label>Posicion</Form.Label>
                         <Form.Select
                             value={posicion_id || ''}
@@ -199,11 +204,11 @@ export default function FormularioUsuario() {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group as={Col} md="4" controlId="limite">
+                    <Form.Group as={Col} md="3" controlId="limite">
                         <Form.Label>Limite</Form.Label>
                         <Form.Control
                             type="text"
-                            value={limite}
+                            value={limite || 0}
                             onChange={actualizarFormulario}
                             isValid={limite}
                             isInvalid={!limite && !isNaN(limite) && +limite < 0}
@@ -211,6 +216,34 @@ export default function FormularioUsuario() {
                         />
                         <Form.Control.Feedback type="invalid">
                             El limite que se puede aprobar es obligatorio.
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group as={Col} md="4" controlId="codigo_almacen">
+                        <Form.Label>Almacen</Form.Label>
+                        <Form.Select
+                            value={codigo_almacen || ''}
+                            onChange={actualizarFormulario}
+                            isValid={codigo_almacen}
+                            isInvalid={!codigo_almacen && (posicion ? ['solicitante', 'administrador'].includes(posicion.toLowerCase()) : false)}
+                            disabled={campo_codigo_almacen}
+                            required={(posicion && posicion.toLowerCase() === 'solicitante')}
+                        >
+                            <option value={''}>
+                                Por favor seleccione ...
+                            </option>
+                            {
+                                state.comboAlmacenes?.map(almacen => {
+                                    return (
+                                        <option key={almacen.codigo} value={almacen.codigo}>
+                                            [{almacen.codigo}] {almacen.nombre}
+                                        </option>
+                                    )
+                                })
+                            }
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid">
+                            El almacen es obligatorio.
                         </Form.Control.Feedback>
                     </Form.Group>
 
