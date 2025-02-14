@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import { useAlerta } from "../../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
 import { useModalAlerta } from "../../../../ControlesGlobales/ModalAlerta/useModalAlerta"
-import { eliminarDatosConId, enviarDatos, guardarDatosEnLocalStorage, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual, quitarFormularioDeLaUrl } from "../../../../FuncionesGlobales"
+import { eliminarDatosConId, enviarDatos, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual, quitarFormularioDeLaUrl } from "../../../../FuncionesGlobales"
 import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 import { formularioReducer } from "./formularioReducer"
 
@@ -172,7 +172,33 @@ export const FormularioProveedor = ({ children }) => {
         }
     }
 
-    const cargarUsuariosAprobadoresPorDepartamentos = async (departamentoId) => {
+    const cargarUnidadesMedida = async () => {
+        try {
+            const res = await obtenerDatos(`UnidadesDeMedida`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarComboUnidadesMedida', payload: { comboUnidadesMedida: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando las Unidades De Medida`, tipo: 'warning' } });
+        }
+    }
+
+    const cargarComboAlmacenes = async () => {
+        try {
+            const res = await obtenerDatos(`Almacenes`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarComboAlmacenes', payload: { comboAlmacenes: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando los Almacenes`, tipo: 'warning' } });
+        }
+    }
+
+    const cargarUsuariosAprobadoresPorDepartamentos = async (departamentoId = '') => {
         try {
             const res = await obtenerDatos(`UsuariosCI/Departamento?departamentoId=${departamentoId}`, null);
             let json = [];
@@ -203,11 +229,11 @@ export const FormularioProveedor = ({ children }) => {
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
                 dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
                 cambioEstadoSolicitud();
             })
             .catch((err) => {
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
@@ -223,6 +249,7 @@ export const FormularioProveedor = ({ children }) => {
         if (state.estadoCambiado) {
             setTimeout(() => {
                 navegar(quitarFormularioDeLaUrl(formData.pathname))
+                dispatchModalAlerta({ type: 'mostrarModalAleta', payload: { mostrar: true, mensaje: 'La página se redireccionará en un momento espere!', tamano: 'md' } })
             }, 3000);
         }
         cambiarEstadoSolicitud(false)
@@ -237,12 +264,12 @@ export const FormularioProveedor = ({ children }) => {
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
                 dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
                 dispatch({ type: 'limpiarProductosSeleccionados' })
                 dispatch({ type: 'mostrarModalAgregarProductos', payload: { mostrar: false } })
             })
             .catch((err) => {
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
@@ -257,10 +284,10 @@ export const FormularioProveedor = ({ children }) => {
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
                 dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
             })
             .catch((err) => {
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
@@ -270,7 +297,7 @@ export const FormularioProveedor = ({ children }) => {
     const pasarLineasDelModalAlDetalle = () => {
 
         if (state.productosSeleccionados.length == 0) {
-            dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debe seleccionar al menos un producto', tipo: 'warning' } });
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debe seleccionar al menos un producto', tipo: 'warning' } });
             return;
         }
 
@@ -303,6 +330,8 @@ export const FormularioProveedor = ({ children }) => {
         await cargarUsuariosCI();
         await cargarClasificaciones();
         await cargarUsuariosCIConCorreo();
+        await cargarUnidadesMedida();
+        await cargarComboAlmacenes();
     }
 
     const validarFormulario = () => {
@@ -347,7 +376,7 @@ export const FormularioProveedor = ({ children }) => {
     }, [contador])
 
     const cargarDatos = async () => {
-        dispatchCargandoInformacion({ action: 'mostrarCargandoInformacion' })
+        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         await cargarDatosIniciales();
 
         // MODO ESCRITURA O MODO VER
@@ -493,7 +522,7 @@ export const FormularioProveedor = ({ children }) => {
 
         // ACTUALIZAR ULTIMA ACTUALIZACION DE REGISTRO
         dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: 'ninguna' } })
-        dispatchCargandoInformacion({ action: 'limpiarCargandoInformacion' })
+        dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
     }
 
     useEffect(() => {
