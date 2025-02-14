@@ -28,14 +28,14 @@ export default function FormularioClasificacion() {
         } else {
             dispatch({ type: 'actualizarFormulario', payload: { id, value } })
         }
-        enviar();
+        validarFormulario();
     }
 
-    const enviar = () => {
+    const validarFormulario = () => {
         document.getElementById('enviarFormulario').click()
     }
 
-    const validarFormulario = (e) => {
+    const enviar = (e) => {
         e.preventDefault();
         e.stopPropagation();
         dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
@@ -46,12 +46,12 @@ export default function FormularioClasificacion() {
     }
 
     useEffect(() => {
-        enviar();
-    },[state.formulario])
+        validarFormulario();
+    }, [state.formulario])
 
     return (
         <>
-            <Form noValidate onSubmit={validarFormulario}>
+            <Form noValidate onSubmit={enviar}>
 
                 <Row className="mb-2">
 
@@ -68,7 +68,7 @@ export default function FormularioClasificacion() {
                     <Form.Group as={Col} md="4" controlId="codigo_clasificacion">
                         <Form.Label>Clasificacion</Form.Label>
                         <Form.Select
-                            value={codigo_clasificacion}
+                            value={codigo_clasificacion || ''}
                             onChange={actualizarFormulario}
                             isValid={codigo_clasificacion}
                             isInvalid={!codigo_clasificacion}
@@ -95,7 +95,7 @@ export default function FormularioClasificacion() {
                         <Form.Label>Descripcion</Form.Label>
                         <Form.Control
                             type="text"
-                            value={descripcion}
+                            value={descripcion || ''}
                             onChange={actualizarFormulario}
                             isValid={descripcion}
                             isInvalid={!descripcion}
