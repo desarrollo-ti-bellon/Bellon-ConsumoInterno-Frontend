@@ -1,3 +1,4 @@
+import { obtenerDatosDelLocalStorage } from "../../../../FuncionesGlobales"
 import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 
 export const formularioReducer = (state = EstadoInicialFormulario, action) => {
@@ -28,8 +29,13 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
 
     if (action.type === 'llenarLineas') {
         let copiaLineas = [...action.payload.lineas] ?? [];
+        const { id_almacen, codigo_almacen } = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO)
         copiaLineas.forEach(linea => {
+            const unidadMedida = state.comboUnidadesMedida?.find(el => el.codigo === linea.codigo_unidad_medida) ?? null;
             linea.total = linea.cantidad * linea.precio_unitario;
+            linea.almacen_id = id_almacen ?? '';
+            linea.almacen_codigo = codigo_almacen ?? '';
+            linea.id_unidad_medida = unidadMedida?.id_unidad_medida ?? '';
         });
         return { ...state, lineas: copiaLineas }
     }
@@ -114,6 +120,14 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
 
     if (action.type === 'actualizarUltimaActualizacionDeRegistro') {
         return { ...state, ultimaActualizacionDeRegistro: action.payload.ultimaActualizacionDeRegistro }
+    }
+
+    if (action.type === 'llenarComboUnidadesMedida') {
+        return { ...state, comboUnidadesMedida: action.payload.comboUnidadesMedida }
+    }
+
+    if (action.type === 'llenarComboAlmacenes') {
+        return { ...state, comboAlmacenes: action.payload.comboAlmacenes }
     }
 
     return state;
