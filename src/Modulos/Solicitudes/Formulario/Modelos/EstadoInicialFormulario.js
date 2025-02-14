@@ -78,7 +78,9 @@ export const EstadoInicialFormulario = {
     comboUsuariosCI: [],
     comboClasificaciones: [],
     comboUsuariosAprobadores: [],
-    productosSeleccionados: [],
+    comboUnidadesMedida: [],
+    comboAlmacenes: [],
+    productosSeleccionados: []
 }
 
 export const pagination = true;
