@@ -1,11 +1,10 @@
 import { createContext, useEffect, useReducer, useRef } from "react"
-import { useLocation } from "react-router-dom"
+import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
+import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
+import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
 import { EstadoInicialUsuarioFormulario } from "../Modelos/EstadoInicialUsuarioFormulario"
 import { formularioUsuarioReducer } from "./formularioUsuarioReducer"
-import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta"
-import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
-import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
 
 export const FormularioUsuarioContexto = createContext(null)
 
@@ -84,19 +83,39 @@ export const FormularioUsuarioProveedor = ({ children }) => {
         }
     }
 
+    const cargarComboAlmacenes = async () => {
+        try {
+            const res = await obtenerDatos(`Almacenes`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarComboAlmacenes', payload: { comboAlmacenes: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando los Almacenes`, tipo: 'warning' } });
+        }
+    }
+
     const cargarDatosIniciales = async () => {
-        dispatchCargandoInformacion({ action: 'mostrarCargandoInformacion' })
+        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         await cargarDepartamentos();
         await cargarUsuarios();
         await cargarSucursales();
         await cargarPosicion();
         await cargarUsuariosCI();
-        dispatchCargandoInformacion({ action: 'limpiarCargandoInformacion' })
+        await cargarComboAlmacenes();
+        dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
+        dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
     }
 
     const guardar = () => {
-        console.log('guardar', state.formulario)
 
+        if (!state.validadoFormulario) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
+            return;
+        }
+
+        console.log('guardar', state.formulario)
         if (state.formulario.id_usuario_ci === null) {
             const existeUsuario = state.lineas.find(linea => linea.id_usuario === state.formulario.id_usuario)
             console.log('existeUsuario =>', existeUsuario);
@@ -113,15 +132,14 @@ export const FormularioUsuarioProveedor = ({ children }) => {
                 cargarUsuariosCI();
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
                 dispatch({ type: 'limpiarFormulario' })
-                dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+                dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
             })
             .catch((err) => {
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
-                dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
             })
     }
 
@@ -143,20 +161,22 @@ export const FormularioUsuarioProveedor = ({ children }) => {
                     campo_limite: false,
                     campo_posicion_id: false,
                     campo_estado: false,
+                    campo_almacen_id: false,
+                    campo_codigo_almacen: false
                 }
             }
         })
     }, [])
 
     useEffect(() => {
-        if (state.validadoFormulario) {
-            tiempoFuera.current = setTimeout(() => {
-                guardar();
-            }, 2000)
-            return () => {
-                clearTimeout(tiempoFuera.current);
-            }
-        }
+        // if (state.validadoFormulario) {
+        //     tiempoFuera.current = setTimeout(() => {
+        //         guardar();
+        //     }, 2000)
+        //     return () => {
+        //         clearTimeout(tiempoFuera.current);
+        //     }
+        // }
     }, [state.formulario, state.validadoFormulario])
 
     return (

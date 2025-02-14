@@ -47,16 +47,17 @@ export const FormularioClasificacionProveedor = ({ children }) => {
     }
 
     const cargarDatosIniciales = async () => {
-        dispatchCargandoInformacion({ action: 'mostrarCargandoInformacion' })
+        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         await cargarClasificacionesERP();
         await cargarClasificaciones();
-        dispatchCargandoInformacion({ action: 'limpiarCargandoInformacion' })
+        dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
+        dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
     }
 
     const guardar = () => {
 
         if (!state.validadoFormulario) {
-            dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
             return;
         }
 
@@ -76,15 +77,14 @@ export const FormularioClasificacionProveedor = ({ children }) => {
                 let json = res.data;
                 cargarClasificaciones();
                 dispatch({ type: 'limpiarFormulario' })
-                dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+                dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
             })
             .catch((err) => {
-                dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
-                dispatch({ type: 'validarFormulario', payload: { validadoFormulario: false } })
             })
     }
 
