@@ -1,11 +1,10 @@
 import React from 'react'
 import { Accordion, Col, Container, Row } from 'react-bootstrap'
+import BarraAcciones from '../../ComponentesGlobales/BarraAcciones'
 import ListadoLinks from '../../ComponentesGlobales/ListadoLinks'
 import { FormularioUsuarioContexto, FormularioUsuarioProveedor } from './Controles/FormularioUsuarioProveedor'
 import DetalleUsuario from './Vistas/DetalleUsuario'
 import FormularioUsuario from './Vistas/FormularioUsuario'
-import UltimaActualizacionDeRegistros from '../../ComponentesGlobales/UltimaActualizacionDeRegistros'
-import ModalAlerta from '../../ComponentesGlobales/ModalAlerta'
 
 export default function UsuariosPrincipal() {
 
@@ -19,7 +18,7 @@ export default function UsuariosPrincipal() {
                 </Row>
                 <Row>
                     <Col>
-                        <UltimaActualizacionDeRegistros contexto={FormularioUsuarioContexto} />
+                        <BarraAcciones contexto={FormularioUsuarioContexto} />
                     </Col>
                 </Row>
                 <Row>
