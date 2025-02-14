@@ -1,6 +1,6 @@
-import React from 'react';
-import { useClasificacionFormulario } from '../Controles/useClasificacionFormulario';
+import React, { useEffect } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import { useClasificacionFormulario } from '../Controles/useClasificacionFormulario';
 
 export default function FormularioClasificacion() {
 
@@ -44,6 +44,10 @@ export default function FormularioClasificacion() {
             dispatch({ type: 'validarFormulario', payload: { validadoFormulario: true } })
         }
     }
+
+    useEffect(() => {
+        enviar();
+    },[state.formulario])
 
     return (
         <>

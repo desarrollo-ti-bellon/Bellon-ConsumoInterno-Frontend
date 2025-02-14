@@ -2,10 +2,10 @@ import { createContext, useEffect, useReducer, useRef } from "react"
 import { useLocation } from "react-router-dom"
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
+import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
+import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
 import { EstadoInicialClasificacionFormulario } from "../Modelos/EstadoInicialClasificacionFormulario"
 import { formularioClasificacionReducer } from "./formularioClasificacionReducer"
-import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
-import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
 
 export const FormularioClasificacionContexto = createContext(null)
 
@@ -54,13 +54,18 @@ export const FormularioClasificacionProveedor = ({ children }) => {
     }
 
     const guardar = () => {
-        console.log('guardar', state.formulario)
 
+        if (!state.validadoFormulario) {
+            dispatchAlerta({ action: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
+            return;
+        }
+
+        console.log('guardar', state.formulario)
         if (state.formulario.id_clasificacion === null) {
             const existeClasificacion = state.lineas.find(linea => linea.id_grupo_cont_producto_general === state.formulario.id_grupo_cont_producto_general)
             console.log('existeClasificacion=>', existeClasificacion);
             if (existeClasificacion) {
-                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: 'No se puede agregar esta clasificación porque ha sido agregada con esta decripción.<hr/> <ul>' + existeClasificacion.descripcion + '</ul>', tamano: 'md' } })
+                dispatchModalAlerta({ type: 'mostrarAlerta', payload: { mensaje: 'No se puede agregar esta clasificación porque ha sido agregada con esta decripción.<hr/> <ul>' + existeClasificacion.descripcion + '</ul>', tamano: 'md' } })
                 return;
             }
         }
@@ -100,14 +105,14 @@ export const FormularioClasificacionProveedor = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        if (state.validadoFormulario) {
-            tiempoFuera.current = setTimeout(() => {
-                guardar();
-            }, 2000)
-            return () => {
-                clearTimeout(tiempoFuera.current);
-            }
-        }
+        // if (state.validadoFormulario) {
+        //     tiempoFuera.current = setTimeout(() => {
+        //         guardar();
+        //     }, 2000)
+        //     return () => {
+        //         clearTimeout(tiempoFuera.current);
+        //     }
+        // }
     }, [state.formulario, state.validadoFormulario])
 
     return (

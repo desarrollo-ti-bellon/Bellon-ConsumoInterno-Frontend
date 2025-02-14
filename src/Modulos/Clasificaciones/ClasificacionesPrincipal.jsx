@@ -1,11 +1,10 @@
 import React from 'react'
 import { Accordion, Col, Container, Row } from 'react-bootstrap'
+import BarraAcciones from '../../ComponentesGlobales/BarraAcciones'
 import ListadoLinks from '../../ComponentesGlobales/ListadoLinks'
-import FormularioClasificacion from './Vistas/FormularioClasificacion'
-import DetalleClasificacion from './Vistas/DetalleClasificacion'
 import { FormularioClasificacionContexto, FormularioClasificacionProveedor } from './Controles/FormularioClasificacionContexto'
-import UltimaActualizacionDeRegistros from '../../ComponentesGlobales/UltimaActualizacionDeRegistros'
-import ModalAlerta from '../../ComponentesGlobales/ModalAlerta'
+import DetalleClasificacion from './Vistas/DetalleClasificacion'
+import FormularioClasificacion from './Vistas/FormularioClasificacion'
 
 export default function ClasificacionesPrincipal() {
 
@@ -19,7 +18,7 @@ export default function ClasificacionesPrincipal() {
                 </Row>
                 <Row>
                     <Col>
-                        <UltimaActualizacionDeRegistros contexto={FormularioClasificacionContexto} />
+                        <BarraAcciones contexto={FormularioClasificacionContexto} />
                     </Col>
                 </Row>
                 <Row>
