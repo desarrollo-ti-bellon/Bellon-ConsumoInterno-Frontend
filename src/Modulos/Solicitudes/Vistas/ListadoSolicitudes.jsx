@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Badge, Button, Col, Container, Row } from 'react-bootstrap';
+import React, { useRef, useState } from 'react';
+import { Badge, Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
@@ -13,6 +13,16 @@ export default function ListadoSolicitudes() {
     const { state, dispatch, eliminarSolicitud, recuperarSolicitudes } = useSolicitudes()
     const navegar = useNavigate();
     const { dispatch: dispatchNotas } = useNotas();
+    const gridRef = useRef(null);
+
+    const obtenerReferenciaAgGrid = (ref) => {
+        gridRef.current = ref.current;
+    };
+
+    const filtrarListado = (filtro) => {
+        gridRef.current.api.setGridOption("quickFilterText", filtro);
+    };
+
 
     const BadgedEstadoSolicitud = (parametros) => {
         return (
@@ -68,7 +78,7 @@ export default function ListadoSolicitudes() {
         const condicion = rutas.includes(ruta);
         return (
             <>
-                { !condicion && (<Button title="Editar solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>)}
+                {!condicion && (<Button title="Editar solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>)}
                 <Button title="Ver solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>
                 <Button title="Poner nota" size='sm' variant="outline-primary" style={{ marginLeft: 5 }} onClick={() => hacerNota(parametros.data)} > {" "} <Icon.JournalBookmarkFill size={15} />{" "} </Button>
             </>
@@ -94,7 +104,32 @@ export default function ListadoSolicitudes() {
     return (
         <Container fluid>
             <Row>
-                <Col>
+                <Col
+                    xs={{ span: 12, order: 2 }}
+                    sm={{ span: 12, order: 2 }}
+                    md={{ span: 6, order: 1 }}
+                    xl={{ span: 5, order: 1 }}
+                    className="text-start mt-2 mb-2"
+                >
+                    <InputGroup className="mb-3">
+                        <InputGroup.Text id="basic-addon3">
+                            <Icon.Search />
+                        </InputGroup.Text>
+                        <Form.Control
+                            type="text"
+                            placeholder="Filtrar..."
+                            onChange={(e) => filtrarListado(e.target.value)}
+                            autoComplete="off"
+                        />
+                    </InputGroup>
+                </Col>
+                <Col
+                    xs={{ span: 12, order: 1 }}
+                    sm={{ span: 12, order: 1 }}
+                    md={{ span: 6, order: 2 }}
+                    xl={{ span: 7, order: 2 }}
+                    className="text-end"
+                >
                     <div style={{ float: 'right' }}>
                         <Button hidden={obtenerIdEstadoSolicitudPorModulo() !== 'nueva'} size='md' variant='primary' className='mb-2' onClick={() => navegar('formulario', { state: null })}><Icon.Plus />Nuevo</Button>
                     </div>
@@ -103,6 +138,7 @@ export default function ListadoSolicitudes() {
             <Row>
                 <Col>
                     <AGGridTabla
+                        obtenerReferenciaAgGrid={obtenerReferenciaAgGrid}
                         colDefs={columnas}
                         rowData={state.listadoSolicitudes}
                         rowSelection={rowSelection}
