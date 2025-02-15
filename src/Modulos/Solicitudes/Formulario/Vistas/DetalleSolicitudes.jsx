@@ -70,9 +70,10 @@ export default function DetalleSolicitudes() {
     }, [obtenerEventoFueraTabla]);
 
     useEffect(() => {
-        const nuevaSolicitud = (state.formulario.id_cabecera_solicitud !== null && !locacion.get('accion'));
+        const nuevaSolicitud = ((state.formulario.id_cabecera_solicitud === null && locacion.get('accion') === null) || (locacion.get('accion') === 'ver' && state.formulario.id_cabecera_solicitud !== null));
+        console.log("nuevaSolicitud =>", locacion.get('accion'))
         setInactivarCamposEditablesTabla(nuevaSolicitud);
-    },[])
+    }, [locacion])
 
     const cambioElValorEnLaTabla = (params) => {
 
