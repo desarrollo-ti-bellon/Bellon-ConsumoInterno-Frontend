@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useUsuarioFormulario } from '../Controles/useUsuarioFormulario';
 
 export default function FormularioUsuario() {
 
-    const { state, dispatch } = useUsuarioFormulario();
+    const { state, dispatch, validarCampoAlmacen } = useUsuarioFormulario();
     const { id_usuario_ci, id_usuario, nombre_usuario, correo, codigo_sucursal, id_sucursal, codigo_departamento, id_departamento, limite, posicion_id, estado, almacen_id, codigo_almacen } = state.formulario;
     const { campo_id_usuario_ci, campo_id_usuario, campo_nombre_usuario, campo_correo, campo_codigo_sucursal, campo_id_sucursal, campo_codigo_departamento, campo_id_departamento, campo_limite, campo_posicion_id, campo_estado, campo_almacen_id, campo_codigo_almacen } = state.inactivarCampos;
-   
 
     const actualizarFormulario = (e) => {
         const { id, value } = e.target
@@ -225,9 +224,9 @@ export default function FormularioUsuario() {
                             value={codigo_almacen || ''}
                             onChange={actualizarFormulario}
                             isValid={codigo_almacen}
-                            isInvalid={!codigo_almacen && (posicion ? ['solicitante', 'administrador'].includes(posicion.toLowerCase()) : false)}
+                            isInvalid={!codigo_almacen && validarCampoAlmacen()}
                             disabled={campo_codigo_almacen}
-                            required={(posicion && posicion.toLowerCase() === 'solicitante')}
+                            required={validarCampoAlmacen()}
                         >
                             <option value={''}>
                                 Por favor seleccione ...
