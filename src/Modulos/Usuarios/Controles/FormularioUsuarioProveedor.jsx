@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer, useRef } from "react"
+import { createContext, useEffect, useReducer } from "react"
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
 import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
@@ -15,7 +15,6 @@ export const FormularioUsuarioProveedor = ({ children }) => {
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
-    const tiempoFuera = useRef();
 
     const cargarDepartamentos = async () => {
         try {
@@ -110,6 +109,11 @@ export const FormularioUsuarioProveedor = ({ children }) => {
 
     const guardar = () => {
 
+        if (validarCampoAlmacen() && !state.formulario.id_almacen) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
+            return;
+        }
+
         if (!state.validadoFormulario) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
             return;
@@ -169,6 +173,10 @@ export const FormularioUsuarioProveedor = ({ children }) => {
     }, [])
 
     useEffect(() => {
+        validarCampoAlmacen();
+    }, [state.formulario.posicion_id])
+
+    useEffect(() => {
         // if (state.validadoFormulario) {
         //     tiempoFuera.current = setTimeout(() => {
         //         guardar();
@@ -179,8 +187,13 @@ export const FormularioUsuarioProveedor = ({ children }) => {
         // }
     }, [state.formulario, state.validadoFormulario])
 
+    const validarCampoAlmacen = () => {
+        const posicionInf = state.comboPosiciones?.find(posicion => posicion.posicion_id == state.formulario.posicion_id) ?? null;
+        return posicionInf ? ['solicitante', 'administrador'].includes(posicionInf.descripcion.toLowerCase()) : false;
+    }
+
     return (
-        <FormularioUsuarioContexto.Provider value={{ state, dispatch, guardar }}>
+        <FormularioUsuarioContexto.Provider value={{ state, dispatch, guardar, validarCampoAlmacen }}>
             {children}
         </FormularioUsuarioContexto.Provider>
     )
