@@ -214,6 +214,32 @@ export const FormularioProveedor = ({ children }) => {
 
     const guardar = async () => {
 
+        if ((state.lineas.length > 0) && state.formulario.id_cabecera_solicitud !== null && obtenerIdEstadoSolicitudPorModulo() !== 'nueva') {
+
+            const productosConCantidadCero = state.lineas.filter(linea => linea.cantidad <= 0)  // Filtra las líneas con cantidad <= 0
+
+            if (productosConCantidadCero.length > 0) {
+                let contenido = `<ul>`;
+                productosConCantidadCero.forEach((linea, index) => {
+                    contenido += `<li>`;
+                    contenido += ` <p>Producto: [${linea.no_producto}] ${linea.descripcion} </p>`;
+                    contenido += ` <p>Cantidad: ${linea.cantidad}</p>`;
+                    contenido += `</li>`;
+                })
+                contenido = `</ul>`;
+                dispatchModalAlerta({
+                    type: 'mostrarModalAlerta', payload: {
+                        mensaje: `<div style="font-size: 20px; font-weight: 600; text-align: left;">No se puede realizar esta acción, se encontraron productos con cantidad 0 por favor verifique e intente de nuevo</div></br>${contenido}`,
+                        mostrar: true,
+                        tamano: 'md'
+                    }
+                })
+                cargarSolicitudPorId();
+                noValidarFormulario();
+                return;
+            }
+        }
+
         if ((state.lineas.length > 0) && (state.formulario.total > state.limiteAprobacion)) {
             dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: left;">El total de la solicitud supera el límite de aprobación, por favor delega la solicitud a otra persona.</b>', mostrar: true, tamano: 'md' } })
             cargarSolicitudPorId();
