@@ -109,7 +109,12 @@ export const FormularioUsuarioProveedor = ({ children }) => {
 
     const guardar = () => {
 
-        if (validarCampoAlmacen() && !state.formulario.id_almacen) {
+        if (validarCampoDependiendoPosicion() && !state.formulario.id_almacen) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
+            return;
+        }
+
+        if (validarCampoDependiendoPosicionLimite() && state.formulario.limite <= 0) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
             return;
         }
@@ -173,7 +178,8 @@ export const FormularioUsuarioProveedor = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        validarCampoAlmacen();
+        validarCampoDependiendoPosicion();
+        validarCampoDependiendoPosicionLimite();
     }, [state.formulario.posicion_id])
 
     useEffect(() => {
@@ -187,13 +193,18 @@ export const FormularioUsuarioProveedor = ({ children }) => {
         // }
     }, [state.formulario, state.validadoFormulario])
 
-    const validarCampoAlmacen = () => {
+    const validarCampoDependiendoPosicion = () => {
         const posicionInf = state.comboPosiciones?.find(posicion => posicion.posicion_id == state.formulario.posicion_id) ?? null;
         return posicionInf ? ['solicitante', 'administrador'].includes(posicionInf.descripcion.toLowerCase()) : false;
     }
 
+    const validarCampoDependiendoPosicionLimite = () => {
+        const posicionInf = state.comboPosiciones?.find(posicion => posicion.posicion_id == state.formulario.posicion_id) ?? null;
+        return posicionInf ? ['director', 'gerente area'].includes(posicionInf.descripcion.toLowerCase()) : false;
+    }
+
     return (
-        <FormularioUsuarioContexto.Provider value={{ state, dispatch, guardar, validarCampoAlmacen }}>
+        <FormularioUsuarioContexto.Provider value={{ state, dispatch, guardar, validarCampoDependiendoPosicion, validarCampoDependiendoPosicionLimite }}>
             {children}
         </FormularioUsuarioContexto.Provider>
     )
