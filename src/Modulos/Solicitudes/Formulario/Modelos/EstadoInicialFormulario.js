@@ -6,8 +6,6 @@ export const EstadoInicialFormulario = {
         creado_por: "",
         usuario_responsable: "",
         usuario_despacho: "",
-        usuario_asistente_inventario: "",
-        usuario_asistente_contabilidad: "",
         id_departamento: "",
         id_estado_solicitud: null,
         id_clasificacion: null,
@@ -16,8 +14,6 @@ export const EstadoInicialFormulario = {
         total: 0,
         id_usuario_responsable: null,
         id_usuario_despacho: null,
-        id_usuario_asistente_inventario: null,
-        id_usuario_asistente_contabilidad: null,
     },
     inactivarCampos: {
         campo_id_cabecera_solicitud: true,
@@ -27,8 +23,6 @@ export const EstadoInicialFormulario = {
         campo_creado_por: true,
         campo_usuario_responsable: true,
         campo_usuario_despacho: true,
-        campo_usuario_asistente_control: true,
-        campo_usuario_asistente_contabilidad: true,
         campo_id_departamento: true,
         campo_id_estado_solicitud: true,
         campo_id_clasificacion: true,
@@ -38,8 +32,6 @@ export const EstadoInicialFormulario = {
         campo_total: true,
         campo_id_usuario_responsable: true,
         campo_id_usuario_despacho: true,
-        campo_id_usuario_asistente_inventario: true,
-        campo_id_usuario_asistente_contabilidad: true
     },
     camposRequeridos: {
         requerido_id_cabecera_solicitud: true,
@@ -49,8 +41,6 @@ export const EstadoInicialFormulario = {
         requerido_creado_por: true,
         requerido_usuario_responsable: true,
         requerido_usuario_despacho: true,
-        requerido_usuario_asistente_control: true,
-        requerido_usuario_asistente_contabilidad: true,
         requerido_id_departamento: true,
         requerido_id_estado_solicitud: true,
         requerido_id_clasificacion: true,
@@ -60,8 +50,6 @@ export const EstadoInicialFormulario = {
         requerido_total: true,
         requerido_id_usuario_responsable: true,
         requerido_id_usuario_despacho: true,
-        requerido_id_usuario_asistente_inventario: true,
-        requerido_id_usuario_asistente_contabilidad: true
     },
     estadoCambiado: false,
     limiteAprobacion: 0,

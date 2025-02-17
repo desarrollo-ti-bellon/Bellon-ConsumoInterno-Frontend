@@ -424,8 +424,6 @@ export const FormularioProveedor = ({ children }) => {
                             campo_creado_por: true,
                             campo_usuario_responsable: true,
                             campo_usuario_despacho: true,
-                            campo_usuario_asistente_control: true,
-                            campo_usuario_asistente_contabilidad: true,
                             campo_id_departamento: true,
                             campo_id_estado_solicitud: true,
                             campo_id_clasificacion: false,
@@ -435,8 +433,6 @@ export const FormularioProveedor = ({ children }) => {
                             campo_total: true,
                             campo_id_usuario_responsable: true,
                             campo_id_usuario_despacho: true,
-                            campo_id_usuario_asistente_inventario: true,
-                            campo_id_usuario_asistente_contabilidad: true,
                         }
                     }
                 });
@@ -452,8 +448,6 @@ export const FormularioProveedor = ({ children }) => {
                             campo_no_documento: true,
                             campo_fecha_creado: true,
                             campo_id_departamento: true,
-                            campo_usuario_asistente_control: true,
-                            campo_usuario_asistente_contabilidad: true,
                             campo_id_estado_solicitud: true,
                             campo_id_clasificacion: true,
                             campo_id_sucursal: true,
@@ -466,8 +460,6 @@ export const FormularioProveedor = ({ children }) => {
                             campo_usuario_despacho: true,
                             campo_id_usuario_responsable: true,
                             campo_id_usuario_despacho: true,
-                            campo_id_usuario_asistente_inventario: true,
-                            campo_id_usuario_asistente_contabilidad: true
                         }
                     }
                 });
@@ -494,8 +486,6 @@ export const FormularioProveedor = ({ children }) => {
                         campo_no_documento: true,
                         campo_fecha_creado: true,
                         campo_id_departamento: true,
-                        campo_usuario_asistente_control: false,
-                        campo_usuario_asistente_contabilidad: false,
                         campo_id_estado_solicitud: true,
                         campo_id_clasificacion: false,
                         campo_id_sucursal: true,
@@ -508,8 +498,6 @@ export const FormularioProveedor = ({ children }) => {
                         campo_usuario_despacho: true,
                         campo_id_usuario_responsable: false,
                         campo_id_usuario_despacho: true,
-                        campo_id_usuario_asistente_inventario: true,
-                        campo_id_usuario_asistente_contabilidad: true
                     }
                 }
             });
@@ -526,8 +514,6 @@ export const FormularioProveedor = ({ children }) => {
                     requerido_fecha_creado: false,
                     requerido_id_departamento: false,
                     requerido_usuario_despacho: false,
-                    requerido_usuario_asistente_control: false,
-                    requerido_usuario_asistente_contabilidad: false,
                     requerido_id_estado_solicitud: false,
                     requerido_id_clasificacion: true,
                     requerido_id_sucursal: false,
@@ -540,8 +526,6 @@ export const FormularioProveedor = ({ children }) => {
                     requerido_usuario_despacho: false,
                     requerido_id_usuario_responsable: false,
                     requerido_id_usuario_despacho: false,
-                    requerido_id_usuario_asistente_inventario: false,
-                    requerido_id_usuario_asistente_contabilidad: false
                 }
             }
         });

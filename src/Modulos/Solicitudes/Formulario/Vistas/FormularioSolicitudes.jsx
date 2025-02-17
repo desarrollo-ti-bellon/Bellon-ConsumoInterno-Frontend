@@ -7,9 +7,9 @@ import { useFormulario } from "../Controles/useFormulario";
 export default function FormularioSolicitudes() {
 
     const { state, dispatch, delegarResponsable, validarFormulario: validarFormularioReducer, noValidarFormulario, actualizarFormulario, limpiarFormulario, enviar } = useFormulario();
-    const { id_cabecera_solicitud, no_documento, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, usuario_asistente_control, usuario_asistente_contabilidad, id_estado_solicitud, id_clasificacion, id_sucursal, comentario, total } = state.formulario;
-    const { campo_id_cabecera_solicitud, campo_no_documento, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_usuario_asistente_control, campo_usuario_asistente_contabilidad, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_comentario, campo_total } = state.inactivarCampos;
-    const { requerido_id_cabecera_solicitud, requerido_no_documento, requerido_fecha_creado, requerido_creado_por, requerido_id_departamento, requerido_usuario_despacho, requerido_usuario_responsable, requerido_usuario_asistente_control, requerido_usuario_asistente_contabilidad, requerido_id_estado_solicitud, requerido_id_clasificacion, requerido_id_sucursal, requerido_comentario, requerido_total } = state.camposRequeridos;
+    const { id_cabecera_solicitud, no_documento, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, id_estado_solicitud, id_clasificacion, id_sucursal, comentario, total } = state.formulario;
+    const { campo_id_cabecera_solicitud, campo_no_documento, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_comentario, campo_total } = state.inactivarCampos;
+    const { requerido_id_cabecera_solicitud, requerido_no_documento, requerido_fecha_creado, requerido_creado_por, requerido_id_departamento, requerido_usuario_despacho, requerido_usuario_responsable, requerido_id_estado_solicitud, requerido_id_clasificacion, requerido_id_sucursal, requerido_comentario, requerido_total } = state.camposRequeridos;
 
     useEffect(() => {
         limpiarFormulario();
@@ -230,44 +230,6 @@ export default function FormularioSolicitudes() {
                         </Row>
 
                         <Row className="mb-3" hidden>
-
-                            <Form.Group as={Col} md="4" controlId="usuario_asistente_contabilidad">
-                                <Form.Label>Asistente Contabilidad</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={usuario_asistente_contabilidad || ''}
-                                    onChange={(e) => {
-                                        actualizarFormulario(e.target.id, e.target.value);
-                                        enviar();
-                                    }}
-                                    isValid={usuario_asistente_contabilidad}
-                                    isInvalid={requerido_usuario_responsable && !usuario_asistente_contabilidad}
-                                    disabled={campo_usuario_asistente_contabilidad}
-                                    required={requerido_usuario_asistente_contabilidad}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    El campo usuario despachador es obligatorio.
-                                </Form.Control.Feedback>
-                            </Form.Group>
-
-                            <Form.Group as={Col} md="4" controlId="usuario_asistente_control">
-                                <Form.Label>Asistente Control</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={usuario_asistente_control || ''}
-                                    onChange={(e) => {
-                                        actualizarFormulario(e.target.id, e.target.value);
-                                        enviar();
-                                    }}
-                                    isValid={usuario_asistente_control}
-                                    isInvalid={requerido_usuario_asistente_control && !usuario_asistente_control}
-                                    disabled={campo_usuario_asistente_control}
-                                    required={requerido_usuario_asistente_control}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    El campo usuario despachador es obligatorio.
-                                </Form.Control.Feedback>
-                            </Form.Group>
 
                             <Form.Group as={Col} md="4" controlId="usuario_despacho">
                                 <Form.Label>Asistente Despacho</Form.Label>

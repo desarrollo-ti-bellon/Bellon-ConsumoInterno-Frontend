@@ -14,7 +14,7 @@ export default function MenuVerticalProveedor({ children }) {
     const { state: stateControlGeneral, dispatch: dispatchControlGeneral } = useControlGeneral();
 
     const regularRutasDelPerfilUsuarioLogueado = () => {
-        
+
         const datosUsuarioLogueado = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO);
         const usuarioLogueado = datosUsuarioLogueado !== null;
 
@@ -39,18 +39,16 @@ export default function MenuVerticalProveedor({ children }) {
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
                     ].includes(r.ruta));
                     break;
-                case 3: // 'Gerente Tienda'
+                case 3: // 'Gerente Area'
                     urls = rutasModulos.filter(r => [
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS
                     ].includes(r.ruta));
                     break;
-                case 4: // 'Gerente Area'
+                case 4: // 'Despacho'
                     urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
                     ].includes(r.ruta));
                     break;
                 case 5: // 'Solicitante'
@@ -60,21 +58,6 @@ export default function MenuVerticalProveedor({ children }) {
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS
-                    ].includes(r.ruta));
-                    break;
-                case 6: // 'Asistente Con. Inventario'
-                    urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
-                    ].includes(r.ruta));
-                    break;
-                case 7: // 'Asistente Contabilidad'
-                    urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
-                    ].includes(r.ruta));
-                    break;
-                case 8: // 'Despachador'
-                    urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
                     ].includes(r.ruta));
                     break;
                 default:

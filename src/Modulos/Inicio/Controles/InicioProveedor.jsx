@@ -41,18 +41,17 @@ export function InicioProveedor({ children }) {
                         'Pendiente',
                     ]
                     break;
-                case 3: // 'Gerente Tienda'
+                case 3: // 'Gerente Area'
                     estados = [
                         'Pendiente',
                         'Rechazada',
                         'Aprobada',
                     ]
                     break;
-                case 4: // 'Gerente Area'
+                case 4: // 'Despacho'
                     estados = [
-                        'Pendiente',
-                        'Rechazada',
                         'Aprobada',
+                        'Confirmada',
                     ]
                     break;
                 case 5: // 'Solicitante'
@@ -61,22 +60,6 @@ export function InicioProveedor({ children }) {
                         'Pendiente',
                         'Aprobada',
                         'Rechazada',
-                    ]
-                    break;
-                case 6: // 'Asistente Con. Inventario'
-                    estados = [
-                        'Confirmada',
-                    ]
-                    break;
-                case 7: // 'Asistente Contabilidad'
-                    estados = [
-                        'Terminada',
-                    ]
-                    break;
-                case 8: // 'Despachador'
-                    estados = [
-                        'Aprobada',
-                        'Confirmada',
                     ]
                     break;
                 default:
