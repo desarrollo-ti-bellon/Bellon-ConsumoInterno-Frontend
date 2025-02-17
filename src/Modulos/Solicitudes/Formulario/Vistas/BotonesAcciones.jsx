@@ -31,6 +31,9 @@ export default function BotonesAcciones() {
 
     useEffect(() => {
         // AQUI SE CONTROLAN QUE BOTONES SE VEN DEPENDIENDO EL MODULO DONDE ESTE Y LOS PERMISOS QUE TENGA LA POSICION DEL USUARIO
+        if (!permisosUsuarioLogueado) {
+            return;
+        }
         const botonesCondiciones = {
             btnNuevo: (['nueva'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud === null && permisosUsuarioLogueado.crear_solicitud),
             btnEnviar: (['nueva', 'rechazada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.enviar_solicitud),
