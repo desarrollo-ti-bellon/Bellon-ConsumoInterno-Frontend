@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { FormularioContexto } from "./FormularioContexto";
+import { FormularioContexto } from "./FormularioProveedor";
 
 export const useFormulario = () => {
 

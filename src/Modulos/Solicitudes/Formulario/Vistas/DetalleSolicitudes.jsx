@@ -4,7 +4,6 @@ import * as Icon from 'react-bootstrap-icons';
 import { useSearchParams } from 'react-router-dom';
 import AGGridTabla from '../../../../ComponentesGlobales/AGGridTabla';
 import { useAlerta } from '../../../../ControlesGlobales/Alertas/useAlerta';
-import { useModalAlerta } from '../../../../ControlesGlobales/ModalAlerta/useModalAlerta';
 import { formatoCantidad, formatoMoneda, obtenerRutaUrlActual } from '../../../../FuncionesGlobales';
 import { useFormulario } from '../Controles/useFormulario';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialFormulario';
@@ -13,12 +12,37 @@ export default function DetalleSolicitudes() {
 
     const { state, dispatch, guardarLineas, eliminaLinea } = useFormulario();
     const { dispatch: dispatchAlerta } = useAlerta();
-    const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const gridRef = useRef(null);
     const [locacion] = useSearchParams();
-    const inactivarCamposEditablesTabla = !(locacion.get('accion') === 'ver' || obtenerRutaUrlActual() !== import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
+    const [activarCamposEditablesTabla, setActivarCamposEditablesTabla] = useState(true);
+    const [activarBotonAgregarProductos, setActivarBotonAgregarProductos] = useState(false);
 
-    const campoEdicionEstilos = inactivarCamposEditablesTabla ? {
+    useEffect(() => {
+        const condicion2 = (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') !== 'ver' && obtenerRutaUrlActual() === import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
+        setActivarBotonAgregarProductos(condicion2)
+        console.log('condicion2 =>', condicion2)
+    }, [state.formulario])
+
+    useEffect(() => {
+
+        const condicion = (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') !== 'ver' && obtenerRutaUrlActual() === import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
+        setActivarCamposEditablesTabla(condicion)
+        console.log('condicion =>', condicion)
+
+        setColumnasProductos([
+            { headerName: 'Producto ID', field: "no_producto", flex: 1 },
+            { headerName: 'Descripcion', field: "descripcion", flex: 4 },
+            { headerName: 'Cantidad', field: "cantidad", editable: activarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 1 },
+            { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
+            { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
+            { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
+            { headerName: 'Nota', field: "nota", editable: activarCamposEditablesTabla, cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 4 },
+            { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
+        ]);
+
+    }, [state])
+
+    const campoEdicionEstilos = activarCamposEditablesTabla ? {
         backgroundColor: "#f2f2f2",
         padding: 0,
         border: "1px solid #bebebe",
@@ -43,14 +67,14 @@ export default function DetalleSolicitudes() {
         )
     }
 
-    const [columnasProductos] = useState([
+    const [columnasProductos, setColumnasProductos] = useState([
         { headerName: 'Producto ID', field: "no_producto", flex: 1 },
         { headerName: 'Descripcion', field: "descripcion", flex: 4 },
-        { headerName: 'Cantidad', field: "cantidad", editable: inactivarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: inactivarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 1, },
+        { headerName: 'Cantidad', field: "cantidad", editable: activarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 1, },
         { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
         { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
         { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
-        { headerName: 'Nota', field: "nota", editable: inactivarCamposEditablesTabla, cellStyle: inactivarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 4 },
+        { headerName: 'Nota', field: "nota", editable: activarCamposEditablesTabla, cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 4 },
         { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
 
@@ -71,7 +95,7 @@ export default function DetalleSolicitudes() {
 
     const cambioElValorEnLaTabla = (params) => {
 
-        console.log("Celda actualizada:", params.data);
+        // console.log("Celda actualizada:", params.data);
         const { colDef, newValue, oldValue } = params;
         let error = false;
         if (newValue !== oldValue) {
@@ -129,7 +153,7 @@ export default function DetalleSolicitudes() {
             <Row>
                 <Col>
                     <div style={{ float: 'right', marginBottom: 5 }}>
-                        <Button disabled={inactivarCamposEditablesTabla} size='md' variant='primary' onClick={() => mostrarAgregarProductos()}><Icon.Plus />Agregar Productos</Button>
+                        <Button disabled={!activarBotonAgregarProductos} size='md' variant='primary' onClick={() => mostrarAgregarProductos()}><Icon.Plus />Agregar Productos</Button>
                     </div>
                 </Col>
             </Row>

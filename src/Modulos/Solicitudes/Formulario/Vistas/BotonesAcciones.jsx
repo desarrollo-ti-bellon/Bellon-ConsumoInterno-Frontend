@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { useFormulario } from '../Controles/useFormulario';
-import { useModalConfirmacion } from '../../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion';
 import { useModalAlerta } from '../../../../ControlesGlobales/ModalAlerta/useModalAlerta';
+import { useModalConfirmacion } from '../../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion';
 import { obtenerDatosDelLocalStorage } from '../../../../FuncionesGlobales';
+import { useFormulario } from '../Controles/useFormulario';
 
 export default function BotonesAcciones() {
 
@@ -35,11 +35,9 @@ export default function BotonesAcciones() {
             return;
         }
         const botonesCondiciones = {
-            btnNuevo: (['nueva'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud === null && permisosUsuarioLogueado.crear_solicitud),
             btnEnviar: (['nueva', 'rechazada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.enviar_solicitud),
-            btnRegistrar: (['confirmada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.registrar_solicitud),
             btnAprobar: (['pendiente'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.aprobar_solicitud),
-            btnRechazar: (['confirmada', 'pendiente', 'aprobada', 'entregada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.rechazar_solicitud),
+            btnRechazar: (['pendiente', 'aprobada', 'entregada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.rechazar_solicitud),
             btnEntregar: (['aprobada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.entregar_solicitud),
             btnConfirmar: (['entregada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
         };
