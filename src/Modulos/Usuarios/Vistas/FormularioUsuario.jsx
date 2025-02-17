@@ -4,7 +4,7 @@ import { useUsuarioFormulario } from '../Controles/useUsuarioFormulario';
 
 export default function FormularioUsuario() {
 
-    const { state, dispatch, validarCampoAlmacen } = useUsuarioFormulario();
+    const { state, dispatch, validarCampoDependiendoPosicion, validarCampoDependiendoPosicionLimite } = useUsuarioFormulario();
     const { id_usuario_ci, id_usuario, nombre_usuario, correo, codigo_sucursal, id_sucursal, codigo_departamento, id_departamento, limite, posicion_id, estado, almacen_id, codigo_almacen } = state.formulario;
     const { campo_id_usuario_ci, campo_id_usuario, campo_nombre_usuario, campo_correo, campo_codigo_sucursal, campo_id_sucursal, campo_codigo_departamento, campo_id_departamento, campo_limite, campo_posicion_id, campo_estado, campo_almacen_id, campo_codigo_almacen } = state.inactivarCampos;
 
@@ -115,15 +115,43 @@ export default function FormularioUsuario() {
                         </Form.Control.Feedback>
                     </Form.Group>
 
+                    <Form.Group as={Col} md="4" controlId="posicion_id">
+                        <Form.Label>Posicion</Form.Label>
+                        <Form.Select
+                            value={posicion_id || ''}
+                            onChange={actualizarFormulario}
+                            isValid={posicion_id}
+                            isInvalid={!posicion_id}
+                            disabled={campo_posicion_id}
+                            required
+                        >
+                            <option value={''}>
+                                Por favor seleccione ...
+                            </option>
+                            {
+                                state.comboPosiciones?.map(posicion => {
+                                    return (
+                                        <option key={posicion.posicion_id} value={posicion.posicion_id}>
+                                            [{posicion.posicion_id}] {posicion.descripcion}
+                                        </option>
+                                    )
+                                })
+                            }
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid">
+                            El campo posición es obligatorio.
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
                     <Form.Group as={Col} md="4" controlId="codigo_sucursal">
                         <Form.Label>Sucursal</Form.Label>
                         <Form.Select
                             value={codigo_sucursal || ''}
                             onChange={actualizarFormulario}
                             isValid={codigo_sucursal}
-                            isInvalid={!codigo_sucursal}
+                            isInvalid={!codigo_sucursal && validarCampoDependiendoPosicion()}
                             disabled={campo_codigo_sucursal}
-                            required
+                            required={validarCampoDependiendoPosicion()}
                         >
                             <option value={''}>
                                 Por favor seleccione ...
@@ -142,6 +170,12 @@ export default function FormularioUsuario() {
                             El código de la sucursal es obligatorio.
                         </Form.Control.Feedback>
                     </Form.Group>
+
+
+
+                </Row>
+
+                <Row className="mb-2">
 
                     <Form.Group as={Col} md="4" controlId="codigo_departamento">
                         <Form.Label>Departamento</Form.Label>
@@ -171,47 +205,16 @@ export default function FormularioUsuario() {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                </Row>
-
-                <Row className="mb-2">
-
-                    <Form.Group as={Col} md="3" controlId="posicion_id">
-                        <Form.Label>Posicion</Form.Label>
-                        <Form.Select
-                            value={posicion_id || ''}
-                            onChange={actualizarFormulario}
-                            isValid={posicion_id}
-                            isInvalid={!posicion_id}
-                            disabled={campo_posicion_id}
-                            required
-                        >
-                            <option value={''}>
-                                Por favor seleccione ...
-                            </option>
-                            {
-                                state.comboPosiciones?.map(posicion => {
-                                    return (
-                                        <option key={posicion.posicion_id} value={posicion.posicion_id}>
-                                            [{posicion.posicion_id}] {posicion.descripcion}
-                                        </option>
-                                    )
-                                })
-                            }
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid">
-                            El campo posición es obligatorio.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group as={Col} md="3" controlId="limite">
+                    <Form.Group as={Col} md="4" controlId="limite">
                         <Form.Label>Limite</Form.Label>
                         <Form.Control
                             type="text"
-                            value={limite || 0}
+                            value={limite || ''}
                             onChange={actualizarFormulario}
                             isValid={limite}
-                            isInvalid={!limite && !isNaN(limite) && +limite < 0}
-                            disabled={campo_limite}
+                            isInvalid={!limite && !isNaN(limite) && (validarCampoDependiendoPosicionLimite() ? +limite <= 0 : false)}
+                            disabled={campo_limite || !validarCampoDependiendoPosicionLimite()}
+                            required={validarCampoDependiendoPosicionLimite()}
                         />
                         <Form.Control.Feedback type="invalid">
                             El limite que se puede aprobar es obligatorio.
@@ -224,9 +227,9 @@ export default function FormularioUsuario() {
                             value={codigo_almacen || ''}
                             onChange={actualizarFormulario}
                             isValid={codigo_almacen}
-                            isInvalid={!codigo_almacen && validarCampoAlmacen()}
-                            disabled={campo_codigo_almacen}
-                            required={validarCampoAlmacen()}
+                            isInvalid={!codigo_almacen && validarCampoDependiendoPosicion()}
+                            disabled={campo_codigo_almacen || !validarCampoDependiendoPosicion()}
+                            required={validarCampoDependiendoPosicion()}
                         >
                             <option value={''}>
                                 Por favor seleccione ...
