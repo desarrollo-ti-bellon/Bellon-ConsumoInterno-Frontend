@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import AGGridTabla from '../../../../ComponentesGlobales/AGGridTabla';
 import { useAlerta } from '../../../../ControlesGlobales/Alertas/useAlerta';
 import { useModalAlerta } from '../../../../ControlesGlobales/ModalAlerta/useModalAlerta';
-import { formatoCantidad, formatoMoneda } from '../../../../FuncionesGlobales';
+import { formatoCantidad, formatoMoneda, obtenerRutaUrlActual } from '../../../../FuncionesGlobales';
 import { useFormulario } from '../Controles/useFormulario';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialFormulario';
 
@@ -16,15 +16,15 @@ export default function DetalleSolicitudes() {
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
     const gridRef = useRef(null);
     const [locacion] = useSearchParams();
-    const [inactivarCamposEditablesTabla, setInactivarCamposEditablesTabla] = useState(true);
+    const inactivarCamposEditablesTabla = !(locacion.get('accion') === 'ver' || obtenerRutaUrlActual() !== import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
 
-    const campoEdicionEstilos = !inactivarCamposEditablesTabla ? {} : {
+    const campoEdicionEstilos = inactivarCamposEditablesTabla ? {
         backgroundColor: "#f2f2f2",
         padding: 0,
         border: "1px solid #bebebe",
         borderRadius: "5px",
         cursor: "pointer"
-    };
+    } : {};
 
     const quitarStylosColumnaFooter = (params) => {
         return !params.node.rowPinned ? campoEdicionEstilos : null;
@@ -46,11 +46,11 @@ export default function DetalleSolicitudes() {
     const [columnasProductos] = useState([
         { headerName: 'Producto ID', field: "no_producto", flex: 1 },
         { headerName: 'Descripcion', field: "descripcion", flex: 4 },
-        { headerName: 'Cantidad', field: "cantidad", editable: inactivarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: quitarStylosColumnaFooter, flex: 1, },
+        { headerName: 'Cantidad', field: "cantidad", editable: inactivarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: inactivarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 1, },
         { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
         { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
         { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
-        { headerName: 'Nota', field: "nota", editable: inactivarCamposEditablesTabla, cellStyle: quitarStylosColumnaFooter, flex: 4 },
+        { headerName: 'Nota', field: "nota", editable: inactivarCamposEditablesTabla, cellStyle: inactivarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 4 },
         { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
 
@@ -68,12 +68,6 @@ export default function DetalleSolicitudes() {
         document.addEventListener("click", obtenerEventoFueraTabla);
         return () => document.removeEventListener("click", obtenerEventoFueraTabla);
     }, [obtenerEventoFueraTabla]);
-
-    useEffect(() => {
-        const nuevaSolicitud = ((state.formulario.id_cabecera_solicitud === null && locacion.get('accion') === null) || (locacion.get('accion') === 'ver' && state.formulario.id_cabecera_solicitud !== null));
-        console.log("nuevaSolicitud =>", locacion.get('accion'))
-        setInactivarCamposEditablesTabla(nuevaSolicitud);
-    }, [locacion])
 
     const cambioElValorEnLaTabla = (params) => {
 
