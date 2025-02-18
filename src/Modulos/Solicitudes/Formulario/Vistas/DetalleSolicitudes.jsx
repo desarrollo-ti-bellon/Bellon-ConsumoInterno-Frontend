@@ -19,7 +19,7 @@ export default function DetalleSolicitudes() {
     const [bloquearBotonBorraLinea, setBloquearBotonBorraLinea] = useState(true);
 
     useEffect(() => {
-        const condicion2 = (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') !== 'ver' && obtenerRutaUrlActual() === import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
+        const condicion2 = locacion.get('accion') !== 'ver';
         setActivarBotonAgregarProductos(condicion2)
         console.log('condicion2 =>', condicion2)
     }, [state.formulario])
@@ -34,15 +34,15 @@ export default function DetalleSolicitudes() {
         // BLOQUEAR BOTON DE BORRAR LINEA
         const condicion2 = locacion.get('accion') === 'ver';
         setBloquearBotonBorraLinea(condicion2)
-        
+
         setColumnasProductos([
-            { headerName: 'Producto ID', field: "no_producto", flex: 1 },
-            { headerName: 'Descripcion', field: "descripcion", flex: 4 },
-            { headerName: 'Cantidad', field: "cantidad", editable: activarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 1 },
-            { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
-            { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
-            { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
-            { headerName: 'Nota', field: "nota", editable: activarCamposEditablesTabla, cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 4 },
+            { headerName: 'Producto ID', field: "no_producto", flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 20 },
+            { headerName: 'Descripcion', field: "descripcion", flex: 4, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: 'Cantidad', field: "cantidad", editable: activarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$'), wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$'), wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: 'Nota', field: "nota", editable: activarCamposEditablesTabla, cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 4, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
             { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
         ]);
 
