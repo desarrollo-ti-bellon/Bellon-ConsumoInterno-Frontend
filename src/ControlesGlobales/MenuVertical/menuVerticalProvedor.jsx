@@ -31,7 +31,8 @@ export default function MenuVerticalProveedor({ children }) {
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
                         import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
-                        import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_USUARIOS
+                        import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_USUARIOS,
+                        import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
                     ].includes(r.ruta));
                     break;
                 case 2: // 'Director'
@@ -57,7 +58,9 @@ export default function MenuVerticalProveedor({ children }) {
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
+                        import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
+
                     ].includes(r.ruta));
                     break;
                 default:
