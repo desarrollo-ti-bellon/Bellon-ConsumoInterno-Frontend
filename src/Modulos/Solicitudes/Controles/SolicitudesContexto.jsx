@@ -41,6 +41,22 @@ export const SolicitudesProveedor = ({ children }) => {
     }
 
     const cargarSolicitudes = async () => {
+
+        if (obtenerRutaUrlActual() === import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES) {
+            try {
+                const res = await obtenerDatos(`HistorialMovimientoSolicitudesCI/Agrupado`, null);
+                let json = [];
+                if (res.status !== 204) {
+                    json = res.data;
+                }
+                dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
+                dispatch({ type: 'combinarEstadosSolicitudes' });
+            } catch (err) {
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
+            }
+            return;
+        }
+
         const idEstadoSolicitud = obtenerIdEstadoSolicitudPorModulo();
         if (idEstadoSolicitud === null) return;
         try {
