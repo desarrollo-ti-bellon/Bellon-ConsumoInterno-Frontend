@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom"
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
 import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
-import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
+import { eliminarDatosConId, enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
 import { EstadoInicialClasificacionFormulario } from "../Modelos/EstadoInicialClasificacionFormulario"
 import { formularioClasificacionReducer } from "./formularioClasificacionReducer"
 
@@ -88,6 +88,23 @@ export const FormularioClasificacionProveedor = ({ children }) => {
             })
     }
 
+    const eliminaLinea = (id) => {
+        dispatch({ type: 'limpiarFormulario' })
+        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
+        eliminarDatosConId('Clasificacion', id)
+            .then((res) => {
+                // let json = res.data;
+                cargarClasificaciones();
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+            })
+            .catch((err) => {
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+            })
+            .finally(() => {
+                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+            })
+    }
+
     useEffect(() => {
         cargarDatosIniciales();
         dispatch({
@@ -116,7 +133,7 @@ export const FormularioClasificacionProveedor = ({ children }) => {
     }, [state.formulario, state.validadoFormulario])
 
     return (
-        <FormularioClasificacionContexto.Provider value={{ state, dispatch, guardar }}>
+        <FormularioClasificacionContexto.Provider value={{ state, dispatch, guardar, eliminaLinea }}>
             {children}
         </FormularioClasificacionContexto.Provider>
     )

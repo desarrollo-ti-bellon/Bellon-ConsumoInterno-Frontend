@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import * as Icon from 'react-bootstrap-icons';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useAlerta } from '../../../ControlesGlobales/Alertas/useAlerta';
 import { useModalAlerta } from '../../../ControlesGlobales/ModalAlerta/useModalAlerta';
@@ -8,15 +9,25 @@ import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelectio
 
 export default function DetalleClasificacion() {
 
-    const { state, dispatch } = useClasificacionFormulario();
+    const { state, dispatch, eliminaLinea } = useClasificacionFormulario();
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
+
+    const BotonesAcciones = (parametros) => {
+        const linea = parametros.data;
+        return (
+            <>
+                {!linea.acciones && (<Button title="Eliminar clasificacion" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => eliminaLinea(linea.id_clasificacion)}> <Icon.Trash /> </Button>)}
+            </>
+        )
+    }
 
     const [columnasProductos] = useState([
         { headerName: 'ID', field: "id_clasificacion", flex: 1 },
         { headerName: 'Codigo Clasificacion', field: "codigo_clasificacion", flex: 2 },
         { headerName: 'Descripción', field: "descripcion", flex: 8 },
-        { headerName: 'Estado', field: "estado", flex: 1, }
+        { headerName: 'Estado', field: "estado", flex: 1, },
+        // { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
 
     const llenarFormulario = (parametros) => {
