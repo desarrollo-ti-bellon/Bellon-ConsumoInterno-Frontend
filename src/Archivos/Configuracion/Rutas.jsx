@@ -50,7 +50,14 @@ export const rutas = [
     {
         ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
         componente: <SolicitudesPrincipal />,
-        nombre: 'Solicitudes Terminadas',
+        nombre: 'Consumos Internos',
+        icono: <Icon.Circle />,
+        grupo: 'Históricos'
+    },
+    {
+        ruta: import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES,
+        componente: <SolicitudesPrincipal />,
+        nombre: 'Historial Mov. Solicitudes',
         icono: <Icon.Circle />,
         grupo: 'Históricos'
     },
