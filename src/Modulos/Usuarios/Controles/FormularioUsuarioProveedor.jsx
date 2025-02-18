@@ -2,7 +2,7 @@ import { createContext, useEffect, useReducer } from "react"
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
 import { useModalAlerta } from "../../../ControlesGlobales/ModalAlerta/useModalAlerta"
-import { enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
+import { eliminarDatosConId, enviarDatos, obtenerDatos } from "../../../FuncionesGlobales"
 import { EstadoInicialUsuarioFormulario } from "../Modelos/EstadoInicialUsuarioFormulario"
 import { formularioUsuarioReducer } from "./formularioUsuarioReducer"
 
@@ -152,6 +152,23 @@ export const FormularioUsuarioProveedor = ({ children }) => {
             })
     }
 
+    const eliminaLinea = (id) => {
+        dispatch({ type: 'limpiarFormulario' })
+        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
+        eliminarDatosConId('UsuariosCI', id)
+            .then((res) => {
+                // let json = res.data;
+                cargarUsuariosCI();
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
+            })
+            .catch((err) => {
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+            })
+            .finally(() => {
+                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+            })
+    }
+
     useEffect(() => {
         cargarDatosIniciales();
         dispatch({
@@ -204,7 +221,7 @@ export const FormularioUsuarioProveedor = ({ children }) => {
     }
 
     return (
-        <FormularioUsuarioContexto.Provider value={{ state, dispatch, guardar, validarCampoDependiendoPosicion, validarCampoDependiendoPosicionLimite }}>
+        <FormularioUsuarioContexto.Provider value={{ state, dispatch, guardar, eliminaLinea, validarCampoDependiendoPosicion, validarCampoDependiendoPosicionLimite }}>
             {children}
         </FormularioUsuarioContexto.Provider>
     )
