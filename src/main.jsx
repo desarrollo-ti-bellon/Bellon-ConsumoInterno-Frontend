@@ -13,6 +13,7 @@ import SolicitudesPrincipal from './Modulos/Solicitudes/SolicitudesPrincipal.jsx
 import FormularioSolicitudesPrincipal from './Modulos/Solicitudes/Formulario/FormularioSolicitudesPrincipal.jsx';
 import ClasificacionesPrincipal from './Modulos/Clasificaciones/ClasificacionesPrincipal.jsx';
 import UsuariosPrincipal from './Modulos/Usuarios/UsuariosPrincipal.jsx';
+import HistorialMovimientosSolicitudPrincipal from './Modulos/HistorialMovimientosSolicitud/HistorialMovimientosSolicitudPrincipal.jsx';
 
 const esProduccion = (window.location.host.split(':')[0]) != 'localhost' ? true : false;
 if (esProduccion) {
@@ -60,10 +61,13 @@ const rutas = createBrowserRouter([
                 element: <SolicitudesPrincipal />,
             },
 
-
-            // VISTAS HISTORICOS (CONSUMOS INTERNOS YA REALIZADOS)
+            // VISTAS HISTORICOS (CONSUMOS INTERNOS YA REALIZADOS Y LOS MOVIMIENTOS DE LA SOLICITUD)
             {
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
+                element: <SolicitudesPrincipal />,
+            },
+            {
+                path: import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES,
                 element: <SolicitudesPrincipal />,
             },
 
@@ -96,7 +100,10 @@ const rutas = createBrowserRouter([
                 path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO,
                 element: <FormularioSolicitudesPrincipal />,
             },
-
+            {
+                path: import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES_HISTORICO,
+                element: <HistorialMovimientosSolicitudPrincipal />,
+            },
 
             // VISTAS MANTENIMIENTOS
             {
