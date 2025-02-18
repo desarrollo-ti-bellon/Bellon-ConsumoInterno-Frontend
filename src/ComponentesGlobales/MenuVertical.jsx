@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Nav, Offcanvas } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import { Link, useLocation } from "react-router-dom";
 import "../ComponentesEstilos/menuVertical.css";
 import { useMenuVertical } from "../ControlesGlobales/MenuVertical/menuVerticalHook";
 import { obtenerDatosDelLocalStorage } from "../FuncionesGlobales";
-import { useEffect } from "react";
 
 export default function MenuVertical() {
 
