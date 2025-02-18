@@ -34,8 +34,8 @@ export default function MenuVertical() {
     };
 
     useEffect(() => {
-        const x = agrupacionModulos(rutas, "grupo");
-        setRenderizarMenu(agrupacionModulos(rutas, "grupo"));
+        const agrupado = agrupacionModulos(rutas, "grupo");
+        setRenderizarMenu(agrupado);
         const datosUsuario = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO) ?? null;
         if (datosUsuario) {
             setPerfil(datosUsuario?.posicion.descripcion);
