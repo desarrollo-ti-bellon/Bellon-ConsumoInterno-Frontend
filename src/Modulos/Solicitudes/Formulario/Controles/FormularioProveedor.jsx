@@ -212,6 +212,27 @@ export const FormularioProveedor = ({ children }) => {
         }
     }
 
+    const cambiarEstadoSolicitud = (estado) => {
+        dispatch({ type: 'cambiarEstadoGeneral', payload: { id: 'estadoCambiado', value: estado } })
+    }
+
+    const cambioEstadoSolicitud = () => {
+        if (state.estadoCambiado) {
+            dispatchModalAlerta({
+                type: 'mostrarModalAlerta', payload: {
+                    mensaje: `<div style="font-size: 20px; font-weight: 600; text-align: left;">Todo listo. Regresando a la pantalla anterior…</div></br>`,
+                    mostrar: true,
+                    tamano: 'md'
+                }
+            })
+            cambiarEstadoSolicitud(false)
+            setTimeout(() => {
+                dispatchModalAlerta({ type: 'cerrarModalAlerta' })
+                navegar(quitarFormularioDeLaUrl(formData.pathname))
+            }, 3000);
+        }
+    }
+
     const guardar = async () => {
 
         if ((state.lineas.length > 0) && state.formulario.id_cabecera_solicitud !== null && obtenerIdEstadoSolicitudPorModulo() !== 'nueva') {
@@ -265,20 +286,6 @@ export const FormularioProveedor = ({ children }) => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
             })
         noValidarFormulario();
-    }
-
-    const cambiarEstadoSolicitud = (estado) => {
-        dispatch({ type: 'cambiarEstadoGeneral', payload: { id: 'estadoCambiado', value: estado } })
-    }
-
-    const cambioEstadoSolicitud = (estado) => {
-        if (state.estadoCambiado) {
-            setTimeout(() => {
-                navegar(quitarFormularioDeLaUrl(formData.pathname))
-                dispatchModalAlerta({ type: 'mostrarModalAleta', payload: { mostrar: true, mensaje: 'La página se redireccionará en un momento espere!', tamano: 'md' } })
-            }, 3000);
-        }
-        cambiarEstadoSolicitud(false)
     }
 
     const guardarLineas = async (parametros) => {
