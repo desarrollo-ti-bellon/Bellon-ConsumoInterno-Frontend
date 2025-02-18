@@ -15,7 +15,7 @@ export default function FormularioSolicitudes() {
     const [locacion] = useSearchParams();
 
     useEffect(() => {
-        const condicion = (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') === 'ver' && obtenerRutaUrlActual() !== import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
+        const condicion = state.formulario.id_cabecera_solicitud === null || (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') === 'ver');
         setBloquearBotonDelegar(condicion);
     }, [state])
 

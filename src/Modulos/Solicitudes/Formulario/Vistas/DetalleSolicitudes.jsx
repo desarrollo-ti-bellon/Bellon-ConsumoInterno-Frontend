@@ -16,6 +16,7 @@ export default function DetalleSolicitudes() {
     const [locacion] = useSearchParams();
     const [activarCamposEditablesTabla, setActivarCamposEditablesTabla] = useState(true);
     const [activarBotonAgregarProductos, setActivarBotonAgregarProductos] = useState(false);
+    const [bloquearBotonBorraLinea, setBloquearBotonBorraLinea] = useState(true);
 
     useEffect(() => {
         const condicion2 = (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') !== 'ver' && obtenerRutaUrlActual() === import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
@@ -25,10 +26,15 @@ export default function DetalleSolicitudes() {
 
     useEffect(() => {
 
+        //ACTIVAR CAMPOS EDITABLES DE LA TABLA
         const condicion = (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') !== 'ver' && obtenerRutaUrlActual() === import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
         setActivarCamposEditablesTabla(condicion)
         console.log('condicion =>', condicion)
 
+        // BLOQUEAR BOTON DE BORRAR LINEA
+        const condicion2 = locacion.get('accion') === 'ver';
+        setBloquearBotonBorraLinea(condicion2)
+        
         setColumnasProductos([
             { headerName: 'Producto ID', field: "no_producto", flex: 1 },
             { headerName: 'Descripcion', field: "descripcion", flex: 4 },
@@ -62,7 +68,7 @@ export default function DetalleSolicitudes() {
         const linea = parametros.data;
         return (
             <>
-                {!linea.acciones && (<Button title="Eliminar linea" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => eliminaLinea(linea.id_linea_solicitud)}> <Icon.Trash /> </Button>)}
+                {!linea.acciones && (<Button title="Eliminar linea" disabled={bloquearBotonBorraLinea} size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => eliminaLinea(linea.id_linea_solicitud)}> <Icon.Trash /> </Button>)}
             </>
         )
     }
