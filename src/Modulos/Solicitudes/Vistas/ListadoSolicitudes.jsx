@@ -31,7 +31,7 @@ export default function ListadoSolicitudes() {
     }
 
     const hacerNota = (parametros) => {
-        console.log(parametros);
+        // console.log(parametros);
         dispatchNotas({ type: "mostrarNotas", payload: { mostrar: true } });
         dispatchNotas({ type: 'mostrarFormularioNotas', payload: { mostrarFormulario: true } });
         dispatchNotas({ type: "actualizarFormulario", payload: { id: 'no_documento', value: parametros.no_documento } });
@@ -59,46 +59,64 @@ export default function ListadoSolicitudes() {
     const BotonesAcciones = (parametros) => {
 
         const ruta = obtenerRutaUrlActual();
-        const rutas = [
+
+        let rutas = [];
+        rutas = [import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES];
+        const mostrarBotonHistorico = rutas.includes(ruta);
+
+        rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS
+        ];
+        const mostrarBotonEditar = rutas.includes(ruta);
+
+        rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS
         ];
+        const mostrarBotonVer = rutas.includes(ruta);
 
-        const condicion = rutas.includes(ruta);
+        rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS
+        ];
+        const mostrarBotonNotas = rutas.includes(ruta);
+
         return (
             <>
-                {!condicion && (<Button title="Editar solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>)}
-                <Button title="Ver solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>
-                <Button title="Poner nota" size='sm' variant="outline-primary" style={{ marginLeft: 5 }} onClick={() => hacerNota(parametros.data)} > {" "} <Icon.JournalBookmarkFill size={15} />{" "} </Button>
+                {mostrarBotonEditar && (<Button title="Editar solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=editar`, { state: parametros.data })}> <Icon.PencilFill /> </Button>)}
+                {mostrarBotonVer && (<Button title="Ver solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>)}
+                {mostrarBotonNotas && (<Button title="Poner nota" size='sm' variant="outline-primary" style={{ marginLeft: 5 }} onClick={() => hacerNota(parametros.data)} > {" "} <Icon.JournalBookmarkFill size={15} />{" "} </Button>)}
+                {mostrarBotonHistorico && (<Button title="Mostrar historial movimientos solicitudes" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES_HISTORICO, { state: parametros.data })}> <Icon.ClockHistory /> </Button>)}
+
             </>
         )
     }
 
     const [columnas] = useState([
-        { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, },
-        { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1 },
-        { headerName: "No Documento", field: "no_documento", filter: true, flex: 1 },
-        { headerName: "Creado Por", field: "creado_por", filter: true, flex: 1 },
-        { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1 },
-        { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1 },
-        { headerName: "Departamento", field: "departamento", filter: true, flex: 1 },
-        { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, filter: true, flex: 1 },
-        { headerName: "Clasificacion", field: "clasificacion", filter: true, flex: 1 },
-        { headerName: "Sucursal", field: "sucursal", filter: true, flex: 1 },
-        { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1 },
-        { headerName: "Comentario", field: "comentario", filter: true, flex: 1 },
-        { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), filter: true, flex: 1 },
+        { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "No Documento", field: "no_documento", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Creado Por", field: "creado_por", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Departamento", field: "departamento", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Clasificacion", field: "clasificacion", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Sucursal", field: "sucursal", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
     ]);
 
     return (
