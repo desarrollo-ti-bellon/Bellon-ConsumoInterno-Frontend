@@ -1,14 +1,16 @@
 import React from "react";
 import { Breadcrumb } from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
 import { obtenerRutas } from "../FuncionesGlobales";
 
 export default function ListadoLinks() {
 
     const urls = obtenerRutas();
+    const [params] = useSearchParams();
 
     return (
         <>
-            <Breadcrumb>
+            <Breadcrumb style={{ display: (params.get('modo') === 'vista' ? 'none' : 'block') }}>
                 <Breadcrumb.Item
                     href="/bellon"
                     className="mt-2 mb-2 display-10 text-capitalize fw-medium"

@@ -1,5 +1,5 @@
 import { Container, Navbar, NavDropdown } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import LogoIcon from "../Archivos/Imagenes/usuario.png";
 import { useMenuVertical } from "../ControlesGlobales/MenuVertical/menuVerticalHook";
 import { cerrarAcceso, obtenerDatosDelLocalStorage } from "../FuncionesGlobales";
@@ -17,6 +17,7 @@ export default function Cabecera() {
     const { account } = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
     const userFullName = account.name;
     const userEmail = account.username;
+    const [params] = useSearchParams();
     const userName = userEmail.split("@")[0];
 
     const cerrarSesion = () => {
@@ -25,7 +26,7 @@ export default function Cabecera() {
     };
 
     return (
-        <Navbar expand={false} className="bg-black" fixed="top">
+        <Navbar style={{ display: (params.get('modo') === 'vista' ? 'none' : 'block') }} expand={false} className="bg-black" fixed="top">
             <Container fluid className="d-flex justify-content-between">
                 <div className="d-flex align-items-center">
                     <Navbar.Toggle

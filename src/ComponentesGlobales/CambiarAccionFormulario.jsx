@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useModalConfirmacion } from "../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
 import { obtenerRutaUrlActual } from "../FuncionesGlobales";
 
@@ -9,6 +9,7 @@ export default function CambiarAccionFormulario() {
 
     const locacion = useLocation();
     const navegar = useNavigate();
+    const [params] = useSearchParams();
     const { dispatch: dispatchModalConfirmacion } = useModalConfirmacion();
     const [bloquearAcciones, setBloquearAcciones] = useState(true);
     const [ocultarBotones, setOcultarBotones] = useState(false);
@@ -44,6 +45,10 @@ export default function CambiarAccionFormulario() {
             setBloquearAcciones(false);
         }
 
+        if (params.get("modo") === "vista") {
+            setOcultarBotones(true);
+        }
+
         const validarHistorico = locacion.pathname.includes("historico");
         if (validarHistorico) {
             setOcultarBotones(true);
@@ -63,7 +68,8 @@ export default function CambiarAccionFormulario() {
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO
         ];
         const validarOcultarBotones = rutas.includes(rutaActual);
         setOcultarBotones(validarOcultarBotones);
