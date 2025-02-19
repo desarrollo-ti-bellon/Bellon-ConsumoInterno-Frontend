@@ -308,3 +308,63 @@ export function quitarFormularioDeLaUrl(url) {
     // Si no se encuentra "/formulario", retorna la URL original
     return url;
 }
+
+export const verDocumento = (no_documento, fila) => {
+    // console.log('verDocumento =>', no_documento, fila);
+
+    if (isNaN(no_documento)) {
+
+        const tipoDocumento = no_documento.slice(0, 3);
+        let url = '';
+        let id = 0;
+        let clave = '';
+        let modo = 'vista';
+
+        const documentoConfig = {
+            LLE: [
+                { key: 'hist_cabecera_llegada_id', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LLEGADAS_FORMULARIO, clave: 'id_hist_cabecera_llegada' },
+                { key: 'id_cabecera_llegada', url: import.meta.env.VITE_APP_BELLON_LLEGADAS_FORMULARIO, clave: 'id_cabecera_llegada' },
+                { key: 'id_hist_cabecera_llegada', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LLEGADAS_FORMULARIO, clave: 'id_hist_cabecera_llegada' }
+            ],
+            TRA: [
+                { key: 'hist_cabecera_transito_id', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO, clave: 'id_hist_cabecera_llegada' },
+                { key: 'id_cabecera_transito', url: import.meta.env.VITE_APP_BELLON_TRANSITOS_FORMULARIO, clave: 'id_cabecera_transito' },
+                { key: 'id_hist_cabecera_transito', url: import.meta.env.VITE_APP_BELLON_HISTORICO_TRANSITOS_FORMULARIO, clave: 'id_hist_cabecera_transito' }
+            ],
+            LIQ: [
+                { key: 'id_cabecera_liquidacion', url: import.meta.env.VITE_APP_BELLON_LIQUIDACIONES_FORMULARIO, clave: 'id_cabecera_liquidacion' },
+                { key: 'id_hist_cabecera_liquidacion', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO, clave: 'id_hist_cabecera_liquidacion' }
+            ],
+            CIN: [
+                { key: 'id_cabecera_solicitud', url: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO, clave: 'id_cabecera_solicitud' },
+                { key: 'id_cabecera_consumo_interno', url: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO, clave: 'id_cabecera_consumo_interno' }
+            ]
+        };
+
+        const documentoTipo = documentoConfig[tipoDocumento];
+
+        if (documentoTipo) {
+            for (const { key, url: documentUrl, clave: documentClave } of documentoTipo) {
+                if (key in fila) {
+                    url = documentUrl;
+                    clave = documentClave;
+                    id = fila[key];
+                    break;
+                }
+            }
+
+            if (url) {
+                const popup = window.open(`${url}?accion=ver&clave=${clave}&documento=${id}&modo=${modo}`, 'documento', 'width=800,height=800');
+                if (popup) {
+                    popup.focus();
+                }
+            } else {
+                console.error('No se encontró la ruta para el documento:', no_documento);
+            }
+        }
+
+    } else {
+        console.error('No se puede ver documento con id:', no_documento);
+    }
+
+};
