@@ -14,7 +14,7 @@ export default function DetalleSolicitudes() {
     const { dispatch: dispatchAlerta } = useAlerta();
     const gridRef = useRef(null);
     const [locacion] = useSearchParams();
-    const [activarCamposEditablesTabla, setActivarCamposEditablesTabla] = useState(true);
+    const [activarCamposEditablesTabla, setActivarCamposEditablesTabla] = useState(false);
     const [activarBotonAgregarProductos, setActivarBotonAgregarProductos] = useState(false);
     const [bloquearBotonBorraLinea, setBloquearBotonBorraLinea] = useState(true);
 
@@ -26,10 +26,16 @@ export default function DetalleSolicitudes() {
 
     useEffect(() => {
 
-        //ACTIVAR CAMPOS EDITABLES DE LA TABLA
-        const condicion = (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') !== 'ver' && obtenerRutaUrlActual() === import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO);
-        setActivarCamposEditablesTabla(condicion)
-        console.log('condicion =>', condicion)
+        // ACTIVAR CAMPOS EDITABLES DE LA TABLA
+        const rutaActual = obtenerRutaUrlActual();
+        const rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO
+        ];
+
+        const condicion = (state.formulario.id_cabecera_solicitud && locacion.get('accion') !== 'ver' && rutas.includes(rutaActual));
+        setActivarCamposEditablesTabla(condicion);
+        // console.log('condicion =>', condicion, rutaActual, rutas)
 
         // BLOQUEAR BOTON DE BORRAR LINEA
         const condicion2 = locacion.get('accion') === 'ver';
