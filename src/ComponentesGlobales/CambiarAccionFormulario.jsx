@@ -38,14 +38,17 @@ export default function CambiarAccionFormulario() {
     };
 
     useEffect(() => {
+
         console.log("locacion", locacion);
         if (locacion.state) {
             setBloquearAcciones(false);
         }
+
         const validarHistorico = locacion.pathname.includes("historico");
         if (validarHistorico) {
             setOcultarBotones(true);
         }
+
         const validarNuevo = locacion.pathname.includes("llegadas");
         if (validarNuevo) {
             setOcultarBotonNuevo(true);
@@ -53,17 +56,18 @@ export default function CambiarAccionFormulario() {
                 setBloquearAcciones(true);
             }
         }
-        const ruta = obtenerRutaUrlActual();
+
+        const rutaActual = obtenerRutaUrlActual();
         const rutas = [
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO,
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO
         ];
-        const validarOcultarBotones = rutas.includes(ruta);
+        const validarOcultarBotones = rutas.includes(rutaActual);
         setOcultarBotones(validarOcultarBotones);
+
     }, []);
 
     return (
