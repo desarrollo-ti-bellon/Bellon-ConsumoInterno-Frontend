@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 /*!
  * Bootstrap  v5.3.3 (https://getbootstrap.com/)
  * Copyright 2011-2024 The Bootstrap Authors
@@ -83,7 +84,7 @@
       rgba(255, 255, 255, 0.15),
       rgba(255, 255, 255, 0));
   --bs-body-font-family: var(--bs-font-family);
-  --bs-body-font-size: 1rem;
+  --bs-body-font-size: 10.5pt;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
   --bs-body-color: #212529;
@@ -2432,7 +2433,7 @@ progress {
   display: block;
   width: 100%;
   padding: 0.375rem 0.75rem;
-  font-size: 1rem;
+  font-size: 10.5pt;
   font-weight: 400;
   line-height: 1.5;
   color: var(--bs-body-color);
@@ -2444,6 +2445,7 @@ progress {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  min-height: 38px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6396,22 +6398,32 @@ fieldset:disabled .btn {
 
   .modal-dialog {
     max-width: var(--bs-modal-width);
-    margin-right: auto;
-    margin-left: auto;
+    margin-right: var(--bs-margin);
+    margin-left: var(--bs-margin);
   }
 
-  .modal-sm {
-    --bs-modal-width: 300px;
+  .modal-dialog:not(.modal-3xs):not(.modal-2xs):not(.modal-1xs):not(.modal-xs):not(.modal-sm):not(.modal-md):not(.modal-lg):not(.modal-xl):not(.modal-2xl) {
+    --bs-margin: auto;
   }
 
-  .modal-xs {
-    --bs-modal-width: 200px;
-    /* Nuevo tamaño extra pequeño */
+  .modal-3xs,
+  .modal-2xs,
+  .modal-1xs,
+  .modal-xs,
+  .modal-sm,
+  .modal-md {
+    --bs-margin: auto;
   }
 
-  .modal-1xs {
-    --bs-modal-width: 150px;
-    /* Nuevo tamaño extra extra pequeño */
+  .modal-lg,
+  .modal-xl,
+  .modal-2xl {
+    --bs-margin: 1rem;
+  }
+
+  .modal-3xs {
+    --bs-modal-width: 50px;
+    /* Nuevo tamaño extra extra extra extra pequeño */
   }
 
   .modal-2xs {
@@ -6419,33 +6431,175 @@ fieldset:disabled .btn {
     /* Nuevo tamaño extra extra extra pequeño */
   }
 
-  .modal-3xs {
-    --bs-modal-width: 50px;
-    /* Nuevo tamaño extra extra extra extra pequeño */
+  .modal-1xs {
+    --bs-modal-width: 150px;
+    /* Nuevo tamaño extra extra pequeño */
+  }
+
+  .modal-xs {
+    --bs-modal-width: 200px;
+    /* Nuevo tamaño extra pequeño */
+  }
+
+  .modal-sm {
+    --bs-modal-width: 300px;
+  }
+
+  .modal-md {
+    --bs-modal-width: 500px;
+    /* Nuevo tamaño mediano */
+  }
+
+  .modal-lg {
+    --bs-modal-width: 700px;
+    /* Nuevo tamaño grande */
+  }
+
+  .modal-xl {
+    --bs-modal-width: 900px;
+    /* Nuevo tamaño extra grande */
+  }
+
+  .modal-2xl {
+    --bs-modal-width: 1100px;
+    /* Nuevo tamaño extra extra grande */
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-dialog:not(.modal-3xs):not(.modal-2xs):not(.modal-1xs):not(.modal-xs):not(.modal-sm):not(.modal-md):not(.modal-lg):not(.modal-xl):not(.modal-2xl) {
+    --bs-margin: auto;
+  }
+  .modal-lg,
+  .modal-xl,
+  .modal-2xl {
+    --bs-margin: 1rem;
+  }
+
+  .modal-md {
+    --bs-margin: auto;
+    --bs-modal-width: 600px;
+    /* Nuevo tamaño mediano */
+  }
+
+  .modal-lg {
+    --bs-modal-width: 800px;
+    /* Nuevo tamaño grande */
+  }
+
+  .modal-xl {
+    --bs-modal-width: 1000px;
+    /* Nuevo tamaño extra grande */
+  }
+
+  .modal-2xl {
+    --bs-modal-width: 1200px;
+    /* Nuevo tamaño extra extra grande */
   }
 }
 
 @media (min-width: 992px) {
-
-  .modal-lg,
-  .modal-xl {
-    --bs-modal-width: 800px;
+  .modal-dialog:not(.modal-3xs):not(.modal-2xs):not(.modal-1xs):not(.modal-xs):not(.modal-sm):not(.modal-md):not(.modal-lg):not(.modal-xl):not(.modal-2xl) {
+    --bs-margin: auto;
+  }
+  .modal-lg {
+    --bs-modal-width: 900px;
+    /* Nuevo tamaño grande */
+    --bs-margin: auto;
   }
 
-  .modal-1xl {
-    --bs-modal-width: 1000px;
+  .modal-xl,
+  .modal-2xl {
+    --bs-margin: 1rem;
+  }
+
+  .modal-xl {
+    --bs-modal-width: 1100px;
     /* Nuevo tamaño extra grande */
+  }
+
+  .modal-2xl {
+    --bs-modal-width: 1300px;
+    /* Nuevo tamaño extra extra grande */
   }
 }
 
 @media (min-width: 1200px) {
+  .modal-dialog:not(.modal-3xs):not(.modal-2xs):not(.modal-1xs):not(.modal-xs):not(.modal-sm):not(.modal-md):not(.modal-lg):not(.modal-xl):not(.modal-2xl) {
+    --bs-margin: auto;
+  }
+  .modal-lg,
   .modal-xl {
-    --bs-modal-width: 1140px;
+    --bs-margin: auto;
+  }
+
+  .modal-2xl {
+    --bs-margin: 1rem;
+  }
+
+  .modal-lg {
+    --bs-modal-width: 1000px;
+    /* Nuevo tamaño grande */
+  }
+
+  .modal-xl {
+    --bs-modal-width: 1200px;
+    /* Nuevo tamaño extra grande */
+  }
+
+  .modal-2xl {
+    --bs-modal-width: 1400px;
+    /* Nuevo tamaño extra extra grande */
+  }
+}
+
+@media (min-width: 1300px) {
+  .modal-dialog:not(.modal-3xs):not(.modal-2xs):not(.modal-1xs):not(.modal-xs):not(.modal-sm):not(.modal-md):not(.modal-lg):not(.modal-xl):not(.modal-2xl) {
+    --bs-margin: auto;
+  }
+  .modal-xl {
+    --bs-margin: 1rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .modal-dialog:not(.modal-3xs):not(.modal-2xs):not(.modal-1xs):not(.modal-xs):not(.modal-sm):not(.modal-md):not(.modal-lg):not(.modal-xl):not(.modal-2xl) {
+    --bs-margin: auto;
+  }
+  .modal-lg,
+  .modal-xl {
+    --bs-margin: auto;
+  }
+
+  .modal-lg {
+    --bs-modal-width: 1100px;
+    /* Nuevo tamaño grande */
+  }
+
+  .modal-xl {
+    --bs-modal-width: 1300px;
+    /* Nuevo tamaño extra grande */
   }
 
   .modal-2xl {
     --bs-modal-width: 1500px;
     /* Nuevo tamaño extra extra grande */
+    --bs-margin: 1rem;
+  }
+}
+
+@media (min-width: 1550px) {
+  .modal-dialog:not(.modal-3xs):not(.modal-2xs):not(.modal-1xs):not(.modal-xs):not(.modal-sm):not(.modal-md):not(.modal-lg):not(.modal-xl):not(.modal-2xl) {
+    --bs-margin: auto;
+  }
+  .modal-lg,
+  .modal-xl,
+  .modal-2xl {
+    --bs-margin: auto;
+  }
+
+  .modal-2xl {
+    --bs-modal-width: 90vw;
   }
 }
 
@@ -14252,4 +14406,3 @@ option:checked {
 .help-cursor {
   cursor: help;
 }
-
