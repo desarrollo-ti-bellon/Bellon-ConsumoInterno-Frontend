@@ -4,7 +4,7 @@ import * as Icon from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useNotas } from '../../../ControlesGlobales/Notas/useNotas';
-import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerRutaUrlActual } from '../../../FuncionesGlobales';
+import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
 import { useSolicitudes } from '../Controles/useSolicitudes';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialSolicitudes';
 
@@ -103,10 +103,19 @@ export default function ListadoSolicitudes() {
         )
     }
 
+    const hypervinculoDocumento = (e) => {
+        const fila = e.data;
+        const no_documento = fila.no_documento;
+        let titulo = `ver solicitud ${no_documento}`
+        return (
+            <a href="#" title={titulo} onClick={() => verDocumento(no_documento, fila)}> {e.value}</a>
+        )
+    }
+
     const [columnas, setColumnas] = useState([
         { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "No Documento", field: "no_documento", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Creado Por", field: "creado_por", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
@@ -127,8 +136,8 @@ export default function ListadoSolicitudes() {
         if (rutas.includes(urlActual)) {
             setColumnas([
                 { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
                 { headerName: "Fecha", field: "id_estado_solicitud", valueGetter: (params) => { return params.data.id_estado_solicitud === 1 ? params.data.fecha_creado : params.data.fecha_modificado; }, valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-                { headerName: "No Documento", field: "no_documento", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
                 { headerName: "Realizado Por", field: "id_estado_solicitud", valueGetter: (params) => { return params.data.id_estado_solicitud === 1 ? params.data.creado_por : params.data.modificado_por; }, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
                 { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
                 { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
