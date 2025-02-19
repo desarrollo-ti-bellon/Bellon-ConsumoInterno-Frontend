@@ -354,9 +354,10 @@ export const verDocumento = (no_documento, fila) => {
             }
 
             if (url) {
-                const popup = window.open(`${url}?accion=ver&clave=${clave}&documento=${id}&modo=${modo}`, 'documento', 'width=800,height=800');
+                const popup = window.open(`${url}?accion=ver&clave=${clave}&documento=${id}&modo=${modo}`, 'documento', 'width=100%,height=100%');
                 if (popup) {
                     popup.focus();
+                    popup.resizeTo(screen.width, screen.height);
                 }
             } else {
                 console.error('No se encontró la ruta para el documento:', no_documento);
