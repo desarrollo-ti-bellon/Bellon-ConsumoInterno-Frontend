@@ -38,13 +38,13 @@ export default function MenuVerticalProveedor({ children }) {
                 case 2: // 'Director'
                     urls = rutasModulos.filter(r => [
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
+                        import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
                     ].includes(r.ruta));
                     break;
                 case 3: // 'Gerente Area'
                     urls = rutasModulos.filter(r => [
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS
+                        import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
                     ].includes(r.ruta));
                     break;
                 case 4: // 'Despacho'
@@ -55,7 +55,6 @@ export default function MenuVerticalProveedor({ children }) {
                 case 5: // 'Solicitante'
                     urls = rutasModulos.filter(r => [
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
                         import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
