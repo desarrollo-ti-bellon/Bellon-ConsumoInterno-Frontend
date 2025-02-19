@@ -40,6 +40,7 @@ export default function BotonesAcciones() {
             btnRechazar: (['pendiente', 'aprobada', 'entregada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.rechazar_solicitud),
             btnEntregar: (['aprobada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.entregar_solicitud),
             btnConfirmar: (['entregada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
+            btnTerminar: (['confirmada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
         };
         setCondiciones(botonesCondiciones);
     }, [estadoSolicitud, state.formulario.id_cabecera_solicitud]); // Actualizamos cuando cambien estos valores
@@ -53,7 +54,7 @@ export default function BotonesAcciones() {
             rechazar: 4,
             entregar: 5,
             confirmar: 6,
-            registrar: 7,
+            terminada: 7,
         }
 
         if (acciones[accion]) {
@@ -92,7 +93,7 @@ export default function BotonesAcciones() {
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnRechazar} onClick={() => confirmarAccion('rechazar')} className="m-1"><Icon.Ban /> {' '} Rechazar Solicitud </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnConfirmar} onClick={() => confirmarAccion('confirmar')} className="m-1"><Icon.CheckCircleFill /> {' '}   Confirmar Solicitud </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnEntregar} onClick={() => confirmarAccion('entregar')} className="m-1"><Icon.Floppy2Fill /> {' '} Entregar </Button>
-            <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnRegistrar} onClick={() => confirmarAccion('registrar')} className="m-1"><Icon.Floppy2Fill /> {' '}   Registrar </Button>
+            <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnTerminar} onClick={() => confirmarAccion('terminada')} className="m-1"><Icon.Floppy2Fill /> {' '}   Registrar </Button>
         </div>
     );
 }
