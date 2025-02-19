@@ -105,6 +105,13 @@ const rutas = createBrowserRouter([
                 element: <HistorialMovimientosSolicitudPrincipal />,
             },
 
+            // ESTE ES EL FORMULARIO GENERAL DE LAS SOLICITUDES
+            {
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO,
+                element: <FormularioSolicitudesPrincipal />,
+            },
+            ////////////////////////////////////////////////////
+
             // VISTAS MANTENIMIENTOS
             {
                 path: import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
@@ -114,7 +121,7 @@ const rutas = createBrowserRouter([
                 path: import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_USUARIOS,
                 element: <UsuariosPrincipal />,
             },
-
+            /////////////////////////////////////////////////////
 
         ]
     },
