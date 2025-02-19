@@ -1,40 +1,117 @@
-/* Estilos para la línea de tiempo */
+/* Contenedor principal del timeline */
 .timeline {
-    list-style-type: none;
-    padding: 0;
-}
-
-.timeline-item {
     position: relative;
-    padding-left: 50px;
-    margin-bottom: 20px;
-}
-
-.timeline-badge {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    padding: 20px 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    color: white;
-    font-size: 18px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
-.timeline-content {
+/* Línea central */
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 3px solid #ccc;
+    /* Línea vertical */
+    margin-left: -1px;
+    width: 0;
+}
+
+/* Contenedor de cada evento */
+.timeline-event {
+    position: relative;
+    width: 45%;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
     padding: 10px;
-    background-color: #f8f9fa;
+    /* Aseguramos que el triángulo se posicione correctamente */
+}
+
+/* Triángulo que apunta hacia el centro de la línea */
+.timeline-event::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    width: 0;
+    height: 0;
+}
+
+/* Estilo de los eventos en el lado izquierdo */
+.timeline-event.left {
+    flex-direction: row-reverse;
+    text-align: left;
+    margin-left: -50%;
+}
+
+.timeline-event.left::before {
+    left: 100%;
+    /* Triángulo a la derecha de la tarjeta */
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid #00b7c3;
+    /* El color del triángulo */
+    /* Triángulo apuntando hacia la línea central */
+    transform: translateY(-50%) rotate(90deg);
+}
+
+/* Estilo de los eventos en el lado derecho */
+.timeline-event.right {
+    flex-direction: row;
+    text-align: left;
+    margin-left: 50%;
+}
+
+
+.timeline-event.right::before {
+    left: -20px;
+    /* Triángulo a la izquierda de la tarjeta */
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid #00b7c3;
+    /* El color del triángulo */
+    /* Triángulo apuntando hacia la línea central */
+    transform: translateY(-50%) rotate(270deg);
+}
+
+/* Estilo de las tarjetas */
+.timeline-event .card {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+/* Estilo del contenido de la tarjeta */
+.timeline-event .card-body {
+    padding: 20px;
+}
+
+/* Estilo del header de la tarjeta (circular) */
+.timeline-event .card-header {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 50%;
+    padding: 10px;
+}
+
+/* Estilo adicional de la tarjeta */
+.timeline-event .card-body {
+    border: 2px solid #00b7c3;
+    /* Borde azul a las tarjetas */
     border-radius: 5px;
-}
-
-.timeline-content h5 {
-    margin-top: 0;
-}
-
-.timeline-item:last-child {
-    margin-bottom: 0;
 }
