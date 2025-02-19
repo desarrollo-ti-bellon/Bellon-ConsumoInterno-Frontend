@@ -41,7 +41,22 @@ export const FormularioProveedor = ({ children }) => {
             return;
         }
 
-        await obtenerDatosConId('Solicitud', formData.state.id_cabecera_solicitud)
+        let entidad = "Solicitud";
+        let id = formData.state.id_cabecera_solicitud;
+
+        const urlActual = obtenerRutaUrlActual();
+        const urls = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO
+        ]
+
+        if (urls.includes(urlActual)) {
+            if ('id_cabecera_consumo_interno' in formData.state) {
+                entidad = "ConsumoInterno";
+                id = formData.state.id_cabecera_consumo_interno;
+            }
+        }
+
+        await obtenerDatosConId(entidad, id)
             .then((res) => {
                 const json = res.data;
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
@@ -543,7 +558,27 @@ export const FormularioProveedor = ({ children }) => {
     }
 
     useEffect(() => {
-        cargarDatos();
+        if (locacion.get('modo') === 'vista') {
+            cargarDatos();
+        }
+    }, [formData.state])
+
+    useEffect(() => {
+        // NUEVA LOGICA PARA VOLVER A RENDERIZAR CUANDO ES UNA VENTANA POR AFUERA
+        const parametro1 = locacion.get('accion');
+        const parametro2 = locacion.get('clave');
+        const parametro3 = locacion.get('documento');
+        const parametro4 = locacion.get('modo');
+
+        if (parametro1 && parametro2 && parametro3 && parametro4) {
+            console.log('parametros =>', parametro1, parametro2, parametro3, parametro4)
+            navegar(`?accion=${parametro1}&modo=${parametro4}`, { state: { [parametro2]: parametro3 } });
+            return;
+        }
+        /* ---------------------------------------------------------------------- */
+        if (!locacion.get('modo')) {
+            cargarDatos();
+        }
     }, [])
 
     useEffect(() => {
