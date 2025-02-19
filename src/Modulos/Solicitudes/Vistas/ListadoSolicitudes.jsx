@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
@@ -103,7 +103,7 @@ export default function ListadoSolicitudes() {
         )
     }
 
-    const [columnas] = useState([
+    const [columnas, setColumnas] = useState([
         { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "No Documento", field: "no_documento", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
@@ -118,6 +118,28 @@ export default function ListadoSolicitudes() {
         { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
     ]);
+
+    useEffect(() => {
+        const urlActual = obtenerRutaUrlActual();
+        const rutas = [
+            import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
+        ]
+        if (rutas.includes(urlActual)) {
+            setColumnas([
+                { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Fecha", field: "id_estado_solicitud", valueGetter: (params) => { return params.data.id_estado_solicitud === 1 ? params.data.fecha_creado : params.data.fecha_modificado; }, valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "No Documento", field: "no_documento", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Realizado Por", field: "id_estado_solicitud", valueGetter: (params) => { return params.data.id_estado_solicitud === 1 ? params.data.creado_por : params.data.modificado_por; }, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Clasificacion", field: "clasificacion", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            ]);
+        }
+    }, [])
 
     return (
         <Container fluid>
