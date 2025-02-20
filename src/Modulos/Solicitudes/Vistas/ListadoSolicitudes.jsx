@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useNotas } from '../../../ControlesGlobales/Notas/useNotas';
-import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
+import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerDatosDelLocalStorage, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
 import { useSolicitudes } from '../Controles/useSolicitudes';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialSolicitudes';
 
@@ -14,6 +14,8 @@ export default function ListadoSolicitudes() {
     const navegar = useNavigate();
     const { dispatch: dispatchNotas } = useNotas();
     const gridRef = useRef(null);
+    const locacion = useLocation();
+    const [ocultarBotonNuevo, setOcultarBotonNuevo] = useState(true);
 
     const obtenerReferenciaAgGrid = (ref) => {
         gridRef.current = ref.current;
@@ -22,7 +24,6 @@ export default function ListadoSolicitudes() {
     const filtrarListado = (filtro) => {
         gridRef.current.api.setGridOption("quickFilterText", filtro);
     };
-
 
     const BadgedEstadoSolicitud = (parametros) => {
         return (
@@ -38,59 +39,50 @@ export default function ListadoSolicitudes() {
         dispatchNotas({ type: "actualizarFormulario", payload: { id: 'id_documento', value: parametros.id_cabecera_solicitud } });
     };
 
-    const obtenerIdEstadoSolicitudPorModulo = () => {
-        const url = obtenerRutaUrlActual();
-        let estadoSolicitudId = null;
-        // Usar un objeto para mapear las rutas a los valores de estadoId
-        const estadoMap = {
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS]: 'nueva',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES]: 'pendiente',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS]: 'aprobada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS]: 'rechazada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS]: 'entregada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS]: 'confirmada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS]: 'terminada',
-        };
-
-        // Si la URL no coincide con ninguna, se asigna null
-        return estadoSolicitudId = estadoMap[url] || null;
-    }
-
     const BotonesAcciones = (parametros) => {
 
+        const estadoSolicitudId = parametros.data.id_estado_solicitud;
         const ruta = obtenerRutaUrlActual();
-
+        let arrEstadosSolicitudes = [];
         let rutas = [];
+
+        // MOSTRAR BOTON HISTORIAL MOVIMIENTOS SOLICITUD
         rutas = [import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES];
         const mostrarBotonHistorico = rutas.includes(ruta);
+        console.log('Mostrar botón Historico:', mostrarBotonHistorico);
 
-        rutas = [
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS
-        ];
-        const mostrarBotonEditar = rutas.includes(ruta);
+        if (!mostrarBotonHistorico) {
+            // MOSTRAR BOTON EDITAR
+            arrEstadosSolicitudes = [
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA
+            ]
+            const mostrarBotonEditar = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
 
-        rutas = [
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS
-        ];
-        const mostrarBotonVer = rutas.includes(ruta);
+            // MOSTRAR BOTON VER
+            arrEstadosSolicitudes = [
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
+            ];
+            const mostrarBotonVer = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
 
-        rutas = [
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS
-        ];
-        const mostrarBotonNotas = rutas.includes(ruta);
+            // MOSTRAR BOTON NOTAS
+            arrEstadosSolicitudes = [
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
+            ];
+            const mostrarBotonNotas = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
+        }
 
         return (
             <>
@@ -98,7 +90,6 @@ export default function ListadoSolicitudes() {
                 {mostrarBotonVer && (<Button title="Ver solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>)}
                 {mostrarBotonNotas && (<Button title="Poner nota" size='sm' variant="outline-primary" style={{ marginLeft: 5 }} onClick={() => hacerNota(parametros.data)} > {" "} <Icon.JournalBookmarkFill size={15} />{" "} </Button>)}
                 {mostrarBotonHistorico && (<Button title="Mostrar historial movimientos solicitudes" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES_HISTORICO, { state: parametros.data })}> <Icon.ClockHistory /> </Button>)}
-
             </>
         )
     }
@@ -125,11 +116,13 @@ export default function ListadoSolicitudes() {
         { headerName: "Sucursal", field: "sucursal", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Acciones", field: "acciones", cellRenderer: BotonesAcciones, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
     ]);
 
     useEffect(() => {
         const urlActual = obtenerRutaUrlActual();
+
+        // CAMBIANDO LAS COLUMNAS
         const rutas = [
             import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
         ]
@@ -145,10 +138,37 @@ export default function ListadoSolicitudes() {
                 { headerName: "Clasificacion", field: "clasificacion", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
                 { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
                 { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-                { headerName: "Acciones", field: "acciones", cellRenderer: (e) => BotonesAcciones(e), flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Acciones", field: "acciones", cellRenderer: BotonesAcciones, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
             ]);
         }
-    }, [])
+
+        // OCULTANDO BOTON NUEVO
+        const urls = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
+            import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
+        ];
+
+        if (urls.includes(urlActual)) {
+            setOcultarBotonNuevo(true);
+            return;
+        }
+
+        const perfilUsuario = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO);
+        if (!perfilUsuario) {
+            setOcultarBotonNuevo(true);
+            return;
+        }
+
+        const arrPosiciones = [
+            import.meta.env.VITE_APP_POSICION_ADMINISTRADOR,
+            import.meta.env.VITE_APP_POSICION_SOLICITANTE
+        ];
+
+        const { posicion_id } = perfilUsuario;
+        if (arrPosiciones.includes(posicion_id.toString())) {
+            setOcultarBotonNuevo(false);
+        }
+    }, [locacion])
 
     return (
         <Container fluid>
@@ -180,7 +200,7 @@ export default function ListadoSolicitudes() {
                     className="text-end"
                 >
                     <div style={{ float: 'right' }}>
-                        <Button hidden={obtenerIdEstadoSolicitudPorModulo() !== 'nueva'} size='md' variant='primary' className='mb-2' onClick={() => navegar('formulario', { state: null })}><Icon.Plus />Nuevo</Button>
+                        <Button hidden={ocultarBotonNuevo} size='md' variant='primary' className='mb-2' onClick={() => navegar('formulario', { state: null })}><Icon.Plus />Nuevo</Button>
                     </div>
                 </Col>
             </Row>
