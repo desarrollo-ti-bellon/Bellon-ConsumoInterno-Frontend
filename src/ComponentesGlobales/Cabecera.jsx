@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Container, Navbar, NavDropdown } from "react-bootstrap";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import LogoIcon from "../Archivos/Imagenes/usuario.png";
@@ -7,22 +8,27 @@ import { cerrarAcceso, obtenerDatosDelLocalStorage } from "../FuncionesGlobales"
 export default function Cabecera() {
 
     const navigate = useNavigate();
-    const validarSesion = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
-    if (!validarSesion) {
-        navigate("/");
-        return;
-    }
+    const [params] = useSearchParams();
+    const [usuario, setUsuario] = useState({});
+
+    useEffect(() => {
+        const validarSesion = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
+        if (!validarSesion) {
+            navigate("/");
+            return;
+        }
+        setUsuario(obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE))
+    }, [])
 
     const { state, dispatch } = useMenuVertical();
-    const { account } = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
-    const userFullName = account.name;
-    const userEmail = account.username;
-    const [params] = useSearchParams();
-    const userName = userEmail.split("@")[0];
+
+    const { account } = usuario;
+    const userFullName = account?.name;
+    const userEmail = account?.username;
+    const userName = userEmail?.split("@")[0];
 
     const cerrarSesion = () => {
         cerrarAcceso();
-        navigate("/");
     };
 
     return (
