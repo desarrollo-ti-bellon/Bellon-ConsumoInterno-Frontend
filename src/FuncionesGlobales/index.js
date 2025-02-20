@@ -4,30 +4,22 @@ import moment from 'moment-timezone';
 import { LOGIN_REQUEST, PUBLIC_CLIENT_APPLICATION, TOKEN_REQUEST } from '../Archivos/Configuracion/msalConfig';
 moment.locale(import.meta.env.VITE_APP_LOCALE_MOMENT);
 
+// INTERCEPTOR PARA MANEJAR TOKEN EXPIRADO Y ERRORES
 axios.interceptors.response.use(
     (response) => response, // Pasar las respuestas exitosas directamente
     async (error) => {
         if (error.response && error.response.status === 401) {
-            try {
-                await refrescarToken(); // Asume que refrescarToken actualiza el token en localStorage
-                const obtenerToken = obtenerDatosDelLocalStorage(localStorageNombre);
-                axios.defaults.headers.common[
-                    "Authorization"
-                ] = `Bearer ${obtenerToken.accessToken}`;
-                // Reintentar la petición original con el nuevo token
-                return axios(error.config);
-            } catch (refreshError) {
-                // Manejar el error de refresco de token si es necesario
-                return Promise.reject(refreshError);
-            }
+            console.log(error.response)
+            localStorage.clear(); // LIMPIAR EL LOCALSTORAGE 
+            location.href = import.meta.env.VITE_APP_BASE_URL_API_REMOTA; // CAMBIANDO LA RUTA AL LOGIN
         }
         if (error.response && error.response.status === 403) {
             setTimeout(() => {
-                location.href = "/403";
+                location.href = '/403'
             }, 500);
         }
-        if (error.toJSON().message === "Network Error") {
-            alert("No hay conexión con el servidor, por favor verifique e intentelo de nuevo");
+        if (error.toJSON().message === 'Network Error') {
+            alert("No hay conexión con el servidor, por favor verifique e intentelo de nuevo")
         }
         return Promise.reject(error); // Propagar otros errores
     }
@@ -37,11 +29,9 @@ axios.interceptors.response.use(
 export const autoAcceso = async () => {
     console.log("autologin");
     var tokenResponse = await PUBLIC_CLIENT_APPLICATION.handleRedirectPromise();
-
     if (!tokenResponse) {
         const accounts = await PUBLIC_CLIENT_APPLICATION.getAllAccounts();
         if (accounts.length === 0) {
-
             const loginResponse = await PUBLIC_CLIENT_APPLICATION.loginPopup(
                 LOGIN_REQUEST
             );
@@ -49,11 +39,11 @@ export const autoAcceso = async () => {
                 PUBLIC_CLIENT_APPLICATION.setActiveAccount(loginResponse.account);
             }
             await refrescarToken();
-
         } else {
             await refrescarToken();
         }
     }
+    return tokenResponse;
 };
 
 export const refrescarToken = async () => {
@@ -66,12 +56,39 @@ export const refrescarToken = async () => {
         console.log('error found=>', err);
     })
     return tokenResponse;
+}
+
+export const refrescarTokenSilencioso = async () => {
+    try {
+        const tokenResponse = await PUBLIC_CLIENT_APPLICATION.acquireTokenSilent(TOKEN_REQUEST);
+        // Guardamos los datos en el almacenamiento local
+        guardarDatosEnLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE, JSON.stringify(tokenResponse));
+        return tokenResponse;
+    } catch (err) {
+        console.log('Error al intentar refrescar el token:', err);
+
+        if (err instanceof msal.InteractionRequiredAuthError) {
+            // Si el error es de autenticación interactiva requerida (token expirado, por ejemplo)
+            console.log('Se requiere interacción del usuario para refrescar el token.');
+            await autoAcceso();
+            // Aquí podrías manejar el flujo de autenticación (popup, redirect, etc.)
+            // Por ejemplo, podrías redirigir a la página de login
+            // O invocar otro método como loginPopup() para obtener un nuevo token
+            // Opcionalmente, puedes retornar un valor que indique que el token no pudo ser refrescado.
+            return null;
+        } else {
+            // Otros errores que no están relacionados con la interacción requerida
+            console.log('Otro error:', err);
+            return null;
+        }
+    }
 };
 
+
 export const cerrarAcceso = async () => {
-    PUBLIC_CLIENT_APPLICATION.logoutRedirect();
-    eliminarDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
-    eliminarDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO);
+    await PUBLIC_CLIENT_APPLICATION.logoutPopup();
+    localStorage.clear();
+    location.href = window.location.origin;
 };
 
 //CONTROLAR TOKEN Y AUTORIZACIONES DEL LS CENTRAL
