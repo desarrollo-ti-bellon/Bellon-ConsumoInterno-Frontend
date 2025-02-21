@@ -7,7 +7,7 @@ export const historialMovimientosSolicitudesReducer = (state = EstadoInicialMovi
             const estado = state.estadosSolicitud.find(estado => estado.id_estado_solicitud === linea.id_estado_solicitud);
             return {
                 ...linea, // Conservamos todas las propiedades de la línea original
-                evento: estado ? estado.descripcion : '' // Asignamos la descripción del estado
+                estado_solicitud_descripcion: estado ? estado.descripcion : '' // Asignamos la descripción del estado
             };
         });
         return { ...state, historialMovimientosSolicitudes: actulizadoHistorial }
