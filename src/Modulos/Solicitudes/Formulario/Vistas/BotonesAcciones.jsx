@@ -8,7 +8,7 @@ import { useFormulario } from '../Controles/useFormulario';
 
 export default function BotonesAcciones() {
 
-    const { state, dispatch, guardar, actualizarFormulario, cambiarEstadoSolicitud, obtenerIdEstadoSolicitudPorModulo, enviar } = useFormulario();
+    const { state, dispatch, guardar, actualizarFormulario, cambiarEstadoSolicitud, enviar } = useFormulario();
     const [estadoSolicitud, setEstadoSolicitud] = useState(null);
     const { dispatch: dispatchModalConfirmacion } = useModalConfirmacion();
     const { dispatch: dispatchModalAlerta } = useModalAlerta();
@@ -18,8 +18,8 @@ export default function BotonesAcciones() {
 
 
     useEffect(() => {
-        const estado = obtenerIdEstadoSolicitudPorModulo();
-        setEstadoSolicitud(estado);
+        const estadoSolicitud = state.formulario.id_estado_solicitud ?? '';
+        setEstadoSolicitud(estadoSolicitud.toString());
 
         // BUSCANDO LOS PERMISOS QUE TENGA EL USUARIO LOGUEADO
         const perfilUsuarioLogueado = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO);
@@ -27,22 +27,26 @@ export default function BotonesAcciones() {
             setPermisosUsuarioLogueado(perfilUsuarioLogueado?.posicion);
         }
 
-    }, []);
+    }, [state.formulario]);
 
     useEffect(() => {
+
         // AQUI SE CONTROLAN QUE BOTONES SE VEN DEPENDIENDO EL MODULO DONDE ESTE Y LOS PERMISOS QUE TENGA LA POSICION DEL USUARIO
         if (!permisosUsuarioLogueado) {
             return;
         }
+
+        // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDO EL ESTADO DE LAS SOLICITUDES 
         const botonesCondiciones = {
-            btnEnviar: (['nueva', 'rechazada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.enviar_solicitud),
-            btnAprobar: (['pendiente'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.aprobar_solicitud),
-            btnRechazar: (['pendiente', 'aprobada', 'entregada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.rechazar_solicitud),
-            btnEntregar: (['aprobada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.entregar_solicitud),
-            btnConfirmar: (['entregada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
-            btnTerminar: (['confirmada'].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
+            btnEnviar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA, import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.enviar_solicitud),
+            btnAprobar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.aprobar_solicitud),
+            btnRechazar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE, import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA, import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.rechazar_solicitud),
+            btnEntregar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.entregar_solicitud),
+            btnConfirmar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
+            btnTerminar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
         };
         setCondiciones(botonesCondiciones);
+
     }, [estadoSolicitud, state.formulario.id_cabecera_solicitud]); // Actualizamos cuando cambien estos valores
 
     const ejecutarAcciones = (accion = '') => {
