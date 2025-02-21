@@ -14,6 +14,7 @@ export const EstadoInicialFormulario = {
         total: 0,
         id_usuario_responsable: null,
         id_usuario_despacho: null,
+        nombre_creado_por: ""
     },
     inactivarCampos: {
         campo_id_cabecera_solicitud: true,
@@ -32,6 +33,7 @@ export const EstadoInicialFormulario = {
         campo_total: true,
         campo_id_usuario_responsable: true,
         campo_id_usuario_despacho: true,
+        campo_nombre_creado_por: true,
     },
     camposRequeridos: {
         requerido_id_cabecera_solicitud: true,
@@ -50,6 +52,7 @@ export const EstadoInicialFormulario = {
         requerido_total: true,
         requerido_id_usuario_responsable: true,
         requerido_id_usuario_despacho: true,
+        requerido_nombre_creado_por: true,
     },
     estadoCambiado: false,
     limiteAprobacion: 0,
