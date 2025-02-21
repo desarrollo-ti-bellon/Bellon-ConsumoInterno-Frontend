@@ -37,27 +37,7 @@ const rutas = createBrowserRouter([
 
             // VISTAS SOLICITUDES ACTIVAS
             {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
-                element: <SolicitudesPrincipal />,
-            },
-            {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
-                element: <SolicitudesPrincipal />,
-            },
-            {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
-                element: <SolicitudesPrincipal />,
-            },
-            {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
-                element: <SolicitudesPrincipal />,
-            },
-            {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
-                element: <SolicitudesPrincipal />,
-            },
-            {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES,
                 element: <SolicitudesPrincipal />,
             },
 
