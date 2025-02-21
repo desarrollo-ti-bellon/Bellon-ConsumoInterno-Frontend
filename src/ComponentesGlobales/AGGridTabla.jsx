@@ -1,7 +1,7 @@
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ListGroup } from "react-bootstrap";
 import '../ComponentesEstilos/ListadoGrupoDelPopup.css'
 import { useAlerta } from "../ControlesGlobales/Alertas/useAlerta";
@@ -14,6 +14,7 @@ export default function AGGridTabla({ obtenerReferenciaAgGrid, colDefs, rowData,
     const [popupVisible, setPopupVisible] = useState(false);
     const { dispatch: dispatchAlerta } = useAlerta()
     const [valorSeleccionado, setValorSeleccionado] = useState(null);
+    // const [fila, setFila] = useState(null);
 
     useEffect(() => {
         if (obtenerReferenciaAgGrid) {
@@ -51,6 +52,7 @@ export default function AGGridTabla({ obtenerReferenciaAgGrid, colDefs, rowData,
     }, [divReferencia.current]);
 
     const celdaSeleccionada = (parametros) => {
+        // setFila(parametros.data);
         setValorSeleccionado(parametros.value); // Guardar los datos de la celda seleccionada
     };
 
@@ -131,6 +133,17 @@ export default function AGGridTabla({ obtenerReferenciaAgGrid, colDefs, rowData,
         return null;
     };
 
+    const obtenerEventoFueraTabla = useCallback((event) => {
+        if (referenciaAgGrid.current) {
+            setPopupVisible(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener("click", obtenerEventoFueraTabla);
+        return () => document.removeEventListener("click", obtenerEventoFueraTabla);
+    }, [obtenerEventoFueraTabla]);
+
     return (
         <div>
             <div
@@ -177,6 +190,8 @@ export default function AGGridTabla({ obtenerReferenciaAgGrid, colDefs, rowData,
                         <ListGroup>
                             <ListGroup.Item className="list-group-bellon-item-hover" onClick={copiarAlPortaPapeles}>Copiar</ListGroup.Item>
                             <ListGroup.Item className="list-group-bellon-item-hover" onClick={exportarCSV}>Exportar CSV </ListGroup.Item>
+                            {/* <ListGroup.Item className="list-group-bellon-item-hover" onClick={() => verDocumento(valorSeleccionado, fila)}>Ver Documento </ListGroup.Item> */}
+                            {/* <ListGroup.Item className="list-group-bellon-item-hover" onClick={() => setPopupVisible(false)}> Ocultar </ListGroup.Item> */}
                         </ListGroup>
                     </div>
                 )}
