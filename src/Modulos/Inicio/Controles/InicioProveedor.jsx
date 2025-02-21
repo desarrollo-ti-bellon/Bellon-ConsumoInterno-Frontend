@@ -31,9 +31,7 @@ export function InicioProveedor({ children }) {
                         'Pendiente',
                         'Aprobada',
                         'Rechazada',
-                        'Entregada',
-                        'Confirmada',
-                        'Terminada',
+                        'Entregada'
                     ]
                     break;
                 case 2: // 'Director'
@@ -51,7 +49,6 @@ export function InicioProveedor({ children }) {
                 case 4: // 'Despacho'
                     estados = [
                         'Aprobada',
-                        'Confirmada',
                     ]
                     break;
                 case 5: // 'Solicitante'
@@ -91,7 +88,7 @@ export function InicioProveedor({ children }) {
         console.log('arrEstadosSolicitudes =>', arrEstadosSolicitudes)
 
         for (const estadoSolicitud of arrEstadosSolicitudes) {
-            let baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS;
+            let baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO;
             try {
                 const res = await obtenerDatos('Solicitud/Cantidad?estadoSolicitudId=' + estadoSolicitud.id_estado_solicitud, null);
                 dispatch({
@@ -99,9 +96,16 @@ export function InicioProveedor({ children }) {
                     payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta.replace('nuevas', `${estadoSolicitud.descripcion.toLowerCase()}s`), funcion: () => { return null; } }
                 });
             } catch (error) {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar VITE_APP_BELLON_SOLICITUDES_NUEVAS.', tipo: 'warning' } });
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, al intentar cargar ${estadoSolicitud.id_estado_solicitud}.`, tipo: 'warning' } });
             }
         }
+
+        await obtenerDatos(`ConsumoInterno/Cantidad`, null)
+            .then((res) => {
+                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'Consumos Internos', cantidad: res.data, ruta: '', funcion: () => dispatchNotas({ type: 'mostrarNotas', payload: { mostrar: true } }) } })
+            }).catch(() => {
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar la cantidad consumos internos.', tipo: 'warning' } })
+            })
 
         await obtenerDatos(`Notas/Cantidad?usuarioDestino=${usuarioDestino}`, '')
             .then((res) => {
