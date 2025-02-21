@@ -43,7 +43,7 @@ const rutas = createBrowserRouter([
 
             // VISTAS HISTORICOS (CONSUMOS INTERNOS YA REALIZADOS Y LOS MOVIMIENTOS DE LA SOLICITUD)
             {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
                 element: <SolicitudesPrincipal />,
             },
             {
@@ -77,7 +77,7 @@ const rutas = createBrowserRouter([
                 element: <FormularioSolicitudesPrincipal />,
             },
             {
-                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO,
+                path: import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS_FORMULARIO,
                 element: <FormularioSolicitudesPrincipal />,
             },
             {
