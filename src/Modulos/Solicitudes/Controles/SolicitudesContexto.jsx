@@ -18,31 +18,11 @@ export const SolicitudesProveedor = ({ children }) => {
     const { dispatch: dispatchModalConfirmacion } = useModalConfirmacion();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
 
-    const obtenerIdEstadoSolicitudPorModulo = () => {
-        const url = obtenerRutaUrlActual();
-        switch (url) {
-            case import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS:
-                return 1;
-            case import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES:
-                return 2;
-            case import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS:
-                return 3;
-            case import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS:
-                return 4;
-            case import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS:
-                return 5;
-            case import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS:
-                return 6;
-            case import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS:
-                return 7;
-            default:
-                return null;
-        }
-    }
-
     const cargarSolicitudes = async () => {
+    
+        const urlActual = obtenerRutaUrlActual();
 
-        if (obtenerRutaUrlActual() === import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES) {
+        if (urlActual === import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES) {
             try {
                 const res = await obtenerDatos(`HistorialMovimientoSolicitudesCI/Agrupado`, null);
                 let json = [];
@@ -57,10 +37,23 @@ export const SolicitudesProveedor = ({ children }) => {
             return;
         }
 
-        const idEstadoSolicitud = obtenerIdEstadoSolicitudPorModulo();
-        if (idEstadoSolicitud === null) return;
+        if (urlActual === import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS) {
+            try {
+                const res = await obtenerDatos(`ConsumoInterno`, null);
+                let json = [];
+                if (res.status !== 204) {
+                    json = res.data;
+                }
+                dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
+                dispatch({ type: 'combinarEstadosSolicitudes' });
+            } catch (err) {
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
+            }
+            return;
+        }
+
         try {
-            const res = await obtenerDatos(`Solicitud/EstadoSolicitud?estadoSolicitudId=${idEstadoSolicitud}`, null);
+            const res = await obtenerDatos(`Solicitud/Solicitudes`, null);
             let json = [];
             if (res.status !== 204) {
                 json = res.data;
@@ -70,6 +63,7 @@ export const SolicitudesProveedor = ({ children }) => {
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
         }
+
     }
 
     const cargarEstadosSolicitudes = async () => {
