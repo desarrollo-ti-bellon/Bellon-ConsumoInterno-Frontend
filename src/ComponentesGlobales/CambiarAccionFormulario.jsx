@@ -47,6 +47,7 @@ export default function CambiarAccionFormulario() {
 
         if (params.get("modo") === "vista") {
             setOcultarBotones(true);
+            return;
         }
 
         const validarHistorico = locacion.pathname.includes("historico");
@@ -64,14 +65,9 @@ export default function CambiarAccionFormulario() {
 
         const rutaActual = obtenerRutaUrlActual();
         const rutas = [
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS_FORMULARIO
         ];
-        const validarOcultarBotones = rutas.includes(rutaActual);
+        const validarOcultarBotones = params.get('modo') === 'vista' || rutas.includes(rutaActual);
         setOcultarBotones(validarOcultarBotones);
 
     }, []);
