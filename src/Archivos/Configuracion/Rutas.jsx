@@ -14,7 +14,7 @@ export const rutas = [
         grupo: 'Módulos'
     },
     {
-        ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
+        ruta: import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
         componente: <SolicitudesPrincipal />,
         nombre: 'Consumos Internos',
         icono: <Icon.Circle />,
