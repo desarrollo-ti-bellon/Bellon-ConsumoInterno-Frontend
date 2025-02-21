@@ -71,6 +71,7 @@ export const refrescarTokenSilencioso = async () => {
             // Si el error es de autenticación interactiva requerida (token expirado, por ejemplo)
             console.log('Se requiere interacción del usuario para refrescar el token.');
             await autoAcceso();
+            // await PUBLIC_CLIENT_APPLICATION.loginPopup();
             // Aquí podrías manejar el flujo de autenticación (popup, redirect, etc.)
             // Por ejemplo, podrías redirigir a la página de login
             // O invocar otro método como loginPopup() para obtener un nuevo token
@@ -82,14 +83,26 @@ export const refrescarTokenSilencioso = async () => {
             return null;
         }
     }
-};
+}
 
+export const verificarTiempoExpiracionToken = async () => {
+    const usuarioDatos = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE)
+    if (usuarioDatos) {
+        const timestamp = usuarioDatos.idTokenClaims.exp; // Este es un ejemplo de timestamp, usa el real
+        const date = moment.unix(timestamp); // Convertimos el timestamp a un objeto moment
+        const ahora = moment().add(20, 'minutes'); // Sumamos 20 minutos a la hora actual
+        if (ahora.isAfter(date)) {
+            console.log('Token al expirar volviendo a refrescar');
+            await refrescarTokenSilencioso(); // Llamas a la función para refrescar el token
+        }
+    }
+}
 
 export const cerrarAcceso = async () => {
     await PUBLIC_CLIENT_APPLICATION.logoutPopup();
     localStorage.clear();
     location.href = window.location.origin;
-};
+}
 
 //CONTROLAR TOKEN Y AUTORIZACIONES DEL LS CENTRAL
 export const guardarDatosEnLocalStorage = (descripcion, json_convertido_texto) => {
@@ -107,30 +120,35 @@ export const eliminarDatosDelLocalStorage = (descripcion) => {
 
 //CONTROLA LAS LLAMADAS A LAS APIs
 export const obtenerDatos = async (entidad, queryString = '') => {
+    await verificarTiempoExpiracionToken();
     const obtenerToken = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
     axios.defaults.headers.common['Authorization'] = `Bearer ${obtenerToken.accessToken}`
     return await axios.get(`${import.meta.env.VITE_APP_BASE_URL_API_REMOTA}/${entidad}`);
 }
 
 export const obtenerDatosConId = async (entidad, id) => {
+    await verificarTiempoExpiracionToken();
     const obtenerToken = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
     axios.defaults.headers.common['Authorization'] = `Bearer ${obtenerToken.accessToken}`
     return await axios.get(`${import.meta.env.VITE_APP_BASE_URL_API_REMOTA}/${entidad}?id=${id}`);
 }
 
 export const obtenerDatosConMuliplesIDs = async (entidad, arreglo) => {
+    await verificarTiempoExpiracionToken();
     const obtenerToken = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
     axios.defaults.headers.common['Authorization'] = `Bearer ${obtenerToken.accessToken}`
     return await axios.post(`${import.meta.env.VITE_APP_BASE_URL_API_REMOTA}/${entidad}`, arreglo);
 }
 
 export const enviarDatos = async (entidad, datos) => {
+    await verificarTiempoExpiracionToken();
     const obtenerToken = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
     axios.defaults.headers.common['Authorization'] = `Bearer ${obtenerToken.accessToken}`
     return await axios.post(`${import.meta.env.VITE_APP_BASE_URL_API_REMOTA}/${entidad}`, datos);
 }
 
 export const eliminarDatosConId = async (entidad, id) => {
+    await verificarTiempoExpiracionToken();
     const obtenerToken = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
     axios.defaults.headers.common['Authorization'] = `Bearer ${obtenerToken.accessToken}`
     return await axios.delete(`${import.meta.env.VITE_APP_BASE_URL_API_REMOTA}/${entidad}?id=${id}`);
@@ -302,13 +320,8 @@ export const tipoDocumento = (ruta) => {
         [import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES]: 'LIQ',
         [import.meta.env.VITE_APP_BELLON_LIQUIDACIONES_FORMULARIO]: 'LIQ',
         [import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO]: 'LIQ',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS]: 'CIN',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES]: 'CIN',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS]: 'CIN',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS]: 'CIN',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS]: 'CIN',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS]: 'CIN',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS]: 'CIN',
     };
     return mapping[ruta] || ''; // Retorna el valor asociado o '' si no existe
 }
