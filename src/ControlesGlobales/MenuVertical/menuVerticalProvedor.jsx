@@ -23,43 +23,35 @@ export default function MenuVerticalProveedor({ children }) {
             switch (datosUsuarioLogueado.posicion_id) {
                 case 1: // 'Administrador':
                     urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
-                        import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES,
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
                         import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_USUARIOS,
+                        import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
                         import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
                     ].includes(r.ruta));
                     break;
                 case 2: // 'Director'
                     urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES,
                         import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
                     ].includes(r.ruta));
                     break;
                 case 3: // 'Gerente Area'
                     urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES,
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES,
                         import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
                     ].includes(r.ruta));
                     break;
                 case 4: // 'Despacho'
                     urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES,
                     ].includes(r.ruta));
                     break;
                 case 5: // 'Solicitante'
                     urls = rutasModulos.filter(r => [
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS,
-                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS,
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES,
+                        import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
                         import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
-
                     ].includes(r.ruta));
                     break;
                 default:
@@ -81,6 +73,7 @@ export default function MenuVerticalProveedor({ children }) {
 
     return (
         <menuVerticalContexto.Provider value={{ state, dispatch, rutas: regularRutasDelPerfilUsuarioLogueado() }}>
+            {/* <menuVerticalContexto.Provider value={{ state, dispatch, rutas: rutasModulos }}> */}
             {children}
         </menuVerticalContexto.Provider>
     )
