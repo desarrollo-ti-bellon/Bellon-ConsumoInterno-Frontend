@@ -5,6 +5,7 @@ import { useModalAlerta } from '../../../../ControlesGlobales/ModalAlerta/useMod
 import { useModalConfirmacion } from '../../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion';
 import { obtenerDatosDelLocalStorage } from '../../../../FuncionesGlobales';
 import { useFormulario } from '../Controles/useFormulario';
+import { useSearchParams } from 'react-router-dom';
 
 export default function BotonesAcciones() {
 
@@ -15,9 +16,12 @@ export default function BotonesAcciones() {
     const [condiciones, setCondiciones] = useState({ btnNuevo: false, btnEnviar: false, btnAprobar: false, btnRechazar: false, btnEntregar: false, btnRegistrar: false });
     const [bloquearBotonesAcciones, setBloquearBotonesAcciones] = useState(state.lineas.length == 0)
     const [permisosUsuarioLogueado, setPermisosUsuarioLogueado] = useState(null);
+    const [params] = useSearchParams();
 
 
     useEffect(() => {
+
+        // SETEANDO EL ESTADO DE SOLICITUD ACTUAL
         const estadoSolicitud = state.formulario.id_estado_solicitud ?? '';
         setEstadoSolicitud(estadoSolicitud.toString());
 
@@ -33,6 +37,11 @@ export default function BotonesAcciones() {
 
         // AQUI SE CONTROLAN QUE BOTONES SE VEN DEPENDIENDO EL MODULO DONDE ESTE Y LOS PERMISOS QUE TENGA LA POSICION DEL USUARIO
         if (!permisosUsuarioLogueado) {
+            return;
+        }
+
+        // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDO SI ESTAMOS EN MODO VISTA
+        if (params.get('modo') === 'vista') {
             return;
         }
 
@@ -52,13 +61,13 @@ export default function BotonesAcciones() {
     const ejecutarAcciones = (accion = '') => {
 
         const acciones = {
-            nueva: 1,
-            enviar: 2,
-            aprobar: 3,
-            rechazar: 4,
-            entregar: 5,
-            confirmar: 6,
-            terminada: 7,
+            nueva: import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA,
+            enviar: import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE,
+            aprobar: import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA,
+            rechazar: import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA,
+            entregar: import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA,
+            confirmar: import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
+            terminada: import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA,
         }
 
         if (acciones[accion]) {
@@ -92,9 +101,9 @@ export default function BotonesAcciones() {
     return (
         <div style={{ float: 'right' }}>
             {/* <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnNuevo} onClick={() => confirmarAccion('nueva')} className="m-1"><Icon.Plus /> {' '}  Nueva Solicitud </Button> */}
+            <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnRechazar} onClick={() => confirmarAccion('rechazar')} className="m-1"><Icon.Ban /> {' '} Rechazar Solicitud </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnEnviar} onClick={() => confirmarAccion('enviar')} className="m-1"><Icon.CardChecklist /> {' '}   Enviar Solicitud </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnAprobar} onClick={() => confirmarAccion('aprobar')} className="m-1"><Icon.Check /> {' '} Aprobar Solicitud </Button>
-            <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnRechazar} onClick={() => confirmarAccion('rechazar')} className="m-1"><Icon.Ban /> {' '} Rechazar Solicitud </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnConfirmar} onClick={() => confirmarAccion('confirmar')} className="m-1"><Icon.CheckCircleFill /> {' '}   Confirmar Solicitud </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnEntregar} onClick={() => confirmarAccion('entregar')} className="m-1"><Icon.Floppy2Fill /> {' '} Entregar </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnTerminar} onClick={() => confirmarAccion('terminada')} className="m-1"><Icon.Floppy2Fill /> {' '}   Registrar </Button>
