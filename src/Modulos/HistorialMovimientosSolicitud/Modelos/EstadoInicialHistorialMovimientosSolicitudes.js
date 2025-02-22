@@ -1,6 +1,9 @@
 export const EstadoInicialMovimientosSolicitudes = {
     historialMovimientosSolicitudes: [],
-    estadosSolicitud: []
+    estadosSolicitudes: [],
+    clasificaciones: [],
+    departamentos: [],
+    sucursales: [],
 }
 
 export const pagination = true;
