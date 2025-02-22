@@ -50,6 +50,22 @@ export default function CambiarAccionFormulario() {
             return;
         }
 
+        //OCULTAR BOTONES SI EL ESTADO DE LA SOLICITUDES SON ESTAS
+        if (locacion.state) {
+            const arrEstadoSolicitudes = [
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
+            ]
+            const condicionOcultarBotones = arrEstadoSolicitudes.includes(locacion.state.id_estado_solicitud.toString());
+            if (condicionOcultarBotones) {
+                setOcultarBotones(condicionOcultarBotones);
+                return;
+            }
+        }
+
         const validarHistorico = locacion.pathname.includes("historico");
         if (validarHistorico) {
             setOcultarBotones(true);
@@ -70,7 +86,7 @@ export default function CambiarAccionFormulario() {
         const validarOcultarBotones = params.get('modo') === 'vista' || rutas.includes(rutaActual);
         setOcultarBotones(validarOcultarBotones);
 
-    }, []);
+    }, [locacion]);
 
     return (
         <Container>
