@@ -67,21 +67,21 @@ export const refrescarTokenSilencioso = async () => {
     } catch (err) {
         console.log('Error al intentar refrescar el token:', err);
 
-        if (err instanceof msal.InteractionRequiredAuthError) {
+        // if (err instanceof msal.InteractionRequiredAuthError) {
             // Si el error es de autenticación interactiva requerida (token expirado, por ejemplo)
-            console.log('Se requiere interacción del usuario para refrescar el token.');
+            // console.log('Se requiere interacción del usuario para refrescar el token.');
             await autoAcceso();
             // await PUBLIC_CLIENT_APPLICATION.loginPopup();
             // Aquí podrías manejar el flujo de autenticación (popup, redirect, etc.)
             // Por ejemplo, podrías redirigir a la página de login
             // O invocar otro método como loginPopup() para obtener un nuevo token
             // Opcionalmente, puedes retornar un valor que indique que el token no pudo ser refrescado.
-            return null;
-        } else {
-            // Otros errores que no están relacionados con la interacción requerida
-            console.log('Otro error:', err);
-            return null;
-        }
+            // return null;
+        // } else {
+        //     // Otros errores que no están relacionados con la interacción requerida
+        //     console.log('Otro error:', err);
+        //     return null;
+        // }
     }
 }
 
@@ -179,11 +179,11 @@ export const formatoMonedaDecimal = (number = 0) => {
     if (number === '0' || number === 0) {
         return ''
     }
-    console.log("formatoMonedaDecimal", number)
+    // console.log("formatoMonedaDecimal", number)
     return Math.floor(number * 10000) / 10000;
 }
 export const formatoMoneda = (number = 0, decimals = 2, symbol = "$") => {
-    console.log('formatoMoneda', number)
+    // console.log('formatoMoneda', number)
 
     if (number === '0' || number === 0) {
         return ''
