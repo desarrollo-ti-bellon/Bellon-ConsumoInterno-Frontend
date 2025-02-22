@@ -3,7 +3,7 @@ import { EstadoInicialNotasModelo } from "./notasModelo"
 
 export const notasReducer = (state = EstadoInicialNotasModelo, action) => {
 
-    console.log(action)
+    // console.log(action)
 
     if (action.type === 'mostrarNotas') {
         return { ...state, mostrar: action.payload.mostrar }

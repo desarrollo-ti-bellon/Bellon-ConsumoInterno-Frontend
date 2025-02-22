@@ -3,7 +3,7 @@ import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 
 export const formularioReducer = (state = EstadoInicialFormulario, action) => {
 
-    console.log(action)
+    // console.log(action)
 
     //ACCIONES DEL FORMULARIO 
     if (action.type === 'actualizarFormulario') {
