@@ -21,7 +21,6 @@ export default function DetalleSolicitudes() {
     useEffect(() => {
         const condicion2 = locacion.get('accion') !== 'ver';
         setActivarBotonAgregarProductos(condicion2)
-        console.log('condicion2 =>', condicion2)
     }, [state.formulario])
 
     useEffect(() => {
@@ -29,8 +28,7 @@ export default function DetalleSolicitudes() {
         // ACTIVAR CAMPOS EDITABLES DE LA TABLA
         const rutaActual = obtenerRutaUrlActual();
         const rutas = [
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO,
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO
         ];
 
         const condicion = (state.formulario.id_cabecera_solicitud && locacion.get('accion') !== 'ver' && rutas.includes(rutaActual));
