@@ -8,8 +8,8 @@ import { useFormulario } from "../Controles/useFormulario";
 export default function FormularioSolicitudes() {
 
     const { state, dispatch, delegarResponsable, validarFormulario: validarFormularioReducer, noValidarFormulario, actualizarFormulario, limpiarFormulario, enviar } = useFormulario();
-    const { id_cabecera_solicitud, no_documento, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, id_estado_solicitud, id_clasificacion, id_sucursal, comentario, total } = state.formulario;
-    const { campo_id_cabecera_solicitud, campo_no_documento, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_comentario, campo_total } = state.inactivarCampos;
+    const { id_cabecera_solicitud, no_documento, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, id_estado_solicitud, id_clasificacion, id_sucursal, comentario, total, nombre_creado_por } = state.formulario;
+    const { campo_id_cabecera_solicitud, campo_no_documento, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_comentario, campo_total, campo_nombre_creado_por } = state.inactivarCampos;
     const { requerido_id_cabecera_solicitud, requerido_no_documento, requerido_fecha_creado, requerido_creado_por, requerido_id_departamento, requerido_usuario_despacho, requerido_usuario_responsable, requerido_id_estado_solicitud, requerido_id_clasificacion, requerido_id_sucursal, requerido_comentario, requerido_total } = state.camposRequeridos;
     const [bloquearBotonDelegar, setBloquearBotonDelegar] = useState(false);
     const [locacion] = useSearchParams();
@@ -60,12 +60,12 @@ export default function FormularioSolicitudes() {
                                 />
                             </Form.Group>
 
-                            <Form.Group as={Col} md="4" controlId="creado_por">
+                            <Form.Group as={Col} md="4" controlId="nombre_creado_por">
                                 <Form.Label>Creado Por</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    defaultValue={creado_por}
-                                    disabled={campo_creado_por}
+                                    defaultValue={nombre_creado_por}
+                                    disabled={campo_nombre_creado_por}
                                 />
                             </Form.Group>
 
