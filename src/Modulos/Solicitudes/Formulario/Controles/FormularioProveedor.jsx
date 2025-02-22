@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import { useAlerta } from "../../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
 import { useModalAlerta } from "../../../../ControlesGlobales/ModalAlerta/useModalAlerta"
-import { eliminarDatosConId, enviarDatos, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual, quitarFormularioDeLaUrl } from "../../../../FuncionesGlobales"
+import { eliminarDatosConId, enviarDatos, obtenerDatos, obtenerDatosConId, obtenerDatosDelLocalStorage, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual, quitarFormularioDeLaUrl } from "../../../../FuncionesGlobales"
 import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 import { formularioReducer } from "./formularioReducer"
 
@@ -21,36 +21,43 @@ export const FormularioProveedor = ({ children }) => {
     const tiempoFuera = useRef(null)
     const [contador, setContador] = useState(0);
 
-    const obtenerIdEstadoSolicitudPorModulo = () => {
-        const url = obtenerRutaUrlActual();
-        const estadoMap = {
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_NUEVAS_FORMULARIO]: 'nueva',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_PENDIENTES_FORMULARIO]: 'pendiente',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_APROBADAS_FORMULARIO]: 'aprobada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_RECHAZADAS_FORMULARIO]: 'rechazada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_ENTREGADAS_FORMULARIO]: 'entregada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONFIRMADAS_FORMULARIO]: 'confirmada',
-            [import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS_FORMULARIO]: 'terminada',
-        };
-        return estadoMap[url] || null;
-    }
-
     const cargarSolicitudPorId = async () => {
 
         if (!formData.state) {
             return;
         }
 
-        let entidad = "Solicitud";
-        let id = formData.state.id_cabecera_solicitud;
+        console.log('FormData =>', formData);
+        let entidad = "";
+        let id = 0;
 
-        const urlActual = obtenerRutaUrlActual();
-        const urls = [
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO
-        ]
+        if (locacion.get('modo') !== 'vista') {
 
-        if (urls.includes(urlActual)) {
+            // ENTONCES BUSCARA EN SOLICITUDES
+            if ('id_cabecera_solicitud' in formData.state) {
+                entidad = "Solicitud";
+                id = formData.state.id_cabecera_solicitud;
+            }
+
+            // ENTONCES BUSCARA EN CONSUMOS INTERNOS
             if ('id_cabecera_consumo_interno' in formData.state) {
+                entidad = "ConsumoInterno";
+                id = formData.state.id_cabecera_consumo_interno;
+            }
+
+        }
+
+        if (locacion.get('modo') === 'vista') {
+            
+            entidad = "Solicitud";
+            id = formData.state.id_cabecera_solicitud;
+
+            const arrEstadosSolicitudes = [
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
+            ];
+
+            if (arrEstadosSolicitudes.includes(formData.state.id_estado_solicitud)) {
                 entidad = "ConsumoInterno";
                 id = formData.state.id_cabecera_consumo_interno;
             }
@@ -58,9 +65,18 @@ export const FormularioProveedor = ({ children }) => {
 
         await obtenerDatosConId(entidad, id)
             .then((res) => {
-                const json = res.data;
-                dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
-                dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
+
+                let json = {};
+                let detalle = [];
+
+                if (res.status !== 204) {
+                    json = res.data;
+                    detalle = json.lineas;
+                }
+
+                dispatch({ type: 'llenarFormulario', payload: { formulario: json } });
+                dispatch({ type: 'llenarLineas', payload: { lineas: detalle } });
+
             }).catch((err) => {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando la solicitud #${formData.state.id_cabecera_solicitud}`, tipo: 'warning' } });
             })
@@ -250,37 +266,45 @@ export const FormularioProveedor = ({ children }) => {
 
     const guardar = async () => {
 
-        if ((state.lineas.length > 0) && state.formulario.id_cabecera_solicitud !== null && obtenerIdEstadoSolicitudPorModulo() !== 'nueva') {
+        if (formData.state) {
+            if (state.formulario.id_cabecera_solicitud !== null) {
+                if (state.lineas.length > 0) {
+                    if (state.formulario.id_estado_solicitud !== import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA) {
 
-            const productosConCantidadCero = state.lineas.filter(linea => linea.cantidad <= 0)  // Filtra las líneas con cantidad <= 0
+                        const productosConCantidadCero = state.lineas.filter(linea => linea.cantidad <= 0)  // Filtra las líneas con cantidad <= 0
+                        if (productosConCantidadCero.length > 0) {
+                            let contenido = `<ul>`;
+                            productosConCantidadCero.forEach((linea, index) => {
+                                contenido += `<li>`;
+                                contenido += ` <p>Producto: [${linea.no_producto}] ${linea.descripcion} </p>`;
+                                contenido += ` <p>Cantidad: ${linea.cantidad}</p>`;
+                                contenido += `</li>`;
+                            })
+                            contenido = `</ul>`;
+                            dispatchModalAlerta({
+                                type: 'mostrarModalAlerta', payload: {
+                                    mensaje: `<div style="font-size: 20px; font-weight: 600; text-align: left;">No se puede realizar esta acción, se encontraron productos con cantidad 0 por favor verifique e intente de nuevo</div></br>${contenido}`,
+                                    mostrar: true,
+                                    tamano: 'md'
+                                }
+                            })
+                            cargarSolicitudPorId();
+                            noValidarFormulario();
+                            return;
+                        }
 
-            if (productosConCantidadCero.length > 0) {
-                let contenido = `<ul>`;
-                productosConCantidadCero.forEach((linea, index) => {
-                    contenido += `<li>`;
-                    contenido += ` <p>Producto: [${linea.no_producto}] ${linea.descripcion} </p>`;
-                    contenido += ` <p>Cantidad: ${linea.cantidad}</p>`;
-                    contenido += `</li>`;
-                })
-                contenido = `</ul>`;
-                dispatchModalAlerta({
-                    type: 'mostrarModalAlerta', payload: {
-                        mensaje: `<div style="font-size: 20px; font-weight: 600; text-align: left;">No se puede realizar esta acción, se encontraron productos con cantidad 0 por favor verifique e intente de nuevo</div></br>${contenido}`,
-                        mostrar: true,
-                        tamano: 'md'
                     }
-                })
+                }
+            }
+        }
+
+        if (state.lineas.length > 0) {
+            if (state.formulario.total > state.limiteAprobacion) {
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: left;">El total de la solicitud supera el límite de aprobación, por favor delega la solicitud a otra persona.</b>', mostrar: true, tamano: 'md' } })
                 cargarSolicitudPorId();
                 noValidarFormulario();
                 return;
             }
-        }
-
-        if ((state.lineas.length > 0) && (state.formulario.total > state.limiteAprobacion)) {
-            dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: left;">El total de la solicitud supera el límite de aprobación, por favor delega la solicitud a otra persona.</b>', mostrar: true, tamano: 'md' } })
-            cargarSolicitudPorId();
-            noValidarFormulario();
-            return;
         }
 
         console.log('guardar', state.formulario)
@@ -296,6 +320,7 @@ export const FormularioProveedor = ({ children }) => {
             })
             .catch((err) => {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                cargarSolicitudPorId();
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
@@ -305,7 +330,7 @@ export const FormularioProveedor = ({ children }) => {
 
     const guardarLineas = async (parametros) => {
         console.log('guardar Lineas', state.productosSeleccionados)
-        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
+        // dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Solicitud/Linea', parametros)
             .then((res) => {
                 const json = res.data;
@@ -320,7 +345,7 @@ export const FormularioProveedor = ({ children }) => {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
             })
             .finally(() => {
-                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+                // dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
             })
     }
 
@@ -491,13 +516,14 @@ export const FormularioProveedor = ({ children }) => {
 
         // MODO NUEVO
         if (!formData.state) {
-            const habilitarCampos = (obtenerIdEstadoSolicitudPorModulo() === 'nueva');
-            if (habilitarCampos) {
-                // LLENAR FORMULARIO
-                actualizarFormulario('fecha_creado', obtenerFechaActual())
-                actualizarFormulario('creado_por', obtenerNombreUsuarioLoggeado())
-                actualizarFormulario('id_estado_solicitud', 1)
-            }
+
+            // LLENAR FORMULARIO
+            actualizarFormulario('fecha_creado', obtenerFechaActual());
+            actualizarFormulario('creado_por', obtenerNombreUsuarioLoggeado());
+            actualizarFormulario('id_estado_solicitud', 1);
+
+            const usuarioDatos = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO);
+            actualizarFormulario('nombre_creado_por', usuarioDatos?.nombre_usuario ?? '');
 
             dispatch({
                 type: 'inactivarCampos',
@@ -520,6 +546,7 @@ export const FormularioProveedor = ({ children }) => {
                         campo_usuario_despacho: true,
                         campo_id_usuario_responsable: false,
                         campo_id_usuario_despacho: true,
+                        campo_nombre_creado_por: true,
                     }
                 }
             });
@@ -548,6 +575,7 @@ export const FormularioProveedor = ({ children }) => {
                     requerido_usuario_despacho: false,
                     requerido_id_usuario_responsable: false,
                     requerido_id_usuario_despacho: false,
+                    requerido_nombre_creado_por: false,
                 }
             }
         });
@@ -627,7 +655,7 @@ export const FormularioProveedor = ({ children }) => {
     }, [state.formulario])
 
     return (
-        <FormularioContexto.Provider value={{ state, dispatch, guardar, guardarLineas, eliminaLinea, cambiarEstadoSolicitud, pasarLineasDelModalAlDetalle, obtenerIdEstadoSolicitudPorModulo, delegarResponsable, actualizarFormulario, validarFormulario, noValidarFormulario, limpiarFormulario, enviar }}>
+        <FormularioContexto.Provider value={{ state, dispatch, guardar, guardarLineas, eliminaLinea, cambiarEstadoSolicitud, pasarLineasDelModalAlDetalle, delegarResponsable, actualizarFormulario, validarFormulario, noValidarFormulario, limpiarFormulario, enviar }}>
             {children}
         </FormularioContexto.Provider>
     )
