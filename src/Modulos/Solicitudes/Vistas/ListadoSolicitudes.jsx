@@ -16,6 +16,7 @@ export default function ListadoSolicitudes() {
     const gridRef = useRef(null);
     const locacion = useLocation();
     const [ocultarBotonNuevo, setOcultarBotonNuevo] = useState(true);
+    const [columnas, setColumnas] = useState([]);
 
     const obtenerReferenciaAgGrid = (ref) => {
         gridRef.current = ref.current;
@@ -49,15 +50,19 @@ export default function ListadoSolicitudes() {
         // MOSTRAR BOTON HISTORIAL MOVIMIENTOS SOLICITUD
         rutas = [import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES];
         const mostrarBotonHistorico = rutas.includes(ruta);
-        console.log('Mostrar botón Historico:', mostrarBotonHistorico);
 
+        let mostrarBotonEditar = "";
+        let mostrarBotonVer = "";
+        let mostrarBotonNotas = "";
+
+        // OCULTANDO BOTON NUEVO
         if (!mostrarBotonHistorico) {
             // MOSTRAR BOTON EDITAR
             arrEstadosSolicitudes = [
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA,
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA
             ]
-            const mostrarBotonEditar = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
+            mostrarBotonEditar = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
 
             // MOSTRAR BOTON VER
             arrEstadosSolicitudes = [
@@ -69,7 +74,7 @@ export default function ListadoSolicitudes() {
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
             ];
-            const mostrarBotonVer = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
+            mostrarBotonVer = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
 
             // MOSTRAR BOTON NOTAS
             arrEstadosSolicitudes = [
@@ -81,7 +86,8 @@ export default function ListadoSolicitudes() {
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
             ];
-            const mostrarBotonNotas = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
+            mostrarBotonNotas = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
+
         }
 
         return (
@@ -103,27 +109,30 @@ export default function ListadoSolicitudes() {
         )
     }
 
-    const [columnas, setColumnas] = useState([
-        { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Creado Por", field: "creado_por", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Departamento", field: "departamento", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Clasificacion", field: "clasificacion", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Sucursal", field: "sucursal", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Acciones", field: "acciones", cellRenderer: BotonesAcciones, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-    ]);
 
     useEffect(() => {
+
+        setColumnas([
+            { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Creado Por", field: "nombre_creado_por", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Departamento", field: "departamento", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Clasificacion", field: "clasificacion", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Sucursal", field: "sucursal", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: "Acciones", field: "acciones", cellRenderer: BotonesAcciones, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        ]);
+
         const urlActual = obtenerRutaUrlActual();
+        let rutas = [];
 
         // CAMBIANDO LAS COLUMNAS
-        const rutas = [
+        rutas = [
             import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
         ]
         if (rutas.includes(urlActual)) {
@@ -142,9 +151,29 @@ export default function ListadoSolicitudes() {
             ]);
         }
 
+        // CAMBIANDO LAS COLUMNAS
+        rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS
+        ]
+        if (rutas.includes(urlActual)) {
+            setColumnas([
+                { headerName: "ID", field: "id_cabecera_consumo_interno", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Realizado Por", field: "nombre_creado_por", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Estado Solicitud", field: "id_estado_solicitud", cellRenderer: BadgedEstadoSolicitud, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Clasificacion", field: "clasificacion", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Total", field: "total", valueFormatter: (e) => formatoMoneda(e.value, 2), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+                { headerName: "Acciones", field: "acciones", cellRenderer: BotonesAcciones, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            ]);
+        }
+
         // OCULTANDO BOTON NUEVO
         const urls = [
-            import.meta.env.VITE_APP_BELLON_SOLICITUDES_TERMINADAS,
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
             import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
         ];
 
