@@ -17,16 +17,55 @@ export const HistorialMovimientosSolicitudesProveedor = ({ children }) => {
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
     const formData = useLocation();
 
-    const cargarEstadosSolicitud = async () => {
+    const cargarEstadosSolicitudes = async () => {
         try {
-            const res = await obtenerDatos('EstadoSolicitud',null);
+            const res = await obtenerDatos(`EstadoSolicitud`, null);
             let json = [];
             if (res.status !== 204) {
                 json = res.data;
             }
-            dispatch({ type: 'llenarEstadosSolicitudes', payload: { estadosSolicitud: json } });
-        } catch (error) {
-            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + error, tipo: 'warning' } });
+            dispatch({ type: 'llenarDatos', payload: { propiedad: 'estadosSolicitudes', valor: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando los estados de las solicitudes', tipo: 'warning' } });
+        }
+    }
+
+    const cargarDepartamentos = async () => {
+        try {
+            const res = await obtenerDatos(`Departamento`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarDatos', payload: { propiedad: 'departamentos', valor: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando los departamentos', tipo: 'warning' } });
+        }
+    }
+
+    const cargarClasificaciones = async () => {
+        try {
+            const res = await obtenerDatos(`Clasificacion`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarDatos', payload: { propiedad: 'clasificaciones', valor: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando las clasificaciones', tipo: 'warning' } });
+        }
+    }
+
+    const cargarSucursales = async () => {
+        try {
+            const res = await obtenerDatos(`Sucursal`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarDatos', payload: { propiedad: 'sucursales', valor: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando las sucursales', tipo: 'warning' } });
         }
     }
 
@@ -49,7 +88,10 @@ export const HistorialMovimientosSolicitudesProveedor = ({ children }) => {
 
     const cargarDatos = async () => {
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' });
-        await cargarEstadosSolicitud();
+        await cargarEstadosSolicitudes();
+        await cargarDepartamentos();
+        await cargarClasificaciones();
+        await cargarSucursales();
         await cargarHistorialMovimientosSolicitudes();
         dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' });
     }
