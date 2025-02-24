@@ -93,7 +93,7 @@ export function InicioProveedor({ children }) {
                 const res = await obtenerDatos('Solicitud/Cantidad?estadoSolicitudId=' + estadoSolicitud.id_estado_solicitud, null);
                 dispatch({
                     type: 'llenarContadoresActividades',
-                    payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta, funcion: () => { return null; } }
+                    payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta +`?estado_solicitud_id=${estadoSolicitud.id_estado_solicitud}`, funcion: () => { return null; } }
                 });
             } catch (error) {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, al intentar cargar ${estadoSolicitud.id_estado_solicitud}.`, tipo: 'warning' } });
