@@ -68,15 +68,15 @@ export const refrescarTokenSilencioso = async () => {
         console.log('Error al intentar refrescar el token:', err);
 
         // if (err instanceof msal.InteractionRequiredAuthError) {
-            // Si el error es de autenticación interactiva requerida (token expirado, por ejemplo)
-            // console.log('Se requiere interacción del usuario para refrescar el token.');
-            await autoAcceso();
-            // await PUBLIC_CLIENT_APPLICATION.loginPopup();
-            // Aquí podrías manejar el flujo de autenticación (popup, redirect, etc.)
-            // Por ejemplo, podrías redirigir a la página de login
-            // O invocar otro método como loginPopup() para obtener un nuevo token
-            // Opcionalmente, puedes retornar un valor que indique que el token no pudo ser refrescado.
-            // return null;
+        // Si el error es de autenticación interactiva requerida (token expirado, por ejemplo)
+        // console.log('Se requiere interacción del usuario para refrescar el token.');
+        await autoAcceso();
+        // await PUBLIC_CLIENT_APPLICATION.loginPopup();
+        // Aquí podrías manejar el flujo de autenticación (popup, redirect, etc.)
+        // Por ejemplo, podrías redirigir a la página de login
+        // O invocar otro método como loginPopup() para obtener un nuevo token
+        // Opcionalmente, puedes retornar un valor que indique que el token no pudo ser refrescado.
+        // return null;
         // } else {
         //     // Otros errores que no están relacionados con la interacción requerida
         //     console.log('Otro error:', err);
@@ -349,42 +349,43 @@ export const verDocumento = (no_documento, fila) => {
         let id = 0;
         let clave = '';
         let modo = 'vista';
-
+        let tipo_documento = '';
         const documentoConfig = {
             LLE: [
-                { key: 'hist_cabecera_llegada_id', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LLEGADAS_FORMULARIO, clave: 'id_hist_cabecera_llegada' },
-                { key: 'id_cabecera_llegada', url: import.meta.env.VITE_APP_BELLON_LLEGADAS_FORMULARIO, clave: 'id_cabecera_llegada' },
-                { key: 'id_hist_cabecera_llegada', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LLEGADAS_FORMULARIO, clave: 'id_hist_cabecera_llegada' }
+                { key: 'hist_cabecera_llegada_id', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LLEGADAS_FORMULARIO, clave: 'id_hist_cabecera_llegada', tipo_documento: '' },
+                { key: 'id_cabecera_llegada', url: import.meta.env.VITE_APP_BELLON_LLEGADAS_FORMULARIO, clave: 'id_cabecera_llegada', tipo_documento: '' },
+                { key: 'id_hist_cabecera_llegada', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LLEGADAS_FORMULARIO, clave: 'id_hist_cabecera_llegada', tipo_documento: '' }
             ],
             TRA: [
-                { key: 'hist_cabecera_transito_id', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO, clave: 'id_hist_cabecera_llegada' },
-                { key: 'id_cabecera_transito', url: import.meta.env.VITE_APP_BELLON_TRANSITOS_FORMULARIO, clave: 'id_cabecera_transito' },
-                { key: 'id_hist_cabecera_transito', url: import.meta.env.VITE_APP_BELLON_HISTORICO_TRANSITOS_FORMULARIO, clave: 'id_hist_cabecera_transito' }
+                { key: 'hist_cabecera_transito_id', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO, clave: 'id_hist_cabecera_llegada', tipo_documento: '' },
+                { key: 'id_cabecera_transito', url: import.meta.env.VITE_APP_BELLON_TRANSITOS_FORMULARIO, clave: 'id_cabecera_transito', tipo_documento: '' },
+                { key: 'id_hist_cabecera_transito', url: import.meta.env.VITE_APP_BELLON_HISTORICO_TRANSITOS_FORMULARIO, clave: 'id_hist_cabecera_transito', tipo_documento: '' }
             ],
             LIQ: [
-                { key: 'id_cabecera_liquidacion', url: import.meta.env.VITE_APP_BELLON_LIQUIDACIONES_FORMULARIO, clave: 'id_cabecera_liquidacion' },
-                { key: 'id_hist_cabecera_liquidacion', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO, clave: 'id_hist_cabecera_liquidacion' }
+                { key: 'id_cabecera_liquidacion', url: import.meta.env.VITE_APP_BELLON_LIQUIDACIONES_FORMULARIO, clave: 'id_cabecera_liquidacion', tipo_documento: '' },
+                { key: 'id_hist_cabecera_liquidacion', url: import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO, clave: 'id_hist_cabecera_liquidacion', tipo_documento: '' }
             ],
             CIN: [
-                { key: 'id_cabecera_solicitud', url: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO, clave: 'id_cabecera_solicitud' },
-                { key: 'id_cabecera_consumo_interno', url: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO, clave: 'id_cabecera_consumo_interno' }
+                { key: 'id_cabecera_solicitud', url: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO, clave: 'id_cabecera_solicitud', tipo_documento: fila.id_estado_solicitud },
+                { key: 'id_cabecera_consumo_interno', url: import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO, clave: 'id_cabecera_consumo_interno', tipo_documento: fila.id_estado_solicitud }
             ]
         };
 
         const documentoTipo = documentoConfig[tipoDocumento];
 
         if (documentoTipo) {
-            for (const { key, url: documentUrl, clave: documentClave } of documentoTipo) {
+            for (const { key, url: documentUrl, clave: documentClave, tipo_documento: tipoDocumento } of documentoTipo) {
                 if (key in fila) {
                     url = documentUrl;
                     clave = documentClave;
                     id = fila[key];
+                    tipo_documento = tipoDocumento;
                     break;
                 }
             }
 
             if (url) {
-                const popup = window.open(`${url}?accion=ver&clave=${clave}&documento=${id}&modo=${modo}`, 'documento', 'width=100%,height=100%');
+                const popup = window.open(`${url}?accion=ver&clave=${clave}&documento=${id}&modo=${modo}&tipo_documento=${tipo_documento}`, 'documento', 'width=100%,height=100%');
                 if (popup) {
                     popup.focus();
                     popup.resizeTo(screen.width, screen.height);
