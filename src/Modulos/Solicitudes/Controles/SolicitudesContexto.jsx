@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta";
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion";
 import { useModalConfirmacion } from "../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
@@ -13,13 +13,13 @@ export const SolicitudesProveedor = ({ children }) => {
 
     const [state, dispatch] = useReducer(solicitudesReducer, EstadoInicialSolicitudes)
     const location = useLocation(); // Obtiene la ubicación actual
-
+    const [locacion] = useSearchParams();
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchModalConfirmacion } = useModalConfirmacion();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
 
     const cargarSolicitudes = async () => {
-    
+
         const urlActual = obtenerRutaUrlActual();
 
         if (urlActual === import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES) {
@@ -49,6 +49,19 @@ export const SolicitudesProveedor = ({ children }) => {
             } catch (err) {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
             }
+            return;
+        }
+
+        if (locacion.get('estado_solicitud_id')) {
+            // console.log('location =>', location);
+            const estadoSolicitudId = locacion.get('estado_solicitud_id')
+            const res = await obtenerDatos(`Solicitud/EstadoSolicitud?estadoSolicitudId=${estadoSolicitudId}`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
+            dispatch({ type: 'combinarEstadosSolicitudes' });
             return;
         }
 
