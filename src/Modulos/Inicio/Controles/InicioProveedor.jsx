@@ -5,6 +5,7 @@ import { useNotas } from "../../../ControlesGlobales/Notas/useNotas";
 import { obtenerDatos, obtenerDatosDelLocalStorage } from "../../../FuncionesGlobales";
 import { EstadoInicialInicio } from "../Modelos/InicioModel";
 import { inicioReducer } from "./inicioReducer";
+import { useControlGeneral } from "../../../ControlesGlobales/ControlGeneral/useControlGeneral";
 
 export const inicioContexto = createContext(null)
 
@@ -14,6 +15,7 @@ export function InicioProveedor({ children }) {
     const { dispatch: dispatchAlerta } = useAlerta();
     const { dispatch: dispatchCargandoInformacion } = useCargandoInformacion();
     const { state: stateNotas, dispatch: dispatchNotas } = useNotas();
+    const { state: stateControlGeneral, dispatch: dispatchControlGeneral } = useControlGeneral();
 
     const [state, dispatch] = useReducer(inicioReducer, EstadoInicialInicio);
 
@@ -134,7 +136,7 @@ export function InicioProveedor({ children }) {
 
     useEffect(() => {
         cargarActividades();
-    }, [])
+    }, [stateControlGeneral.perfilUsuario])
 
     useEffect(() => {
         const validarCargaNotas = state.actividades.find(actividad => actividad.titulo === 'Notas Actuales');
