@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Col, Container, Row } from 'react-bootstrap';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
-import { formateadorDeFechaYHoraEspanol, formatoMoneda, verDocumento } from '../../../FuncionesGlobales';
+import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
 import { useHistorialMovmientosSolicitudes } from '../Controles/useHistorialMovmientosSolicitudes';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialHistorialMovimientosSolicitudes';
 
@@ -22,6 +22,18 @@ export default function HistorialMovimientosSolicitud() {
     }
 
     const hypervinculoDocumento = (e) => {
+
+        const url = import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES_HISTORICO;
+        const urlActual = obtenerRutaUrlActual();
+
+        if (url === urlActual) {
+            return (
+                <span>
+                    {e.value}
+                </span>
+            );
+        }
+
         const fila = e.data;
         const no_documento = fila.no_documento;
         let titulo = `Ver solicitud ${no_documento}`
