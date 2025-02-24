@@ -85,15 +85,15 @@ export function InicioProveedor({ children }) {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar Estados de solicitudes.', tipo: 'warning' } });
             });
 
-        console.log('arrEstadosSolicitudes =>', arrEstadosSolicitudes)
+        // console.log('arrEstadosSolicitudes =>', arrEstadosSolicitudes)
 
         for (const estadoSolicitud of arrEstadosSolicitudes) {
-            let baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO;
+            const baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES;
             try {
                 const res = await obtenerDatos('Solicitud/Cantidad?estadoSolicitudId=' + estadoSolicitud.id_estado_solicitud, null);
                 dispatch({
                     type: 'llenarContadoresActividades',
-                    payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta.replace('nuevas', `${estadoSolicitud.descripcion.toLowerCase()}s`), funcion: () => { return null; } }
+                    payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta, funcion: () => { return null; } }
                 });
             } catch (error) {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, al intentar cargar ${estadoSolicitud.id_estado_solicitud}.`, tipo: 'warning' } });
@@ -102,7 +102,11 @@ export function InicioProveedor({ children }) {
 
         await obtenerDatos(`ConsumoInterno/Cantidad`, null)
             .then((res) => {
-                dispatch({ type: 'llenarContadoresActividades', payload: { titulo: 'Consumos Internos', cantidad: res.data, ruta: '', funcion: () => dispatchNotas({ type: 'mostrarNotas', payload: { mostrar: true } }) } })
+                const baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS;
+                dispatch({
+                    type: 'llenarContadoresActividades',
+                    payload: { titulo: 'Consumos Internos', cantidad: res.data, ruta: baseRuta, funcion: () => { return null; } }
+                })
             }).catch(() => {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar la cantidad consumos internos.', tipo: 'warning' } })
             })
