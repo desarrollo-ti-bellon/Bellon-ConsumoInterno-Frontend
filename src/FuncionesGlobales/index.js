@@ -40,7 +40,10 @@ export const autoAcceso = async () => {
             }
             await refrescarToken();
         } else {
-            await refrescarToken();
+            // await refrescarToken();
+            localStorage.clear();
+            cerrarAcceso();
+            location.href = '/';
         }
     }
     return tokenResponse;
