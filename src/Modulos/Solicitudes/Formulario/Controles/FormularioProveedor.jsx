@@ -28,41 +28,32 @@ export const FormularioProveedor = ({ children }) => {
         }
 
         console.log('FormData =>', formData);
-        let entidad = "";
-        let id = 0;
+        let entidad = formData.state.hasOwnProperty("id_cabecera_solicitud") ? 'Solicitud' : 'ConsumoInterno';
+        let id = entidad === 'Solicitud' ? formData.state.id_cabecera_solicitud : formData.state.id_cabecera_consumo_interno
 
-        if (locacion.get('modo') !== 'vista') {
-
-            // ENTONCES BUSCARA EN SOLICITUDES
-            if ('id_cabecera_solicitud' in formData.state) {
-                entidad = "Solicitud";
-                id = formData.state.id_cabecera_solicitud;
-            }
-
-            // ENTONCES BUSCARA EN CONSUMOS INTERNOS
-            if ('id_cabecera_consumo_interno' in formData.state) {
-                entidad = "ConsumoInterno";
-                id = formData.state.id_cabecera_consumo_interno;
-            }
-
-        }
-
+        // SI ES VISTA, CARGAR DATOS DE LA SOLICITUD GENERAL
         if (locacion.get('modo') === 'vista') {
-            
-            entidad = "Solicitud";
-            id = formData.state.id_cabecera_solicitud;
+            await obtenerDatosConId('Solicitud/SolicitudGeneral', id)
+                .then((res) => {
 
-            const arrEstadosSolicitudes = [
-                import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
-                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
-            ];
+                    let json = {};
+                    let detalle = [];
 
-            if (arrEstadosSolicitudes.includes(formData.state.id_estado_solicitud)) {
-                entidad = "ConsumoInterno";
-                id = formData.state.id_cabecera_consumo_interno;
-            }
+                    if (res.status !== 204) {
+                        json = res.data;
+                        detalle = json.lineas;
+                    }
+
+                    dispatch({ type: 'llenarFormulario', payload: { formulario: json } });
+                    dispatch({ type: 'llenarLineas', payload: { lineas: detalle } });
+
+                }).catch((err) => {
+                    dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando la solicitud #${formData.state.id_cabecera_solicitud}`, tipo: 'warning' } });
+                })
+            return;
         }
 
+        // CARGA LOS DATOS NORMAL 
         await obtenerDatosConId(entidad, id)
             .then((res) => {
 
@@ -597,10 +588,11 @@ export const FormularioProveedor = ({ children }) => {
         const parametro2 = locacion.get('clave');
         const parametro3 = locacion.get('documento');
         const parametro4 = locacion.get('modo');
+        const parametro5 = locacion.get('tipo_documento');
 
-        if (parametro1 && parametro2 && parametro3 && parametro4) {
+        if (parametro1 && parametro2 && parametro3 && parametro4 && parametro5) {
             console.log('parametros =>', parametro1, parametro2, parametro3, parametro4)
-            navegar(`?accion=${parametro1}&modo=${parametro4}`, { state: { [parametro2]: parametro3 } });
+            navegar(`?accion=${parametro1}&modo=${parametro4}`, { state: { [parametro2]: parametro3, id_estado_solicitud: parametro5 } });
             return;
         }
         /* ---------------------------------------------------------------------- */
