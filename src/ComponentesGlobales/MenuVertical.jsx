@@ -39,7 +39,7 @@ export default function MenuVertical() {
         if (datosUsuario) {
             setPerfil(datosUsuario?.posicion.descripcion);
         }
-    }, [])
+    }, [rutas])
 
     return (
         <>
