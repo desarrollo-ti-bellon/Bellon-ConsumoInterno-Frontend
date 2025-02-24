@@ -4,6 +4,7 @@ import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
 import { useHistorialMovmientosSolicitudes } from '../Controles/useHistorialMovmientosSolicitudes';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialHistorialMovimientosSolicitudes';
+import * as Icon from 'react-bootstrap-icons';
 
 export default function HistorialMovimientosSolicitud() {
 
@@ -65,7 +66,7 @@ export default function HistorialMovimientosSolicitud() {
         <Container fluid>
             <Row>
                 <Col>
-                    <h2>Historial de Movimientos <a href="#" className="primary" style={{ color: "#00b7c3" }} onClick={() => verDocumento(noDocumento, state.historialMovimientosSolicitudes[0])}>{noDocumento}</a></h2>
+                    <h2 className='my-3'>Historial Movimientos Estado Solicitud  <Icon.ArrowRight /> <a href="#" className="primary" style={{ color: "#00b7c3" }} onClick={() => verDocumento(noDocumento, state.historialMovimientosSolicitudes[0])}>{noDocumento}</a></h2>
                 </Col>
             </Row>
             <Row>
