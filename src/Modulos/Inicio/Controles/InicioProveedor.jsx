@@ -135,7 +135,9 @@ export function InicioProveedor({ children }) {
     }
 
     useEffect(() => {
-        cargarActividades();
+        if (stateControlGeneral.perfilUsuario) {
+            cargarActividades();
+        }
     }, [stateControlGeneral.perfilUsuario])
 
     useEffect(() => {
