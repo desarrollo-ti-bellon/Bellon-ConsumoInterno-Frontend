@@ -298,8 +298,8 @@ export const FormularioProveedor = ({ children }) => {
             }
         }
 
-        console.log('guardar', state.formulario)
-        dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
+        // console.log('guardar', state.formulario)
+        // dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Solicitud/Cabecera', state.formulario)
             .then((res) => {
                 let json = {};
@@ -319,7 +319,7 @@ export const FormularioProveedor = ({ children }) => {
                 cargarSolicitudPorId();
             })
             .finally(() => {
-                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+                // dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
             })
         noValidarFormulario();
     }
