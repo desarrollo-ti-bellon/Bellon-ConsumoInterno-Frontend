@@ -32,7 +32,7 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
         const { id_almacen, codigo_almacen } = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO)
         copiaLineas.forEach(linea => {
             const unidadMedida = state.comboUnidadesMedida?.find(el => el.codigo === linea.codigo_unidad_medida) ?? null;
-            linea.total = linea.cantidad * linea.precio_unitario;
+            linea.total = linea.total ?? 0;
             linea.almacen_id = id_almacen ?? '';
             linea.almacen_codigo = codigo_almacen ?? '';
             linea.id_unidad_medida = unidadMedida?.id_unidad_medida ?? '';
