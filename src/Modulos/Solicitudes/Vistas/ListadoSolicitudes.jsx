@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useNotas } from '../../../ControlesGlobales/Notas/useNotas';
 import { formateadorDeFechaYHoraEspanol, formatoMoneda, obtenerDatosDelLocalStorage, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
@@ -10,7 +10,7 @@ import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelectio
 
 export default function ListadoSolicitudes() {
 
-    const { state, dispatch, eliminarSolicitud, recuperarSolicitudes } = useSolicitudes()
+    const { state, dispatch, eliminarSolicitud, recuperarSolicitudes, imprimirConsumosInternos } = useSolicitudes()
     const navegar = useNavigate();
     const { dispatch: dispatchNotas } = useNotas();
     const gridRef = useRef(null);
@@ -54,6 +54,7 @@ export default function ListadoSolicitudes() {
         let mostrarBotonEditar = "";
         let mostrarBotonVer = "";
         let mostrarBotonNotas = "";
+        let mostrarBotonImprimirCI = "";
 
         // OCULTANDO BOTON NUEVO
         if (!mostrarBotonHistorico) {
@@ -88,6 +89,9 @@ export default function ListadoSolicitudes() {
             ];
             mostrarBotonNotas = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
 
+            // MOSTRAR IMPRIMIR CONSUMOS INTERNOS
+            rutas = [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS];
+            mostrarBotonImprimirCI = rutas.includes(ruta);
         }
 
         return (
@@ -96,6 +100,7 @@ export default function ListadoSolicitudes() {
                 {mostrarBotonVer && (<Button title="Ver solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>)}
                 {mostrarBotonNotas && (<Button title="Poner nota" size='sm' variant="outline-primary" style={{ marginLeft: 5 }} onClick={() => hacerNota(parametros.data)} > {" "} <Icon.JournalBookmarkFill size={15} />{" "} </Button>)}
                 {mostrarBotonHistorico && (<Button title="Mostrar historial movimientos solicitudes" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES_HISTORICO, { state: parametros.data })}> <Icon.ClockHistory /> </Button>)}
+                {mostrarBotonImprimirCI && (<Button title="Imprimir consumos internos" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos()}> <Icon.Receipt /> </Button>)}
             </>
         )
     }
