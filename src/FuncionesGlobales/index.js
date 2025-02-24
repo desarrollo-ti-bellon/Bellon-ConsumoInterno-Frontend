@@ -26,6 +26,7 @@ axios.interceptors.response.use(
 );
 
 // CONTROLAR EL ACCESO 
+var contador = 0;
 export const autoAcceso = async () => {
     console.log("autologin");
     var tokenResponse = await PUBLIC_CLIENT_APPLICATION.handleRedirectPromise();
@@ -41,9 +42,12 @@ export const autoAcceso = async () => {
             await refrescarToken();
         } else {
             // await refrescarToken();
-            localStorage.clear();
-            cerrarAcceso();
-            location.href = '/';
+            contador++;
+            if (contador >= 3) {
+                cerrarAcceso();
+                return;
+            }
+            await autoAcceso();
         }
     }
     return tokenResponse;
@@ -102,9 +106,9 @@ export const verificarTiempoExpiracionToken = async () => {
 }
 
 export const cerrarAcceso = async () => {
-    await PUBLIC_CLIENT_APPLICATION.logoutPopup();
     localStorage.clear();
     location.href = window.location.origin;
+    await PUBLIC_CLIENT_APPLICATION.logoutRedirect();
 }
 
 //CONTROLAR TOKEN Y AUTORIZACIONES DEL LS CENTRAL
