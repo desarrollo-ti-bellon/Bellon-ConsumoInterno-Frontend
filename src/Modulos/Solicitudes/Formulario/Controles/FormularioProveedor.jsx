@@ -302,9 +302,14 @@ export const FormularioProveedor = ({ children }) => {
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Solicitud/Cabecera', state.formulario)
             .then((res) => {
-                let json = res.data;
+                let json = {};
+                let lineas = [];
+                if (res.status !== 204) {
+                    json = res.data;
+                    lineas = json.lineas;
+                }
                 dispatch({ type: 'llenarFormulario', payload: { formulario: json } })
-                dispatch({ type: 'llenarLineas', payload: { lineas: json.lineas } })
+                dispatch({ type: 'llenarLineas', payload: { lineas: lineas } })
                 dispatch({ type: 'actualizarUltimaActualizacionDeRegistro', payload: { ultimaActualizacionDeRegistro: obtenerFechaYHoraActual() } })
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
                 cambioEstadoSolicitud();
