@@ -3,7 +3,7 @@ import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 
 export const formularioReducer = (state = EstadoInicialFormulario, action) => {
 
-    // console.log(action)
+    console.log(action)
 
     //ACCIONES DEL FORMULARIO 
     if (action.type === 'actualizarFormulario') {
@@ -32,7 +32,6 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
         const { id_almacen, codigo_almacen } = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO)
         copiaLineas.forEach(linea => {
             const unidadMedida = state.comboUnidadesMedida?.find(el => el.codigo === linea.codigo_unidad_medida) ?? null;
-            linea.total = linea.total ?? 0;
             linea.almacen_id = id_almacen ?? '';
             linea.almacen_codigo = codigo_almacen ?? '';
             linea.id_unidad_medida = unidadMedida?.id_unidad_medida ?? '';
@@ -71,7 +70,7 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
 
     //ACCIONES DE LOS MODALES
     if (action.type === 'mostrarModalAgregarSolicitud') {
-        return { ...state, modalAgregarSolcitudes: action.payload.mostrar }
+        return { ...state, modalAgregarSolicitudes: action.payload.mostrar }
     }
 
     if (action.type === 'mostrarModalAgregarProductos') {
@@ -79,7 +78,18 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
     }
 
     if (action.type === 'llenarProductos') {
-        return { ...state, listadoProductos: action.payload.productos }
+        
+        // Crear un Set de 'no_producto' en las líneas existentes para mejorar la búsqueda
+        const productosEnLineas = new Set(state.lineas.map(linea => linea.id_producto));
+        console.log('productosEnLineas =>', productosEnLineas);
+        
+        // Filtrar los productos que no están listados en 'lineas'
+        const productosNoListados = action.payload.productos.filter(el => !productosEnLineas.has(el.id_producto));
+        console.log('productosEnLineas =>', productosEnLineas);
+
+        // Devolver el nuevo estado con los productos no listados
+        return { ...state, listadoProductos: productosNoListados }
+
     }
 
     if (action.type === 'llenarComboEstadosSolicitudes') {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import { useSearchParams } from "react-router-dom";
+import { useModalConfirmacion } from "../../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
 import { formateadorDeFechas, formatoCantidad, formatoMoneda } from "../../../../FuncionesGlobales";
 import { useFormulario } from "../Controles/useFormulario";
 
@@ -11,6 +12,7 @@ export default function FormularioSolicitudes() {
     const { id_cabecera_solicitud, no_documento, fecha_creado, creado_por, id_departamento, usuario_despacho, usuario_responsable, id_estado_solicitud, id_clasificacion, id_sucursal, comentario, total, nombre_creado_por } = state.formulario;
     const { campo_id_cabecera_solicitud, campo_no_documento, campo_fecha_creado, campo_creado_por, campo_id_departamento, campo_usuario_despacho, campo_usuario_responsable, campo_id_estado_solicitud, campo_id_clasificacion, campo_id_sucursal, campo_comentario, campo_total, campo_nombre_creado_por } = state.inactivarCampos;
     const { requerido_id_cabecera_solicitud, requerido_no_documento, requerido_fecha_creado, requerido_creado_por, requerido_id_departamento, requerido_usuario_despacho, requerido_usuario_responsable, requerido_id_estado_solicitud, requerido_id_clasificacion, requerido_id_sucursal, requerido_comentario, requerido_total } = state.camposRequeridos;
+    const { dispatch: dispatchModalConfirmacion } = useModalConfirmacion();
     const [bloquearBotonDelegar, setBloquearBotonDelegar] = useState(false);
     const [locacion] = useSearchParams();
 
@@ -32,6 +34,23 @@ export default function FormularioSolicitudes() {
         if (form.checkValidity()) {
             validarFormularioReducer();
         }
+    }
+
+    const confirmarAccion = () => {
+        dispatchModalConfirmacion({
+            type: 'mostrarModalConfirmacion',
+            payload: {
+                mostrar: true,
+                mensaje: '¿Está seguro de delegar la solicitud?',
+                tamano: 'md',
+                funcionEjecutar: confirmarDelegacion
+            }
+        });
+    }
+
+    const confirmarDelegacion = () => {
+        delegarResponsable();
+        enviar();
     }
 
     return (
@@ -212,29 +231,26 @@ export default function FormularioSolicitudes() {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} md="2">
+                            <Form.Group as={Col} md="4">
                                 <Form.Label>Usuario Aprobador</Form.Label>
                                 <Form.Control
+                                    hidden
                                     type="text"
                                     value={formatoCantidad(state.limiteAprobacion)}
                                     isValid={total <= state.limiteAprobacion}
                                     isInvalid={!state.limiteAprobacion || total > state.limiteAprobacion}
                                     disabled
                                 />
+                                <div style={{ marginTop: '0px' }}>
+                                    <Button variant="primary"
+                                        style={{ border: (!state.limiteAprobacion || total > state.limiteAprobacion) ? '2px #c21f19 solid' : '' }}
+                                        disabled={bloquearBotonDelegar}
+                                        onClick={() => confirmarAccion()}
+                                    > <Icon.ArrowUp /> Delegar </Button>
+                                </div>
                                 <Form.Control.Feedback type="invalid">
                                     Limite superado del usuario responsable
                                 </Form.Control.Feedback>
-                            </Form.Group>
-
-                            <Form.Group as={Col} md="2">
-                                <div style={{ marginTop: '30px' }}>
-                                    <Button variant="primary"
-                                        disabled={bloquearBotonDelegar}
-                                        onClick={() => {
-                                            delegarResponsable();
-                                            enviar();
-                                        }}> <Icon.ArrowUp /> Delegar </Button>
-                                </div>
                             </Form.Group>
 
                         </Row>
