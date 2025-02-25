@@ -568,7 +568,6 @@ export const FormularioProveedor = ({ children }) => {
                     requerido_comentario: false,
                     requerido_creado_por: false,
                     requerido_usuario_responsable: false,
-                    requerido_usuario_despacho: false,
                     requerido_id_usuario_responsable: false,
                     requerido_id_usuario_despacho: false,
                     requerido_nombre_creado_por: false,
