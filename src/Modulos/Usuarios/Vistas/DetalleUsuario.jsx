@@ -22,11 +22,11 @@ export default function DetalleUsuario() {
     const [columnasProductos] = useState([
         { headerName: "ID", field: "id_usuario_ci", flex: 1 },
         { headerName: "Nombre", field: "nombre_usuario", flex: 2 },
+        { headerName: "Posicion", field: "posicion_descripcion", flex: 1 },
         { headerName: "Correo", field: "correo", flex: 2 },
         { headerName: "Sucursal", field: "codigo_sucursal", flex: 1 },
         { headerName: "Departamento", field: "codigo_departamento", flex: 1 },
         { headerName: "Limite", field: "limite", valueFormatter: (e) => formatoMoneda(e.value, 0, '$'), flex: 1 },
-        { headerName: "Posicion", field: "posicion_descripcion", flex: 1 },
         { headerName: "Estado", field: "estado", flex: 1 },
         // { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
