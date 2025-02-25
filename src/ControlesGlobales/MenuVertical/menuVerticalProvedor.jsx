@@ -52,7 +52,6 @@ export default function MenuVerticalProveedor({ children }) {
             case 5: // 'Solicitante'
                 urls = rutasModulos.filter(r => [
                     import.meta.env.VITE_APP_BELLON_SOLICITUDES,
-                    import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
                     import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
                 ].includes(r.ruta));
                 break;
