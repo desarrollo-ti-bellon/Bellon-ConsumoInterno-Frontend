@@ -171,8 +171,6 @@ export default function FormularioUsuario() {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-
-
                 </Row>
 
                 <Row className="mb-2">
