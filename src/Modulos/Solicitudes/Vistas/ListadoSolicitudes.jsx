@@ -16,6 +16,7 @@ export default function ListadoSolicitudes() {
     const gridRef = useRef(null);
     const locacion = useLocation();
     const [ocultarBotonNuevo, setOcultarBotonNuevo] = useState(true);
+    const [ocultarBotonImprimirCI, setOcultarBotonImprimirCI] = useState(true);
     const [columnas, setColumnas] = useState([]);
 
     const obtenerReferenciaAgGrid = (ref) => {
@@ -54,7 +55,7 @@ export default function ListadoSolicitudes() {
         let mostrarBotonEditar = "";
         let mostrarBotonVer = "";
         let mostrarBotonNotas = "";
-        let mostrarBotonImprimirCI = "";
+        // let mostrarBotonImprimirCI = "";
 
         // OCULTANDO BOTON NUEVO
         if (!mostrarBotonHistorico) {
@@ -89,9 +90,6 @@ export default function ListadoSolicitudes() {
             ];
             mostrarBotonNotas = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
 
-            // MOSTRAR IMPRIMIR CONSUMOS INTERNOS
-            rutas = [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS];
-            mostrarBotonImprimirCI = rutas.includes(ruta);
         }
 
         return (
@@ -100,7 +98,6 @@ export default function ListadoSolicitudes() {
                 {mostrarBotonVer && (<Button title="Ver solicitud" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(`formulario?accion=ver`, { state: parametros.data })}> <Icon.EyeFill /> </Button>)}
                 {mostrarBotonNotas && (<Button title="Poner nota" size='sm' variant="outline-primary" style={{ marginLeft: 5 }} onClick={() => hacerNota(parametros.data)} > {" "} <Icon.JournalBookmarkFill size={15} />{" "} </Button>)}
                 {mostrarBotonHistorico && (<Button title="Mostrar historial movimientos solicitudes" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => navegar(import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES_HISTORICO, { state: parametros.data })}> <Icon.ClockHistory /> </Button>)}
-                {mostrarBotonImprimirCI && (<Button title="Imprimir consumos internos" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos()}> <Icon.Receipt /> </Button>)}
             </>
         )
     }
@@ -114,8 +111,14 @@ export default function ListadoSolicitudes() {
         )
     }
 
-
     useEffect(() => {
+
+        const urlActual = obtenerRutaUrlActual();
+        let rutas = [];
+
+        rutas = [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS]
+        // MOSTRAR IMPRIMIR CONSUMOS INTERNOS
+        setOcultarBotonImprimirCI(!rutas.includes(urlActual));
 
         setColumnas([
             { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
@@ -133,8 +136,6 @@ export default function ListadoSolicitudes() {
             { headerName: "Acciones", field: "acciones", cellRenderer: BotonesAcciones, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         ]);
 
-        const urlActual = obtenerRutaUrlActual();
-        let rutas = [];
 
         // CAMBIANDO LAS COLUMNAS
         rutas = [
@@ -202,18 +203,15 @@ export default function ListadoSolicitudes() {
         if (arrPosiciones.includes(posicion_id.toString())) {
             setOcultarBotonNuevo(false);
         }
+
+
+
     }, [locacion])
 
     return (
         <Container fluid>
             <Row>
-                <Col
-                    xs={{ span: 12, order: 2 }}
-                    sm={{ span: 12, order: 2 }}
-                    md={{ span: 6, order: 1 }}
-                    xl={{ span: 5, order: 1 }}
-                    className="text-start mt-2 mb-2"
-                >
+                <Col>
                     <InputGroup className="mb-3">
                         <InputGroup.Text id="basic-addon3">
                             <Icon.Search />
@@ -226,13 +224,10 @@ export default function ListadoSolicitudes() {
                         />
                     </InputGroup>
                 </Col>
-                <Col
-                    xs={{ span: 12, order: 1 }}
-                    sm={{ span: 12, order: 1 }}
-                    md={{ span: 6, order: 2 }}
-                    xl={{ span: 7, order: 2 }}
-                    className="text-end"
-                >
+                <Col>
+                    <Button hidden={ocultarBotonImprimirCI} title="Imprimir consumos internos" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos()}> <Icon.PrinterFill /> Imprimir Consumos Internos </Button>
+                </Col>
+                <Col>
                     <div style={{ float: 'right' }}>
                         <Button hidden={ocultarBotonNuevo} size='md' variant='primary' className='mb-2' onClick={() => navegar('formulario', { state: null })}><Icon.Plus />Nuevo</Button>
                     </div>
