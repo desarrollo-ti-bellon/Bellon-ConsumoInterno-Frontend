@@ -44,8 +44,6 @@ export function InicioProveedor({ children }) {
                 case 3: // 'Gerente Area'
                     estados = [
                         'Pendiente',
-                        'Rechazada',
-                        'Aprobada',
                     ]
                     break;
                 case 4: // 'Despacho'
@@ -56,9 +54,8 @@ export function InicioProveedor({ children }) {
                 case 5: // 'Solicitante'
                     estados = [
                         'Nueva',
-                        'Pendiente',
-                        'Aprobada',
                         'Rechazada',
+                        'Entregada'
                     ]
                     break;
                 default:
@@ -95,23 +92,33 @@ export function InicioProveedor({ children }) {
                 const res = await obtenerDatos('Solicitud/Cantidad?estadoSolicitudId=' + estadoSolicitud.id_estado_solicitud, null);
                 dispatch({
                     type: 'llenarContadoresActividades',
-                    payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta +`?estado_solicitud_id=${estadoSolicitud.id_estado_solicitud}`, funcion: () => { return null; } }
+                    payload: { titulo: `${estadoSolicitud.descripcion}s`, cantidad: res.data, ruta: baseRuta + `?estado_solicitud_id=${estadoSolicitud.id_estado_solicitud}`, funcion: () => { return null; } }
                 });
             } catch (error) {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, al intentar cargar ${estadoSolicitud.id_estado_solicitud}.`, tipo: 'warning' } });
             }
         }
 
-        await obtenerDatos(`ConsumoInterno/Cantidad`, null)
-            .then((res) => {
-                const baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS;
-                dispatch({
-                    type: 'llenarContadoresActividades',
-                    payload: { titulo: 'Consumos Internos', cantidad: res.data, ruta: baseRuta, funcion: () => { return null; } }
-                })
-            }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar la cantidad consumos internos.', tipo: 'warning' } })
-            })
+        if (stateControlGeneral) {
+
+            const mostrarCardConsumosInternos = stateControlGeneral.perfilUsuario.posicion_id;
+            const posiciones = [import.meta.env.VITE_APP_POSICION_ADMINISTRADOR, import.meta.env.VITE_APP_POSICION_DIRECTOR, import.meta.env.VITE_APP_POSICION_GERENTE_AREA];
+            const validarPosiciones = posiciones.includes(mostrarCardConsumosInternos.toString());
+
+            if (validarPosiciones) {
+                await obtenerDatos(`ConsumoInterno/Cantidad`, null)
+                    .then((res) => {
+                        const baseRuta = import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS;
+                        dispatch({
+                            type: 'llenarContadoresActividades',
+                            payload: { titulo: 'Consumos Internos', cantidad: res.data, ruta: baseRuta, funcion: () => { return null; } }
+                        })
+                    }).catch(() => {
+                        dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar la cantidad consumos internos.', tipo: 'warning' } })
+                    })
+            }
+
+        }
 
         await obtenerDatos(`Notas/Cantidad?usuarioDestino=${usuarioDestino}`, '')
             .then((res) => {
