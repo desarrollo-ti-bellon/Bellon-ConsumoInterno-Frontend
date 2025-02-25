@@ -13,7 +13,6 @@ export const ControlGeneralProveedor = ({ children }) => {
     const navegar = useNavigate();
 
     const cargarPerfilUsuarioLogueado = async (accion = '') => {
-        console.log("cargarPerfilUsuarioLogueado");
         eliminarDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO);
         return await obtenerDatos(`UsuariosCI/Correo?correo=${obtenerNombreUsuarioLoggeado()}`, null)
             .then((res) => {
