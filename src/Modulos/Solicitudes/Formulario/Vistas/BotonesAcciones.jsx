@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
+import { useSearchParams } from 'react-router-dom';
 import { useModalAlerta } from '../../../../ControlesGlobales/ModalAlerta/useModalAlerta';
 import { useModalConfirmacion } from '../../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion';
 import { obtenerDatosDelLocalStorage } from '../../../../FuncionesGlobales';
 import { useFormulario } from '../Controles/useFormulario';
-import { useSearchParams } from 'react-router-dom';
 
 export default function BotonesAcciones() {
 
@@ -17,7 +17,6 @@ export default function BotonesAcciones() {
     const [bloquearBotonesAcciones, setBloquearBotonesAcciones] = useState(state.lineas.length == 0)
     const [permisosUsuarioLogueado, setPermisosUsuarioLogueado] = useState(null);
     const [params] = useSearchParams();
-
 
     useEffect(() => {
 
@@ -44,16 +43,35 @@ export default function BotonesAcciones() {
         if (params.get('modo') === 'vista') {
             return;
         }
-
+        
         // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDO EL ESTADO DE LAS SOLICITUDES 
+        const tieneSolicitudValida = state.formulario.id_cabecera_solicitud !== null;
+        const estadoPermiteEnvio = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA].includes(estadoSolicitud.toString());
+        const estadoPermiteAprobacion = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE].includes(estadoSolicitud.toString());
+        const estadoPermiteRechazo = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE, import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA, import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA].includes(estadoSolicitud.toString());
+        const estadoPermiteEntrega = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA].includes(estadoSolicitud.toString());
+        const estadoPermiteConfirmacion = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA].includes(estadoSolicitud.toString());
+        const estadoPermiteTerminado = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA].includes(estadoSolicitud.toString());
+
+        // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDO LA POSICION DEL USUARIO
+        const posicionId = permisosUsuarioLogueado.posicion_id ?? 0;
+        const mostrarBtnEnviarXPosicion = [import.meta.env.VITE_APP_POSICION_SOLICITANTE, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
+        const mostrarBtnAprobarXPosicion = [import.meta.env.VITE_APP_POSICION_DIRECTOR, import.meta.env.VITE_APP_POSICION_GERENTE_AREA, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
+        const mostrarBtnRechazarXPosicion = [import.meta.env.VITE_APP_POSICION_SOLICITANTE, import.meta.env.VITE_APP_POSICION_DESPACHO, import.meta.env.VITE_APP_POSICION_DIRECTOR, import.meta.env.VITE_APP_POSICION_GERENTE_AREA, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
+        const mostrarBtnEntregarXPosicion = [import.meta.env.VITE_APP_POSICION_DESPACHO, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
+        const mostrarBtnConfirmarXPosicion = [import.meta.env.VITE_APP_POSICION_SOLICITANTE, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
+        const mostrarBtnTerminarXPosicion = [import.meta.env.VITE_APP_POSICION_ADMINISTRADOR, import.meta.env.VITE_APP_POSICION_DIRECTOR, import.meta.env.VITE_APP_POSICION_GERENTE_AREA, import.meta.env.VITE_APP_POSICION_DESPACHO, import.meta.env.VITE_APP_POSICION_SOLICITANTE, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
+
+        // ESTA ES LA CONFIGURACION DE LOS BOTONES USUANDO LAS CONDICIONES ANTERIORES
         const botonesCondiciones = {
-            btnEnviar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA, import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.enviar_solicitud),
-            btnAprobar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.aprobar_solicitud),
-            btnRechazar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE, import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA, import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.rechazar_solicitud),
-            btnEntregar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.entregar_solicitud),
-            btnConfirmar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
-            btnTerminar: ([import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA].includes(estadoSolicitud) && state.formulario.id_cabecera_solicitud !== null && permisosUsuarioLogueado.confirmar_solicitud),
+            btnEnviar:    tieneSolicitudValida && estadoPermiteEnvio        && permisosUsuarioLogueado.enviar_solicitud    && mostrarBtnEnviarXPosicion.includes(posicionId.toString()),
+            btnAprobar:   tieneSolicitudValida && estadoPermiteAprobacion   && permisosUsuarioLogueado.aprobar_solicitud   && mostrarBtnAprobarXPosicion.includes(posicionId.toString()),
+            btnRechazar:  tieneSolicitudValida && estadoPermiteRechazo      && permisosUsuarioLogueado.rechazar_solicitud  && mostrarBtnRechazarXPosicion.includes(posicionId.toString()),
+            btnEntregar:  tieneSolicitudValida && estadoPermiteEntrega      && permisosUsuarioLogueado.entregar_solicitud  && mostrarBtnEntregarXPosicion.includes(posicionId.toString()),
+            btnConfirmar: tieneSolicitudValida && estadoPermiteConfirmacion && permisosUsuarioLogueado.confirmar_solicitud && mostrarBtnConfirmarXPosicion.includes(posicionId.toString()),
+            btnTerminar:  tieneSolicitudValida && estadoPermiteTerminado    && permisosUsuarioLogueado.confirmar_solicitud && mostrarBtnTerminarXPosicion.includes(posicionId.toString())
         };
+
         setCondiciones(botonesCondiciones);
 
     }, [estadoSolicitud, state.formulario.id_cabecera_solicitud]); // Actualizamos cuando cambien estos valores
