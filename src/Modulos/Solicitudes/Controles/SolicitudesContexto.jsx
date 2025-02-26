@@ -300,7 +300,7 @@ export const SolicitudesProveedor = ({ children }) => {
                             content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.no_documento}                                </th>`;
                             content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.descripcion}                                 </th>`;
                             content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.clasificacion_descripcion}                   </th>`;
-                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${almacen.nombre ?? ''}                             </th>`;
+                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${almacen?.nombre ?? ''}                             </th>`;
                             content += `    <th style="text-align: center; padding: 0px;"       > ${item.cantidad_total}                              </th>`;
                             content += `    <th style="text-align: right;  padding-right: 2px;" > ${formatoMoneda(item.precio_unitario_total, 2, '')} </th>`;
                             content += `    <th style="text-align: right;  padding-right: 2px;" > ${formatoMoneda(operacion, 2, '')}                  </th>`;
