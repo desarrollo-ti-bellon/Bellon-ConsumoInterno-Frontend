@@ -41,13 +41,12 @@ export const autoAcceso = async () => {
             }
             await refrescarToken();
         } else {
-            // await refrescarToken();
             contador++;
             if (contador >= 3) {
                 cerrarAcceso();
                 return;
             }
-            await autoAcceso();
+            await refrescarToken();
         }
     }
     return tokenResponse;
@@ -327,8 +326,8 @@ export const tipoDocumento = (ruta) => {
         [import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES]: 'LIQ',
         [import.meta.env.VITE_APP_BELLON_LIQUIDACIONES_FORMULARIO]: 'LIQ',
         [import.meta.env.VITE_APP_BELLON_HISTORICO_LIQUIDACIONES_FORMULARIO]: 'LIQ',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES]: 'CIN',
-        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS]: 'CIN',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES]: 'CINT',
+        [import.meta.env.VITE_APP_BELLON_SOLICITUDES_FORMULARIO]: 'CINT',
     };
     return mapping[ruta] || ''; // Retorna el valor asociado o '' si no existe
 }
