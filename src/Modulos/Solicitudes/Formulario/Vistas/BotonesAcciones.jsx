@@ -4,6 +4,7 @@ import * as Icon from 'react-bootstrap-icons';
 import { useSearchParams } from 'react-router-dom';
 import { useModalAlerta } from '../../../../ControlesGlobales/ModalAlerta/useModalAlerta';
 import { useModalConfirmacion } from '../../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion';
+import { useNotas } from '../../../../ControlesGlobales/Notas/useNotas';
 import { obtenerDatosDelLocalStorage } from '../../../../FuncionesGlobales';
 import { useFormulario } from '../Controles/useFormulario';
 
@@ -17,6 +18,11 @@ export default function BotonesAcciones() {
     const [bloquearBotonesAcciones, setBloquearBotonesAcciones] = useState(state.lineas.length == 0)
     const [permisosUsuarioLogueado, setPermisosUsuarioLogueado] = useState(null);
     const [params] = useSearchParams();
+
+    // PARA CONTROLAR LAS NOTAS CUANDO SE VA A RECHAZAR LAS SOLICITUDES
+    const [accion, setAccion] = useState('');
+    const { state: stateNotas, dispatch: dispatchNotas } = useNotas();
+    const [cantidadNotas, setCantidadNotas] = useState(0);
 
     useEffect(() => {
 
@@ -43,10 +49,10 @@ export default function BotonesAcciones() {
         if (params.get('modo') === 'vista') {
             return;
         }
-        
+
         // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDO EL ESTADO DE LAS SOLICITUDES 
         const tieneSolicitudValida = state.formulario.id_cabecera_solicitud !== null;
-        const estadoPermiteEnvio = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA].includes(estadoSolicitud.toString());
+        const estadoPermiteEnvio = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA, import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA].includes(estadoSolicitud.toString());
         const estadoPermiteAprobacion = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE].includes(estadoSolicitud.toString());
         const estadoPermiteRechazo = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE, import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA, import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA].includes(estadoSolicitud.toString());
         const estadoPermiteEntrega = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA].includes(estadoSolicitud.toString());
@@ -54,7 +60,7 @@ export default function BotonesAcciones() {
         const estadoPermiteTerminado = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA].includes(estadoSolicitud.toString());
 
         // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDO LA POSICION DEL USUARIO
-        const posicionId = permisosUsuarioLogueado.posicion_id ?? 0;
+        const posicionId = permisosUsuarioLogueado.posicion_id ?? null;
         const mostrarBtnEnviarXPosicion = [import.meta.env.VITE_APP_POSICION_SOLICITANTE, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
         const mostrarBtnAprobarXPosicion = [import.meta.env.VITE_APP_POSICION_DIRECTOR, import.meta.env.VITE_APP_POSICION_GERENTE_AREA, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
         const mostrarBtnRechazarXPosicion = [import.meta.env.VITE_APP_POSICION_SOLICITANTE, import.meta.env.VITE_APP_POSICION_DESPACHO, import.meta.env.VITE_APP_POSICION_DIRECTOR, import.meta.env.VITE_APP_POSICION_GERENTE_AREA, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
@@ -64,12 +70,12 @@ export default function BotonesAcciones() {
 
         // ESTA ES LA CONFIGURACION DE LOS BOTONES USUANDO LAS CONDICIONES ANTERIORES
         const botonesCondiciones = {
-            btnEnviar:    tieneSolicitudValida && estadoPermiteEnvio        && permisosUsuarioLogueado.enviar_solicitud    && mostrarBtnEnviarXPosicion.includes(posicionId.toString()),
-            btnAprobar:   tieneSolicitudValida && estadoPermiteAprobacion   && permisosUsuarioLogueado.aprobar_solicitud   && mostrarBtnAprobarXPosicion.includes(posicionId.toString()),
-            btnRechazar:  tieneSolicitudValida && estadoPermiteRechazo      && permisosUsuarioLogueado.rechazar_solicitud  && mostrarBtnRechazarXPosicion.includes(posicionId.toString()),
-            btnEntregar:  tieneSolicitudValida && estadoPermiteEntrega      && permisosUsuarioLogueado.entregar_solicitud  && mostrarBtnEntregarXPosicion.includes(posicionId.toString()),
+            btnEnviar: tieneSolicitudValida && estadoPermiteEnvio && permisosUsuarioLogueado.enviar_solicitud && mostrarBtnEnviarXPosicion.includes(posicionId.toString()),
+            btnAprobar: tieneSolicitudValida && estadoPermiteAprobacion && permisosUsuarioLogueado.aprobar_solicitud && mostrarBtnAprobarXPosicion.includes(posicionId.toString()),
+            btnRechazar: tieneSolicitudValida && estadoPermiteRechazo && permisosUsuarioLogueado.rechazar_solicitud && mostrarBtnRechazarXPosicion.includes(posicionId.toString()),
+            btnEntregar: tieneSolicitudValida && estadoPermiteEntrega && permisosUsuarioLogueado.entregar_solicitud && mostrarBtnEntregarXPosicion.includes(posicionId.toString()),
             btnConfirmar: tieneSolicitudValida && estadoPermiteConfirmacion && permisosUsuarioLogueado.confirmar_solicitud && mostrarBtnConfirmarXPosicion.includes(posicionId.toString()),
-            btnTerminar:  tieneSolicitudValida && estadoPermiteTerminado    && permisosUsuarioLogueado.confirmar_solicitud && mostrarBtnTerminarXPosicion.includes(posicionId.toString())
+            btnTerminar: tieneSolicitudValida && estadoPermiteTerminado && permisosUsuarioLogueado.confirmar_solicitud && mostrarBtnTerminarXPosicion.includes(posicionId.toString())
         };
 
         setCondiciones(botonesCondiciones);
@@ -98,7 +104,21 @@ export default function BotonesAcciones() {
         cambiarEstadoSolicitud(true);
     }
 
-    const confirmarAccion = (accion) => {
+    const hacerNota = () => {
+        // console.log(parametros);
+        const usuario = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
+        dispatchNotas({ type: "mostrarNotas", payload: { mostrar: true } });
+        dispatchNotas({ type: 'mostrarFormularioNotas', payload: { mostrarFormulario: true } });
+        dispatchNotas({ type: "actualizarFormulario", payload: { id: 'no_documento', value: state.formulario.no_documento } });
+        dispatchNotas({ type: "actualizarFormulario", payload: { id: 'id_documento', value: state.formulario.id_cabecera_solicitud } });
+        dispatchNotas({ type: "actualizarFormulario", payload: { id: 'usuario_destino', value: state.formulario.creado_por } });
+        dispatchNotas({ type: "actualizarFormulario", payload: { id: 'creado_por', value: usuario.account.username } });
+    };
+
+    const confirmarAccion = (accionBoton) => {
+
+        setAccion(accionBoton);
+
         if (state.lineas.length === 0 || state.formulario.total === 0) {
             dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: 'No hay productos disponibles para enviar, por favor verifique.', mostrar: true, tamano: 'sm' } })
             return;
@@ -108,8 +128,26 @@ export default function BotonesAcciones() {
             dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El total del consumo supera al limite que puede aprobar el usuario aprobador. Por favor delegue su solicitud a otra persona.</b>', mostrar: true, tamano: 'md' } })
             return;
         }
-        dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mostrar: true, mensaje: 'Desea usted realizar esta acción?', funcionEjecutar: () => ejecutarAcciones(accion) } })
+
+        // MOSTRAR NOTAS CUANDO SE VA A RECHAZAR LAS SOLICITUDES
+        if (accionBoton === 'rechazar') {
+            dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mostrar: true, mensaje: 'Antes de proceder con esta operación, por favor, deje una nota justificativa explicando los motivos.', funcionEjecutar: () => hacerNota() } })
+            setCantidadNotas(stateNotas.notas.length);
+            return;
+        }
+
+        dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mostrar: true, mensaje: 'Desea usted realizar esta acción?', funcionEjecutar: () => ejecutarAcciones(accionBoton) } })
     }
+
+    useEffect(() => {
+        if (accion === 'rechazar') {
+            if (!stateNotas.mostrarFormulario) {
+                if (cantidadNotas !== stateNotas.length) {
+                    ejecutarAcciones(accion);
+                }
+            }
+        }
+    }, [stateNotas.notas]);
 
     useEffect(() => {
         const bloquear = state.lineas.length === 0;
