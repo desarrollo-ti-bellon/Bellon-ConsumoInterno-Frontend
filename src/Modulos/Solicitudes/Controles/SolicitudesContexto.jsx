@@ -271,7 +271,7 @@ export const SolicitudesProveedor = ({ children }) => {
                 content += `                <th style="text-align: left; padding-left:  2px;"> Descripcion    </th>`;
                 content += `                <th style="text-align: left; padding-left:  2px;"> Clasificacion  </th>`;
                 content += `                <th style="text-align: left; padding-left:  2px;"> Almacen        </th>`;
-                content += `                <th style="text-align: left; padding-left:  2px;"> Cantidad       </th>`;
+                content += `                <th style="text-align: center; padding:     0px;"> Cantidad       </th>`;
                 content += `                <th style="text-align: right;padding-right: 2px;"> Costo          </th>`;
                 content += `                <th style="text-align: right;padding-right: 2px;"> Total          </th>`;
                 content += `             </tr>`;
@@ -309,14 +309,14 @@ export const SolicitudesProveedor = ({ children }) => {
                             console.log('almacen => ', almacen);
 
                             content += ` <tr>`;
-                            content += `    <th class="text-left">           ${item.fecha_creado}                                </th>`;
-                            content += `    <th class="text-left">           ${item.no_documento}                                </th>`;
-                            content += `    <th class="text-left">           ${item.descripcion}                                 </th>`;
-                            content += `    <th class="text-left">           ${item.clasificacion_descripcion}                   </th>`;
-                            content += `    <th class="text-left">           ${almacen.nombre ?? ''}                             </th>`;
-                            content += `    <th class="text-center">         ${item.cantidad_total}                              </th>`;
-                            content += `    <th style="text-align: right;">  ${formatoMoneda(item.precio_unitario_total, 2, '')} </th>`;
-                            content += `    <th style="text-align: right;">  ${formatoMoneda(operacion, 2, '')}                  </th>`;
+                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.fecha_creado}                                </th>`;
+                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.no_documento}                                </th>`;
+                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.descripcion}                                 </th>`;
+                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.clasificacion_descripcion}                   </th>`;
+                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${almacen.nombre ?? ''}                             </th>`;
+                            content += `    <th style="text-align: center; padding: 0px;"       > ${item.cantidad_total}                              </th>`;
+                            content += `    <th style="text-align: right;  padding-right: 2px;" > ${formatoMoneda(item.precio_unitario_total, 2, '')} </th>`;
+                            content += `    <th style="text-align: right;  padding-right: 2px;" > ${formatoMoneda(operacion, 2, '')}                  </th>`;
                             content += ` </tr>`;
 
                             sumatoriaTotal = sumatoriaTotal + item.total;
