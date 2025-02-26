@@ -132,6 +132,19 @@ export const SolicitudesProveedor = ({ children }) => {
         }
     }
 
+    const cargarAlmacenes = async () => {
+        try {
+            const res = await obtenerDatos(`Almacenes`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarDatos', payload: { propiedad: 'almacenes', valor: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando las sucursales', tipo: 'warning' } });
+        }
+    }
+
     const cargarDatosIniciales = async () => {
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' });
         await cargarEstadosSolicitudes();
@@ -139,6 +152,7 @@ export const SolicitudesProveedor = ({ children }) => {
         await cargarClasificaciones();
         await cargarSucursales();
         await cargarSolicitudes();
+        await cargarAlmacenes();
         dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' });
     }
 
@@ -166,7 +180,7 @@ export const SolicitudesProveedor = ({ children }) => {
 
     const imprimirConsumosInternos = async (parametros = {}) => {
 
-        await obtenerDatos('ConsumoInterno', parametros)
+        await obtenerDatos('ImpresionConsumoInterno', parametros)
             .then((res) => {
 
                 let lineas = []
@@ -182,7 +196,7 @@ export const SolicitudesProveedor = ({ children }) => {
                 let content = ``;
                 content += ` <html>`;
                 content += `   <head>`;
-                content += `       <title>Valoracion Impuestos Aduana Liquidación de Mercancía #${parametros.id_hist_cabecera_liquidacion}</title>`;
+                content += `       <title>Consumos Internos</title>`;
                 content += `       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">`;
                 content += `       <style>`;
                 content += `           @page {`;
@@ -251,16 +265,14 @@ export const SolicitudesProveedor = ({ children }) => {
                 content += `        <table class="table border">`;
                 content += `          <thead>`;
                 content += `             <tr style="background-color: #f3f2f2;">`;
-                content += `                <th class="text-left"> ID </th>`
-                content += `                <th class="text-left"> No Documento </th>`
-                content += `                <th class="text-left"> Fecha </th>`
-                content += `                <th class="text-left"> Realizado Por </th>`
-                content += `                <th class="text-left"> Responsable </th>`
-                content += `                <th class="text-left"> Despachador </th>`
-                content += `                <th class="text-left"> Estado Solicitud </th>`
-                content += `                <th class="text-left"> Clasificacion </th>`
-                content += `                <th class="text-left"> Comentario </th>`
-                content += `                <th class="text-left" style="padding-right: 2px;"> Total </th>`
+                content += `                <th class="text-left" style="padding-left:  2px;"> Fecha Registro </th>`;
+                content += `                <th class="text-left" style="padding-left:  2px;"> No Documento   </th>`;
+                content += `                <th class="text-left" style="padding-left:  2px;"> Descripcion    </th>`;
+                content += `                <th class="text-left" style="padding-left:  2px;"> Clasificacion  </th>`;
+                content += `                <th class="text-left" style="padding-left:  2px;"> Almacen        </th>`;
+                content += `                <th class="text-left" style="padding-left:  2px;"> Cantidad       </th>`;
+                content += `                <th class="text-left" style="padding-left:  2px;"> Costo          </th>`;
+                content += `                <th class="text-left" style="padding-right: 2px;"> Total          </th>`;
                 content += `             </tr>`;
                 content += `          </thead>`;
                 content += `         <tbody>`;
@@ -268,30 +280,54 @@ export const SolicitudesProveedor = ({ children }) => {
 
                 if (lineas.length > 0) {
 
-                    let sumatoriaTotal = 0;
+                    // Agrupar por clasificacion_descripcion
+                    const AgruparProductosXclasificacion = lineas.reduce((acc, item) => {
 
-                    lineas.map((item) => {
+                        // Verifica si ya existe la clasificacion en el acumulador
+                        if (!acc[item.id_clasificacion]) {
+                            acc[item.id_clasificacion] = [];
+                        }
 
-                        content += ` <tr>`;
-                        content += `    <th class="text-left">  ${item.id_cabecera_consumo_interno}  </th>`;
-                        content += `    <th class="text-left">  ${item.no_documento}                 </th>`;
-                        content += `    <th class="text-left">  ${item.fecha_creado}                 </th>`;
-                        content += `    <th class="text-left">  ${item.nombre_creado_por}            </th>`;
-                        content += `    <th class="text-left">  ${item.usuario_responsable}          </th>`;
-                        content += `    <th class="text-left">  ${item.usuario_despacho}             </th>`;
-                        content += `    <th class="text-left">  ${item.id_estado_solicitud}          </th>`;
-                        content += `    <th class="text-left">  ${item.clasificacion}                </th>`;
-                        content += `    <th class="text-left">  ${item.comentario}                   </th>`;
-                        content += `    <th class="text-left"> ${formatoMoneda(item.total, 2, '')} </th>`;
-                        content += ` </tr>`;
+                        // Agregar el item a la clasificación correspondiente
+                        acc[item.id_clasificacion].push(item);
 
-                        sumatoriaTotal = sumatoriaTotal + item.total;
+                        return acc;
+                    }, {});
+
+                    // console.log(AgruparProductosXclasificacion);
+
+                    Object.keys(AgruparProductosXclasificacion).map(key => {
+                        console.log(key);
+                        let sumatoriaTotal = 0;
+                        let clasificacion = state.clasificaciones.find(c => c.id_clasificacion == key) ?? null;
+
+                        AgruparProductosXclasificacion[key].map(item => {
+                            console.log(item);
+                            const almacen = state.almacenes.find(almacen => almacen.codigo === item.almacen_codigo);
+                            const operacion = item.cantidad_total * item.precio_unitario_total;
+                            console.log('almacen => ', almacen);
+
+                            content += ` <tr>`;
+                            content += `    <th class="text-left">  ${item.fecha_creado} </th>`;
+                            content += `    <th class="text-left">  ${item.no_documento} </th>`;
+                            content += `    <th class="text-left">  ${item.descripcion} </th>`;
+                            content += `    <th class="text-left">  ${item.clasificacion_descripcion} </th>`;
+                            content += `    <th class="text-left">  ${almacen.nombre ?? ''} </th>`;
+                            content += `    <th class="text-left">  ${item.cantidad_total} </th>`;
+                            content += `    <th class="text-left">  ${formatoMoneda(item.precio_unitario_total, 2, '')} </th>`;
+                            content += `    <th class="text-left">  ${formatoMoneda(operacion, 2, '')} </th>`;
+                            content += ` </tr>`;
+
+                            sumatoriaTotal = sumatoriaTotal + item.total;
+                        })
+                        content += `    <tr>`;
+                        content += `       <th colspan="6" class="text-left"> Totales: </th>`;
+                        content += `       <th colspan="1" class="text-left"> ${clasificacion?.codigo_clasificacion ?? ''} </th>`;
+                        content += `       <th style="text-align: left;"> ${formatoMoneda(sumatoriaTotal, 2, '')}   </th>`;
+                        content += `    </tr>`;
                     })
 
-                    content += `     <tr>`;
-                    content += `        <th colspan="9" class="text-left"> Totales: </th>`;
-                    content += `        <th style="text-align: right;"> ${formatoMoneda(sumatoriaTotal, 2, '')}   </th>`;
-                    content += `     </tr>`;
+
 
                 } else {
                     content += `     <tr>`;
