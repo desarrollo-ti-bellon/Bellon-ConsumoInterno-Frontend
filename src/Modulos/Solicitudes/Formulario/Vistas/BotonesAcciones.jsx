@@ -68,11 +68,17 @@ export default function BotonesAcciones() {
         const mostrarBtnConfirmarXPosicion = [import.meta.env.VITE_APP_POSICION_SOLICITANTE, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
         const mostrarBtnTerminarXPosicion = [import.meta.env.VITE_APP_POSICION_ADMINISTRADOR, import.meta.env.VITE_APP_POSICION_DIRECTOR, import.meta.env.VITE_APP_POSICION_GERENTE_AREA, import.meta.env.VITE_APP_POSICION_DESPACHO, import.meta.env.VITE_APP_POSICION_SOLICITANTE, import.meta.env.VITE_APP_POSICION_ADMINISTRADOR];
 
+        //CONDICIONES NECESARIAS 
+        const noNostrarBtnRechazarSolicitanteAprobada = !(
+            estadoSolicitud === import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA &&
+            posicionId.toString() === import.meta.env.VITE_APP_POSICION_SOLICITANTE 
+        )
+
         // ESTA ES LA CONFIGURACION DE LOS BOTONES USUANDO LAS CONDICIONES ANTERIORES
         const botonesCondiciones = {
             btnEnviar: tieneSolicitudValida && estadoPermiteEnvio && permisosUsuarioLogueado.enviar_solicitud && mostrarBtnEnviarXPosicion.includes(posicionId.toString()),
             btnAprobar: tieneSolicitudValida && estadoPermiteAprobacion && permisosUsuarioLogueado.aprobar_solicitud && mostrarBtnAprobarXPosicion.includes(posicionId.toString()),
-            btnRechazar: tieneSolicitudValida && estadoPermiteRechazo && permisosUsuarioLogueado.rechazar_solicitud && mostrarBtnRechazarXPosicion.includes(posicionId.toString()),
+            btnRechazar: tieneSolicitudValida && estadoPermiteRechazo && permisosUsuarioLogueado.rechazar_solicitud && mostrarBtnRechazarXPosicion.includes(posicionId.toString()) && noNostrarBtnRechazarSolicitanteAprobada,
             btnEntregar: tieneSolicitudValida && estadoPermiteEntrega && permisosUsuarioLogueado.entregar_solicitud && mostrarBtnEntregarXPosicion.includes(posicionId.toString()),
             btnConfirmar: tieneSolicitudValida && estadoPermiteConfirmacion && permisosUsuarioLogueado.confirmar_solicitud && mostrarBtnConfirmarXPosicion.includes(posicionId.toString()),
             btnTerminar: tieneSolicitudValida && estadoPermiteTerminado && permisosUsuarioLogueado.confirmar_solicitud && mostrarBtnTerminarXPosicion.includes(posicionId.toString())
