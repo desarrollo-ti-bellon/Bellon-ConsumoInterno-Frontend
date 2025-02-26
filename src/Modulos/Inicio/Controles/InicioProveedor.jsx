@@ -55,7 +55,8 @@ export function InicioProveedor({ children }) {
                     estados = [
                         'Nueva',
                         'Rechazada',
-                        'Entregada'
+                        'Entregada',
+                        'Aprobada'
                     ]
                     break;
                 default:
