@@ -332,7 +332,7 @@ export const SolicitudesProveedor = ({ children }) => {
 
                     content += `    <tr style="background-color: #f3f2f2;">`;
                     content += `       <th colspan="7" style="text-align: right;"> Total General: </th>`;
-                    content += `       <th colspan="1" style="text-align: left;"> ${formatoMoneda(totalGeneral, 2, '')}   </th>`;
+                    content += `       <th colspan="1" style="text-align: right;"> ${formatoMoneda(totalGeneral, 2, '')}   </th>`;
                     content += `    </tr>`;
 
                 } else {
