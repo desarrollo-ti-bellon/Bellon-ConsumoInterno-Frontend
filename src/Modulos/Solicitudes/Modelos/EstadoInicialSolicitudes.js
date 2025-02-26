@@ -4,7 +4,8 @@ export const EstadoInicialSolicitudes = {
     comboEstadosSolicitudes: [],
     sucursales: [],
     departamentos: [],
-    clasificaciones: []
+    clasificaciones: [],
+    almacenes: []
 } 
 
 export const pagination = true;
