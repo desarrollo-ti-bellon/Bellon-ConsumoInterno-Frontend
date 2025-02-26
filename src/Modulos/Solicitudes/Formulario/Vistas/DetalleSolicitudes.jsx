@@ -16,10 +16,10 @@ export default function DetalleSolicitudes() {
     const [locacion] = useSearchParams();
     const [activarCamposEditablesTabla, setActivarCamposEditablesTabla] = useState(false);
     const [activarBotonAgregarProductos, setActivarBotonAgregarProductos] = useState(false);
-    const [bloquearBotonBorraLinea, setBloquearBotonBorraLinea] = useState(true);
+    const [bloquearBotonBorraLinea, setBloquearBotonBorraLinea] = useState(true); 
 
     useEffect(() => {
-        const condicion2 = locacion.get('accion') !== 'ver';
+        const condicion2 = locacion.get('accion') !== 'ver' && state.formulario.id_cabecera_solicitud !== null ;
         setActivarBotonAgregarProductos(condicion2)
     }, [state.formulario])
 
