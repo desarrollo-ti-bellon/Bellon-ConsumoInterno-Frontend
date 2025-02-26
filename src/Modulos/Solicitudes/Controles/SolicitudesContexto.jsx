@@ -259,8 +259,8 @@ export const SolicitudesProveedor = ({ children }) => {
                 content += `   <body>`;
 
                 content += `        <p><b><img src="../BellonLogoMinusculo.png" width="25px" height="25px" /> Bellon, S.A.S</b></p>`;
-                content += `        <p><b>Consumos Internos</b></p>`;
                 content += `        <p><b>Fecha:</b> ${obtenerFechaYHoraActual()}</p>`;
+                content += `        <p><b>Consumos Internos</b></p>`;
 
                 content += `        <table class="table border">`;
                 content += `          <thead>`;
@@ -295,7 +295,7 @@ export const SolicitudesProveedor = ({ children }) => {
                     }, {});
 
                     // console.log(AgruparProductosXclasificacion);
-
+                    let totalGeneral = 0;
                     Object.keys(AgruparProductosXclasificacion).map(key => {
                         console.log(key);
                         let sumatoriaTotal = 0;
@@ -319,15 +319,20 @@ export const SolicitudesProveedor = ({ children }) => {
                             content += ` </tr>`;
 
                             sumatoriaTotal = sumatoriaTotal + item.total;
+                            totalGeneral = totalGeneral + sumatoriaTotal;
                         })
-                        content += `    <tr>`;
-                        content += `       <th colspan="6" class="text-left"> Totales: </th>`;
-                        content += `       <th colspan="1" class="text-left"> ${clasificacion?.codigo_clasificacion ?? ''} </th>`;
-                        content += `       <th style="text-align: left;"> ${formatoMoneda(sumatoriaTotal, 2, '')}   </th>`;
+                        content += `    <tr style="background-color: #f3f2f2;">`;
+                        content += `       <th colspan="5" style="text-align: right;">                                              </th>`;
+                        content += `       <th style="text-align: right;"> Total                                        </th>`;
+                        content += `       <th style="text-align: right;"> ${clasificacion?.codigo_clasificacion ?? ''} </th>`;
+                        content += `       <th style="text-align: left;"> ${formatoMoneda(sumatoriaTotal, 2, '')}           </th>`;
                         content += `    </tr>`;
                     })
 
-
+                    content += `    <tr style="background-color: #f3f2f2;">`;
+                    content += `       <th colspan="7" class="text-right"> Total: </th>`;
+                    content += `       <th style="text-align: left;"> ${formatoMoneda(totalGeneral, 2, '')}   </th>`;
+                    content += `    </tr>`;
 
                 } else {
                     content += `     <tr>`;
