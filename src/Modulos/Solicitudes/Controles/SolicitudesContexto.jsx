@@ -156,21 +156,8 @@ export const SolicitudesProveedor = ({ children }) => {
         dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' });
     }
 
-    const rechazar = (id) => {
-        obtenerDatosConId('',)
-    }
-
-    const recuperar = (id) => {
-        // dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mensaje: 'Esta seguro que quiere recuperar este consumo interno?', funcionEjecutar: action.payload.funcionEjecutar } })
-        obtenerDatosConId('',)
-    }
-
     const eliminarSolicitud = async (id) => {
         dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mensaje: 'Realmente desea rechazar la operación?', funcionEjecutar: rechazar(id) } })
-    }
-
-    const recuperarSolicitudes = async (id) => {
-        dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mensaje: 'Realmente desea reabrir la solicitud?', funcionEjecutar: recuperar(id) } })
     }
 
     useEffect(() => {
@@ -355,7 +342,7 @@ export const SolicitudesProveedor = ({ children }) => {
     }
 
     return (
-        <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, recuperarSolicitudes, imprimirConsumosInternos }}>
+        <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, imprimirConsumosInternos }}>
             {children}
         </SolicitudesContexto.Provider>
     )

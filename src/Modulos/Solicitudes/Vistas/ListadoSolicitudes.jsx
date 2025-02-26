@@ -10,7 +10,7 @@ import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelectio
 
 export default function ListadoSolicitudes() {
 
-    const { state, dispatch, eliminarSolicitud, recuperarSolicitudes, imprimirConsumosInternos } = useSolicitudes()
+    const { state, dispatch, eliminarSolicitud, imprimirConsumosInternos } = useSolicitudes()
     const navegar = useNavigate();
     const { dispatch: dispatchNotas } = useNotas();
     const gridRef = useRef(null);
