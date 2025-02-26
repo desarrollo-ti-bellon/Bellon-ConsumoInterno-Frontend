@@ -194,7 +194,7 @@ export const SolicitudesProveedor = ({ children }) => {
 
                 ventana.current = window.open('', '', 'fullscreen'); // Abrimos la ventana de nuevo
                 let content = ``;
-                content += ` <html>`;
+                content += ` <html style="padding: 10px;">`;
                 content += `   <head>`;
                 content += `       <title>Consumos Internos</title>`;
                 content += `       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">`;
@@ -258,21 +258,22 @@ export const SolicitudesProveedor = ({ children }) => {
                 content += `   </head>`;
                 content += `   <body>`;
 
-                content += `        <p><b><img src="../BellonLogoMinusculo.png" width="25px" height="25px" /> Bellon, S.A.S</b></p>`;
+                content += `        <p><img src="../BellonLogoMinusculo.png" width="50px" height="50px" /></p>`;
+                content += `        <p><b>Bellon, S.A.S</b></p>`;
                 content += `        <p><b>Fecha:</b> ${obtenerFechaYHoraActual()}</p>`;
-                content += `        <p><b>Consumos Internos</b></p>`;
+                content += `        <div style="text-align: center;"><h6><b>Consumos Internos</h6></p></div>`;
 
                 content += `        <table class="table border">`;
                 content += `          <thead>`;
                 content += `             <tr style="background-color: #f3f2f2;">`;
-                content += `                <th class="text-left" style="padding-left:  2px;"> Fecha Registro </th>`;
-                content += `                <th class="text-left" style="padding-left:  2px;"> No Documento   </th>`;
-                content += `                <th class="text-left" style="padding-left:  2px;"> Descripcion    </th>`;
-                content += `                <th class="text-left" style="padding-left:  2px;"> Clasificacion  </th>`;
-                content += `                <th class="text-left" style="padding-left:  2px;"> Almacen        </th>`;
-                content += `                <th class="text-left" style="padding-left:  2px;"> Cantidad       </th>`;
-                content += `                <th class="text-left" style="padding-left:  2px;"> Costo          </th>`;
-                content += `                <th class="text-left" style="padding-right: 2px;"> Total          </th>`;
+                content += `                <th style="text-align: left; padding-left:  2px;"> Fecha Registro </th>`;
+                content += `                <th style="text-align: left; padding-left:  2px;"> No Documento   </th>`;
+                content += `                <th style="text-align: left; padding-left:  2px;"> Descripcion    </th>`;
+                content += `                <th style="text-align: left; padding-left:  2px;"> Clasificacion  </th>`;
+                content += `                <th style="text-align: left; padding-left:  2px;"> Almacen        </th>`;
+                content += `                <th style="text-align: left; padding-left:  2px;"> Cantidad       </th>`;
+                content += `                <th style="text-align: right;padding-right: 2px;"> Costo          </th>`;
+                content += `                <th style="text-align: right;padding-right: 2px;"> Total          </th>`;
                 content += `             </tr>`;
                 content += `          </thead>`;
                 content += `         <tbody>`;
@@ -308,14 +309,14 @@ export const SolicitudesProveedor = ({ children }) => {
                             console.log('almacen => ', almacen);
 
                             content += ` <tr>`;
-                            content += `    <th class="text-left">  ${item.fecha_creado} </th>`;
-                            content += `    <th class="text-left">  ${item.no_documento} </th>`;
-                            content += `    <th class="text-left">  ${item.descripcion} </th>`;
-                            content += `    <th class="text-left">  ${item.clasificacion_descripcion} </th>`;
-                            content += `    <th class="text-left">  ${almacen.nombre ?? ''} </th>`;
-                            content += `    <th class="text-left">  ${item.cantidad_total} </th>`;
-                            content += `    <th class="text-left">  ${formatoMoneda(item.precio_unitario_total, 2, '')} </th>`;
-                            content += `    <th class="text-left">  ${formatoMoneda(operacion, 2, '')} </th>`;
+                            content += `    <th class="text-left">           ${item.fecha_creado}                                </th>`;
+                            content += `    <th class="text-left">           ${item.no_documento}                                </th>`;
+                            content += `    <th class="text-left">           ${item.descripcion}                                 </th>`;
+                            content += `    <th class="text-left">           ${item.clasificacion_descripcion}                   </th>`;
+                            content += `    <th class="text-left">           ${almacen.nombre ?? ''}                             </th>`;
+                            content += `    <th class="text-center">         ${item.cantidad_total}                              </th>`;
+                            content += `    <th style="text-align: right;">  ${formatoMoneda(item.precio_unitario_total, 2, '')} </th>`;
+                            content += `    <th style="text-align: right;">  ${formatoMoneda(operacion, 2, '')}                  </th>`;
                             content += ` </tr>`;
 
                             sumatoriaTotal = sumatoriaTotal + item.total;
@@ -325,13 +326,13 @@ export const SolicitudesProveedor = ({ children }) => {
                         content += `       <th colspan="5" style="text-align: right;">                                              </th>`;
                         content += `       <th style="text-align: right;"> Total                                        </th>`;
                         content += `       <th style="text-align: right;"> ${clasificacion?.codigo_clasificacion ?? ''} </th>`;
-                        content += `       <th style="text-align: left;"> ${formatoMoneda(sumatoriaTotal, 2, '')}           </th>`;
+                        content += `       <th style="text-align: right;"> ${formatoMoneda(sumatoriaTotal, 2, '')}           </th>`;
                         content += `    </tr>`;
                     })
 
                     content += `    <tr style="background-color: #f3f2f2;">`;
-                    content += `       <th colspan="7" class="text-right"> Total: </th>`;
-                    content += `       <th style="text-align: left;"> ${formatoMoneda(totalGeneral, 2, '')}   </th>`;
+                    content += `       <th colspan="7" style="text-align: right;"> Total General: </th>`;
+                    content += `       <th colspan="1" style="text-align: left;"> ${formatoMoneda(totalGeneral, 2, '')}   </th>`;
                     content += `    </tr>`;
 
                 } else {
