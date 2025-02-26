@@ -248,17 +248,18 @@ export const SolicitudesProveedor = ({ children }) => {
                 content += `        <p><img src="../BellonLogoMinusculo.png" width="50px" height="50px" /></p>`;
                 content += `        <p><b>Bellon, S.A.S</b></p>`;
                 content += `        <p><b>Fecha:</b> ${obtenerFechaYHoraActual()}</p>`;
-                content += `        <div style="text-align: center;"><h6><b>Consumos Internos</h6></p></div>`;
+                content += `        <div style="text-align: center;"><h5><b>Consumos Internos</h5></p></div>`;
 
                 content += `        <table class="table border">`;
                 content += `          <thead>`;
                 content += `             <tr style="background-color: #f3f2f2;">`;
                 content += `                <th style="text-align: left; padding-left:  2px;"> Fecha Registro </th>`;
                 content += `                <th style="text-align: left; padding-left:  2px;"> No Documento   </th>`;
+                content += `                <th style="text-align: left;                    "> ID Producto    </th>`;
                 content += `                <th style="text-align: left; padding-left:  2px;"> Descripcion    </th>`;
                 content += `                <th style="text-align: left; padding-left:  2px;"> Clasificacion  </th>`;
                 content += `                <th style="text-align: left; padding-left:  2px;"> Almacen        </th>`;
-                content += `                <th style="text-align: center; padding:     0px;"> Cantidad       </th>`;
+                content += `                <th style="text-align: center;                  "> Cantidad       </th>`;
                 content += `                <th style="text-align: right;padding-right: 2px;"> Costo          </th>`;
                 content += `                <th style="text-align: right;padding-right: 2px;"> Total          </th>`;
                 content += `             </tr>`;
@@ -296,21 +297,22 @@ export const SolicitudesProveedor = ({ children }) => {
                             console.log('almacen => ', almacen);
 
                             content += ` <tr>`;
-                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.fecha_creado}                                </th>`;
-                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.no_documento}                                </th>`;
-                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.descripcion}                                 </th>`;
-                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${item.clasificacion_descripcion}                   </th>`;
-                            content += `    <th style="text-align: left;   padding-left: 2px;"  > ${almacen?.nombre ?? ''}                             </th>`;
-                            content += `    <th style="text-align: center; padding: 0px;"       > ${item.cantidad_total}                              </th>`;
-                            content += `    <th style="text-align: right;  padding-right: 2px;" > ${formatoMoneda(item.precio_unitario_total, 2, '')} </th>`;
-                            content += `    <th style="text-align: right;  padding-right: 2px;" > ${formatoMoneda(operacion, 2, '')}                  </th>`;
+                            content += `    <th style="text-align: left;   padding-left:  2px;"> ${item.fecha_creado}                                </th>`;
+                            content += `    <th style="text-align: left;   padding-left:  2px;"> ${item.no_documento}                                </th>`;
+                            content += `    <th style="text-align: left;                      "> ${item.no_producto}                                 </th>`;
+                            content += `    <th style="text-align: left;   padding-left:  2px;"> ${item.descripcion}                                 </th>`;
+                            content += `    <th style="text-align: left;   padding-left:  2px;"> ${item.clasificacion_descripcion}                   </th>`;
+                            content += `    <th style="text-align: left;   padding-left:  2px;"> ${almacen?.nombre ?? ''}                            </th>`;
+                            content += `    <th style="text-align: center;                    "> ${item.cantidad_total}                              </th>`;
+                            content += `    <th style="text-align: right;  padding-right: 2px;"> ${formatoMoneda(item.precio_unitario_total, 2, '')} </th>`;
+                            content += `    <th style="text-align: right;  padding-right: 2px;"> ${formatoMoneda(operacion, 2, '')}                  </th>`;
                             content += ` </tr>`;
 
                             sumatoriaTotal = sumatoriaTotal + item.total;
                             totalGeneral = totalGeneral + sumatoriaTotal;
                         })
                         content += `    <tr style="background-color: #f3f2f2;">`;
-                        content += `       <th colspan="5" style="text-align: right;">                                              </th>`;
+                        content += `       <th colspan="6" style="text-align: right;">                                              </th>`;
                         content += `       <th style="text-align: right;"> Total                                        </th>`;
                         content += `       <th style="text-align: right;"> ${clasificacion?.codigo_clasificacion ?? ''} </th>`;
                         content += `       <th style="text-align: right;"> ${formatoMoneda(sumatoriaTotal, 2, '')}           </th>`;
@@ -318,7 +320,7 @@ export const SolicitudesProveedor = ({ children }) => {
                     })
 
                     content += `    <tr style="background-color: #f3f2f2;">`;
-                    content += `       <th colspan="7" style="text-align: right;"> Total General: </th>`;
+                    content += `       <th colspan="8" style="text-align: right;"> Total General: </th>`;
                     content += `       <th colspan="1" style="text-align: right;"> ${formatoMoneda(totalGeneral, 2, '')}   </th>`;
                     content += `    </tr>`;
 
