@@ -116,8 +116,10 @@ export default function ListadoSolicitudes() {
         const urlActual = obtenerRutaUrlActual();
         let rutas = [];
 
-        rutas = [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS]
         // MOSTRAR IMPRIMIR CONSUMOS INTERNOS
+        rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS
+        ];
         setOcultarBotonImprimirCI(!rutas.includes(urlActual));
 
         setColumnas([
@@ -135,7 +137,6 @@ export default function ListadoSolicitudes() {
             { headerName: "Comentario", field: "comentario", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
             { headerName: "Acciones", field: "acciones", cellRenderer: BotonesAcciones, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         ]);
-
 
         // CAMBIANDO LAS COLUMNAS
         rutas = [
@@ -203,8 +204,6 @@ export default function ListadoSolicitudes() {
         if (arrPosiciones.includes(posicion_id.toString())) {
             setOcultarBotonNuevo(false);
         }
-
-
 
     }, [locacion])
 
