@@ -383,7 +383,8 @@ export const FormularioProveedor = ({ children }) => {
                 codigo_unidad_medida: producto.codigo_unidad_medida,
                 almacen_id: "",
                 almacen_codigo: "",
-                nota: ""
+                nota: "",
+                costo_unitario: producto.costo_unitario,
             }
         })
 
