@@ -3,7 +3,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta";
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion";
 import { useModalConfirmacion } from "../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
-import { formatoMoneda, obtenerDatos, obtenerDatosConId, obtenerFechaYHoraActual, obtenerRutaUrlActual } from "../../../FuncionesGlobales";
+import { formateadorDeFechas, formatoMoneda, obtenerDatos, obtenerDatosConId, obtenerFechaYHoraActual, obtenerRutaUrlActual } from "../../../FuncionesGlobales";
 import { EstadoInicialSolicitudes } from "../Modelos/EstadoInicialSolicitudes";
 import { solicitudesReducer } from "./solicitudesReducer";
 
@@ -286,18 +286,15 @@ export const SolicitudesProveedor = ({ children }) => {
                     // console.log(AgruparProductosXclasificacion);
                     let totalGeneral = 0;
                     Object.keys(AgruparProductosXclasificacion).map(key => {
-                        console.log(key);
                         let sumatoriaTotal = 0;
                         let clasificacion = state.clasificaciones.find(c => c.id_clasificacion == key) ?? null;
 
                         AgruparProductosXclasificacion[key].map(item => {
-                            console.log(item);
                             const almacen = state.almacenes.find(almacen => almacen.codigo === item.almacen_codigo);
                             const operacion = item.cantidad_total * item.precio_unitario_total;
-                            console.log('almacen => ', almacen);
 
                             content += ` <tr>`;
-                            content += `    <th style="text-align: left;   padding-left:  2px;"> ${item.fecha_creado}                                </th>`;
+                            content += `    <th style="text-align: left;   padding-left:  2px;"> ${formateadorDeFechas(item.fecha_creado)}           </th>`;
                             content += `    <th style="text-align: left;   padding-left:  2px;"> ${item.no_documento}                                </th>`;
                             content += `    <th style="text-align: left;                      "> ${item.no_producto}                                 </th>`;
                             content += `    <th style="text-align: left;   padding-left:  2px;"> ${item.descripcion}                                 </th>`;
@@ -337,7 +334,9 @@ export const SolicitudesProveedor = ({ children }) => {
 
                 ventana.current.document.write(content);
                 ventana.current.document.close();
-                ventana.current.print();
+                setTimeout(() => {
+                    ventana.current.print();
+                }, 1000);
             }).catch((err) => {
                 console.log("Err =>", err);
             })
