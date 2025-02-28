@@ -254,6 +254,26 @@ export function formateadorDeFechas(fecha) {
     return `${year}-${month}-${day}`;
 }
 
+export function formateadorDeHora(fecha) {
+    if (!fecha || !(fecha instanceof Date || !isNaN(new Date(fecha)))) {
+        return 'Hora inválida';
+    }
+
+    const date = new Date(fecha);
+
+    const pad = (num) => String(num).padStart(2, '0');
+
+    let hour = date.getHours();
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    const period = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12; // Convertir a formato de 12 horas
+    hour = hour ? hour : 12; // El valor 0 debe ser 12
+
+    return `${hour}:${minutes}:${seconds} ${period}`; // AM o PM
+}
+
 export const formateadorDeFechaYHora = (dateInput, format = 'YYYY-MM-DD HH:mm:ss') => {
 
     const date = new Date(dateInput);
