@@ -28,6 +28,11 @@ export const solicitudesReducer = (state = EstadoInicialSolicitudes, action) => 
         return { ...state, [action.payload.propiedad]: action.payload.valor }
     }
 
+    if (action.type === 'actualizarFiltros') {
+        const { id, value } = action.payload
+        return { ...state, filtros: { ...state.filtros, [id]: value } }
+    }
+
     if (action.type === 'combinarEstadosSolicitudes') {
         const listadoSolicitudesActualizado = state.listadoSolicitudes.map(el => {
             const descripcionEstadoSolicitud = state.comboEstadosSolicitudes.find(estadoSolicitud => estadoSolicitud.id_estado_solicitud === el.id_estado_solicitud)?.descripcion ?? 'N/A';

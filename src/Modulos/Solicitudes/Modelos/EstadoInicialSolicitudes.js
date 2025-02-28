@@ -5,8 +5,18 @@ export const EstadoInicialSolicitudes = {
     sucursales: [],
     departamentos: [],
     clasificaciones: [],
-    almacenes: []
-} 
+    almacenes: [],
+    filtros: {
+        noDocumento: "",
+        creadoPor: "",
+        fechaDesde: "",
+        fechaHasta: "",
+        usuarioResponsable: "",
+        estadoSolicitudId: 0,
+        idSucursal: "",
+        idDepartamento: ""
+    }
+}
 
 export const pagination = true;
 export const paginationPageSize = 500;

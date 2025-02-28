@@ -4,13 +4,14 @@ import * as Icon from 'react-bootstrap-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useNotas } from '../../../ControlesGlobales/Notas/useNotas';
-import { formateadorDeFechas, formateadorDeFechaYHoraEspanol, formateadorDeHora, formatoMoneda, obtenerDatosDelLocalStorage, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
+import { formateadorDeFechas, formateadorDeHora, formatoMoneda, obtenerDatosDelLocalStorage, obtenerFechaActual, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
 import { useSolicitudes } from '../Controles/useSolicitudes';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialSolicitudes';
 
 export default function ListadoSolicitudes() {
 
-    const { state, dispatch, eliminarSolicitud, imprimirConsumosInternos } = useSolicitudes()
+    const { state, dispatch, eliminarSolicitud, imprimirConsumosInternos, buscarConsumosInternos } = useSolicitudes()
+    const { fechaDesde, fechaHasta } = state.filtros;
     const navegar = useNavigate();
     const { dispatch: dispatchNotas } = useNotas();
     const gridRef = useRef(null);
@@ -40,6 +41,12 @@ export default function ListadoSolicitudes() {
         dispatchNotas({ type: "actualizarFormulario", payload: { id: 'no_documento', value: parametros.no_documento } });
         dispatchNotas({ type: "actualizarFormulario", payload: { id: 'id_documento', value: parametros.id_cabecera_solicitud } });
     };
+
+    const actualizarFiltros = (e) => {
+        const id = e.target.id;
+        const value = e.target.value;
+        dispatch({ type: 'actualizarFiltros', payload: { id, value } })
+    }
 
     const BotonesAcciones = (parametros) => {
 
@@ -214,21 +221,52 @@ export default function ListadoSolicitudes() {
         <Container fluid>
             <Row>
                 <Col>
-                    <InputGroup className="mb-3">
-                        <InputGroup.Text id="basic-addon3">
-                            <Icon.Search />
-                        </InputGroup.Text>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Filtrar</Form.Label>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text id="basic-addon3">
+                                <Icon.Search />
+                            </InputGroup.Text>
+                            <Form.Control
+                                type="text"
+                                placeholder="Filtrar..."
+                                onChange={(e) => filtrarListado(e.target.value)}
+                                autoComplete="off"
+                            />
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+                
+                {/* <Col hidden={ocultarBotonImprimirCI}>
+                    <Form.Group className="mb-3" controlId="fechaDesde">
+                        <Form.Label>Fecha Inicial</Form.Label>
                         <Form.Control
-                            type="text"
-                            placeholder="Filtrar..."
-                            onChange={(e) => filtrarListado(e.target.value)}
-                            autoComplete="off"
+                            type='date'
+                            value={fechaDesde}
+                            onChange={(e) => actualizarFiltros(e)}
                         />
-                    </InputGroup>
+                    </Form.Group>
                 </Col>
-                <Col>
-                    <Button hidden={ocultarBotonImprimirCI} title="Imprimir consumos internos" size='sm' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos()}> <Icon.PrinterFill /> Imprimir Consumos Internos </Button>
+                <Col hidden={ocultarBotonImprimirCI}>
+                    <Form.Group className="mb-3" controlId="fechaHasta">
+                        <Form.Label>Fecha Hasta</Form.Label>
+                        <Form.Control
+                            type='datetime'
+                            value={fechaHasta}
+                            onChange={(e) => actualizarFiltros(e)}
+                        />
+                    </Form.Group>
                 </Col>
+                <Col hidden={ocultarBotonImprimirCI}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Acciones</Form.Label>
+                        <div>
+                            <Button title="Imprimir consumos internos" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos()}> <Icon.PrinterFill />  Imprimir </Button>
+                            <Button title="Buscar" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => buscarConsumosInternos()}> <Icon.Search /> Buscar </Button>
+                        </div>
+                    </Form.Group>
+                </Col> */}
+
                 <Col>
                     <div style={{ float: 'right' }}>
                         <Button hidden={ocultarBotonNuevo} size='md' variant='primary' className='mb-2' onClick={() => navegar('formulario', { state: null })}><Icon.Plus />Nuevo</Button>
@@ -249,6 +287,6 @@ export default function ListadoSolicitudes() {
                     />
                 </Col>
             </Row>
-        </Container>
+        </Container >
     )
 }

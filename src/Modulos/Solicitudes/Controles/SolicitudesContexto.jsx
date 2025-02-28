@@ -3,7 +3,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta";
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion";
 import { useModalConfirmacion } from "../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
-import { formateadorDeFechas, formatoMoneda, obtenerDatos, obtenerDatosConId, obtenerFechaYHoraActual, obtenerRutaUrlActual } from "../../../FuncionesGlobales";
+import { enviarDatos, formateadorDeFechas, formatoMoneda, obtenerDatos, obtenerDatosConId, obtenerFechaYHoraActual, obtenerRutaUrlActual } from "../../../FuncionesGlobales";
 import { EstadoInicialSolicitudes } from "../Modelos/EstadoInicialSolicitudes";
 import { solicitudesReducer } from "./solicitudesReducer";
 
@@ -158,6 +158,19 @@ export const SolicitudesProveedor = ({ children }) => {
 
     const eliminarSolicitud = async (id) => {
         dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mensaje: 'Realmente desea rechazar la operación?', funcionEjecutar: rechazar(id) } })
+    }
+
+    const buscarConsumosInternos = async () => {
+        try {
+            const res = await enviarDatos('ConsumoInterno', state.filtros);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
+        } catch (error) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando consumos internos', tipo: 'warning' } });
+        }
     }
 
     useEffect(() => {
@@ -342,7 +355,7 @@ export const SolicitudesProveedor = ({ children }) => {
     }
 
     return (
-        <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, imprimirConsumosInternos }}>
+        <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, imprimirConsumosInternos, buscarConsumosInternos }}>
             {children}
         </SolicitudesContexto.Provider>
     )
