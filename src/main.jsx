@@ -115,7 +115,6 @@ const rutas = createBrowserRouter([
         element: <Estado403 />,
         errorElement: <EstadoError />,
     }
-
 ]);
 
 createRoot(document.getElementById('root')).render(
