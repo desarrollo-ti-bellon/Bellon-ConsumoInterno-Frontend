@@ -35,13 +35,15 @@ export default function MenuVerticalProveedor({ children }) {
             case 2: // 'Director'
                 urls = rutasModulos.filter(r => [
                     import.meta.env.VITE_APP_BELLON_SOLICITUDES,
-                    import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
+                    import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
+                    // import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
                 ].includes(r.ruta));
                 break;
             case 3: // 'Gerente Area'
                 urls = rutasModulos.filter(r => [
                     import.meta.env.VITE_APP_BELLON_SOLICITUDES,
-                    import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
+                    import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
+                    // import.meta.env.VITE_APP_BELLON_MANTENIMIENTO_CLASIFICACIONES,
                 ].includes(r.ruta));
                 break;
             case 4: // 'Despacho'
