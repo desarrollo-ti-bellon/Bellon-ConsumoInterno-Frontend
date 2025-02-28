@@ -4,7 +4,7 @@ import * as Icon from "react-bootstrap-icons";
 import AGGridTabla from "../../../ComponentesGlobales/AGGridTabla";
 import CartaActividad from "../../../ComponentesGlobales/CartaActividad";
 import { useNotas } from "../../../ControlesGlobales/Notas/useNotas";
-import { formateadorDeFechaYHoraEspanol } from "../../../FuncionesGlobales";
+import { formateadorDeFechaYHoraEspanol, verDocumento } from "../../../FuncionesGlobales";
 import { useInicio } from "../Controles/useInicio";
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from "../Modelos/InicioModel";
 
@@ -38,10 +38,20 @@ export default function InicioVista() {
         );
     };
 
+    const hypervinculoDocumento = (e) => {
+        const fila = e.data;
+        e.data.id_cabecera_solicitud = fila.id_documento;
+        const no_documento = fila.no_documento;
+        let titulo = `ver solicitud ${no_documento}`
+        return (
+            <a href="#" title={titulo} onClick={() => verDocumento(no_documento, fila)}> {e.value}</a>
+        )
+    }
+
     const columnas = [
         { headerName: "ID", field: "id_nota", flex: 1 },
         { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), flex: 2 },
-        { headerName: "No Documento", field: "no_documento", flex: 2 },
+        { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, flex: 2 },
         { headerName: "Nota", field: "descripcion", flex: 2 },
         { headerName: "Creado Por", field: "creado_por", valueFormatter: (e) => e.value?.toLowerCase(), flex: 2 },
         { headerName: "Dirigido A", field: "usuario_destino", valueFormatter: (e) => e.value?.toLowerCase(), flex: 2 },
