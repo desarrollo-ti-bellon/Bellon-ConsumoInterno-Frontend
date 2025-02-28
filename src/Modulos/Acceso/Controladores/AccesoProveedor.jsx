@@ -12,6 +12,7 @@ export const AccesoProveedor = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        // NO  SE ESTA UTILIZANDO PERO DE FUTURO QUIZAS SE PUEDA IMPLEMENTAR
         const verificarDatosAcceso = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE);
         if (verificarDatosAcceso) {
             const datosLocalStorage = verificarDatosAcceso;
