@@ -266,7 +266,6 @@ export const SolicitudesProveedor = ({ children }) => {
                 content += `          </thead>`;
                 content += `         <tbody>`;
 
-
                 if (lineas.length > 0) {
 
                     // Agrupar por clasificacion_descripcion
