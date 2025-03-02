@@ -236,8 +236,8 @@ export default function ListadoSolicitudes() {
                         </InputGroup>
                     </Form.Group>
                 </Col>
-                
-                {/* <Col hidden={ocultarBotonImprimirCI}>
+                {/* 
+                <Col hidden={ocultarBotonImprimirCI}>
                     <Form.Group className="mb-3" controlId="fechaDesde">
                         <Form.Label>Fecha Inicial</Form.Label>
                         <Form.Control
@@ -251,21 +251,22 @@ export default function ListadoSolicitudes() {
                     <Form.Group className="mb-3" controlId="fechaHasta">
                         <Form.Label>Fecha Hasta</Form.Label>
                         <Form.Control
-                            type='datetime'
+                            type='date'
                             value={fechaHasta}
                             onChange={(e) => actualizarFiltros(e)}
                         />
                     </Form.Group>
                 </Col>
+                */}
                 <Col hidden={ocultarBotonImprimirCI}>
                     <Form.Group className="mb-3">
                         <Form.Label>Acciones</Form.Label>
                         <div>
                             <Button title="Imprimir consumos internos" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos()}> <Icon.PrinterFill />  Imprimir </Button>
-                            <Button title="Buscar" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => buscarConsumosInternos()}> <Icon.Search /> Buscar </Button>
+                            {/* <Button title="Buscar" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => buscarConsumosInternos()}> <Icon.Search /> Buscar </Button> */}
                         </div>
                     </Form.Group>
-                </Col> */}
+                </Col>
 
                 <Col>
                     <div style={{ float: 'right' }}>
