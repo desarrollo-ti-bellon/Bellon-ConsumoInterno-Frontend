@@ -3,7 +3,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta";
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion";
 import { useModalConfirmacion } from "../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
-import { enviarDatos, formateadorDeFechas, formatoMoneda, obtenerDatos, obtenerDatosConId, obtenerFechaYHoraActual, obtenerRutaUrlActual } from "../../../FuncionesGlobales";
+import { enviarDatos, formateadorDeFechas, formatoMoneda, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerRutaUrlActual } from "../../../FuncionesGlobales";
 import { EstadoInicialSolicitudes } from "../Modelos/EstadoInicialSolicitudes";
 import { solicitudesReducer } from "./solicitudesReducer";
 
@@ -151,8 +151,8 @@ export const SolicitudesProveedor = ({ children }) => {
         await cargarDepartamentos();
         await cargarClasificaciones();
         await cargarSucursales();
-        await cargarSolicitudes();
         await cargarAlmacenes();
+        await cargarSolicitudes();
         dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' });
     }
 
@@ -177,6 +177,11 @@ export const SolicitudesProveedor = ({ children }) => {
         dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
         cargarDatosIniciales();
     }, [location]);
+
+    useEffect(() => {
+        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } });
+        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } });
+    }, [])
 
     const imprimirConsumosInternos = async (parametros = {}) => {
 
