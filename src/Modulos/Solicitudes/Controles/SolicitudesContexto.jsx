@@ -40,7 +40,7 @@ export const SolicitudesProveedor = ({ children }) => {
 
         if (urlActual === import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS) {
             try {
-                const res = await obtenerDatos(`ConsumoInterno`, null);
+                const res = await enviarDatos('ConsumoInterno', state.filtros);
                 let json = [];
                 if (res.status !== 204) {
                     json = res.data;
@@ -168,6 +168,7 @@ export const SolicitudesProveedor = ({ children }) => {
                 json = res.data;
             }
             dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
+            dispatch({ type: 'combinarEstadosSolicitudes' });
         } catch (error) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando consumos internos', tipo: 'warning' } });
         }
@@ -185,7 +186,7 @@ export const SolicitudesProveedor = ({ children }) => {
 
     const imprimirConsumosInternos = async (parametros = {}) => {
 
-        await obtenerDatos('ImpresionConsumoInterno', parametros)
+        await enviarDatos('ImpresionConsumoInterno', parametros)
             .then((res) => {
 
                 let lineas = []

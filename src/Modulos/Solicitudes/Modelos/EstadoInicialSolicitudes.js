@@ -7,14 +7,14 @@ export const EstadoInicialSolicitudes = {
     clasificaciones: [],
     almacenes: [],
     filtros: {
-        noDocumento: "",
-        creadoPor: "",
-        fechaDesde: "",
-        fechaHasta: "",
-        usuarioResponsable: "",
-        estadoSolicitudId: 0,
-        idSucursal: "",
-        idDepartamento: ""
+        noDocumento: null,
+        creadoPor: null,
+        fechaDesde: null,
+        fechaHasta: null,
+        usuarioResponsable: null,
+        estadoSolicitudId: null,
+        idSucursal: null,
+        idDepartamento: null
     }
 }
 

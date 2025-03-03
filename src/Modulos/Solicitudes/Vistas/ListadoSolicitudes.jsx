@@ -220,6 +220,7 @@ export default function ListadoSolicitudes() {
     return (
         <Container fluid>
             <Row>
+
                 <Col>
                     <Form.Group className="mb-3">
                         <Form.Label>Filtrar</Form.Label>
@@ -236,7 +237,7 @@ export default function ListadoSolicitudes() {
                         </InputGroup>
                     </Form.Group>
                 </Col>
-                {/* 
+
                 <Col hidden={ocultarBotonImprimirCI}>
                     <Form.Group className="mb-3" controlId="fechaDesde">
                         <Form.Label>Fecha Inicial</Form.Label>
@@ -247,6 +248,7 @@ export default function ListadoSolicitudes() {
                         />
                     </Form.Group>
                 </Col>
+ 
                 <Col hidden={ocultarBotonImprimirCI}>
                     <Form.Group className="mb-3" controlId="fechaHasta">
                         <Form.Label>Fecha Hasta</Form.Label>
@@ -257,13 +259,13 @@ export default function ListadoSolicitudes() {
                         />
                     </Form.Group>
                 </Col>
-                */}
+
                 <Col hidden={ocultarBotonImprimirCI}>
                     <Form.Group className="mb-3">
                         <Form.Label>Acciones</Form.Label>
                         <div>
-                            <Button title="Imprimir consumos internos" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos()}> <Icon.PrinterFill />  Imprimir </Button>
-                            {/* <Button title="Buscar" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => buscarConsumosInternos()}> <Icon.Search /> Buscar </Button> */}
+                            <Button title="Imprimir consumos internos" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos(state.filtros)}> <Icon.PrinterFill />  Imprimir </Button>
+                            <Button title="Buscar" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => buscarConsumosInternos()}> <Icon.Search /> Buscar </Button>
                         </div>
                     </Form.Group>
                 </Col>
@@ -273,6 +275,7 @@ export default function ListadoSolicitudes() {
                         <Button hidden={ocultarBotonNuevo} size='md' variant='primary' className='mb-2' onClick={() => navegar('formulario', { state: null })}><Icon.Plus />Nuevo</Button>
                     </div>
                 </Col>
+
             </Row>
             <Row>
                 <Col>
