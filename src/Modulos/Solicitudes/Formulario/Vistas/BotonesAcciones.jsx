@@ -126,7 +126,7 @@ export default function BotonesAcciones() {
         setAccion(accionBoton);
 
         if (state.lineas.length === 0 || state.formulario.total === 0) {
-            dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: 'No hay productos disponibles para enviar, por favor verifique.', mostrar: true, tamano: 'sm' } })
+            dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: 'No hay productos disponibles para enviar, o los productos no tienen precio unitario definidos, por favor verifique.', mostrar: true, tamano: 'sm' } })
             return;
         }
 
