@@ -341,7 +341,7 @@ export const SolicitudesProveedor = ({ children }) => {
 
                 } else {
                     content += `     <tr>`;
-                    content += `        <th colspan="10" class="text-left" style="color:red; font-weight: 600"> No hay datos que mostrar </th>`;
+                    content += `        <th colspan="10" class="text-center" style="color:red; font-weight: 600"> No hay datos que mostrar </th>`;
                     content += `     </tr>`;
                 }
 
