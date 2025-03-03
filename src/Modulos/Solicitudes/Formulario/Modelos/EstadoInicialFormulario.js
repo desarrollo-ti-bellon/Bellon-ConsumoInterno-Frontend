@@ -61,6 +61,7 @@ export const EstadoInicialFormulario = {
     validadoFormulario: false,
     modalAgregarProductos: false,
     listadoProductos: [],
+    listadoProductosTemp: [],
     comboEstadoSolicitudes: [],
     comboDepartamentos: [],
     comboUsuarios: [],

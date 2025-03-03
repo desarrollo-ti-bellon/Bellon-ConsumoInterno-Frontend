@@ -74,21 +74,30 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
     }
 
     if (action.type === 'mostrarModalAgregarProductos') {
-        return { ...state, modalAgregarProductos: action.payload.mostrar }
-    }
 
-    if (action.type === 'llenarProductos') {
-        
         // Crear un Set de 'no_producto' en las líneas existentes para mejorar la búsqueda
         const productosEnLineas = new Set(state.lineas.map(linea => linea.id_producto));
         console.log('productosEnLineas =>', productosEnLineas);
-        
+
+        // Filtrar los productos que no están listados en 'lineas'
+        const productosNoListados = state.listadoProductosTemp.filter(el => !productosEnLineas.has(el.id_producto));
+        console.log('productosEnLineas =>', productosEnLineas);
+
+        return { ...state, modalAgregarProductos: action.payload.mostrar, listadoProductos: productosNoListados }
+    }
+
+    if (action.type === 'llenarProductos') {
+
+        // Crear un Set de 'no_producto' en las líneas existentes para mejorar la búsqueda
+        const productosEnLineas = new Set(state.lineas.map(linea => linea.id_producto));
+        console.log('productosEnLineas =>', productosEnLineas);
+
         // Filtrar los productos que no están listados en 'lineas'
         const productosNoListados = action.payload.productos.filter(el => !productosEnLineas.has(el.id_producto));
         console.log('productosEnLineas =>', productosEnLineas);
 
         // Devolver el nuevo estado con los productos no listados
-        return { ...state, listadoProductos: productosNoListados }
+        return { ...state, listadoProductos: productosNoListados, listadoProductosTemp: [...action.payload.productos] }
 
     }
 
