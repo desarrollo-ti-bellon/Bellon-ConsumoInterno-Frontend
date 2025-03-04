@@ -178,7 +178,7 @@ export const FormularioUsuarioProveedor = ({ children }) => {
                     ...state.inactivarCampos,
                     campo_id_usuario_ci: true,
                     campo_id_usuario: false,
-                    campo_nombre_usuario: false,
+                    campo_nombre_usuario: true,
                     campo_correo: false,
                     campo_codigo_sucursal: false,
                     campo_id_sucursal: false,
