@@ -12,7 +12,7 @@ export const Notas = () => {
     const { state, dispatch, guardar, eliminar } = useNotas();
     const { mostrar, notas, formulario } = state;
     const { id_nota, fecha_creado, creado_por, usuario_destino, descripcion, tipo_documento, id_documento, no_documento } = formulario
-    const opcionesNotas = state.usuarios?.map(usuario => { return { value: usuario.correo_electronico, label: usuario.correo_electronico } });
+    const opcionesNotas = state.usuarios?.map(usuario => { return { value: usuario.correo_electronico, label: usuario.nombre_completo } });
     const { dispatch: dispatchModalConfirmacion } = useModalConfirmacion();
     const { dispatch: dispatchAlerta } = useAlerta();
     const bloquearAccionesYCampos = (creado_por !== obtenerNombreUsuarioLoggeado() && id_nota) ?? false;
