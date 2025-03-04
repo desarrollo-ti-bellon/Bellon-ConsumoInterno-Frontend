@@ -179,7 +179,7 @@ export const Notas = () => {
                                 </Row>
 
                                 <Row>
-                                    <Form.Group as={Col} md="12" controlId="creado_por">
+                                    <Form.Group as={Col} md="12" controlId="creado_por" hidden>
                                         <Form.Label>Usuario Origen</Form.Label>
                                         <Form.Control
                                             type="text"
@@ -248,7 +248,8 @@ export const Notas = () => {
                                             Campo requerido
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group as={Col} md="12" controlId="tipo_documento">
+
+                                    <Form.Group as={Col} md="12" controlId="tipo_documento" hidden>
                                         <Form.Label>Módulo</Form.Label>
                                         <Form.Control
                                             type="text"
