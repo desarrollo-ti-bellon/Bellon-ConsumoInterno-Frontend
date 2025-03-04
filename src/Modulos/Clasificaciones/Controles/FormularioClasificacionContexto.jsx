@@ -81,7 +81,7 @@ export const FormularioClasificacionProveedor = ({ children }) => {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
             })
             .catch((err) => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err.response.data.mensaje, tipo: 'warning' } })
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
@@ -98,7 +98,7 @@ export const FormularioClasificacionProveedor = ({ children }) => {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
             })
             .catch((err) => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err.response.data.mensaje, tipo: 'warning' } })
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })

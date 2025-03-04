@@ -81,8 +81,8 @@ export const HistorialMovimientosSolicitudesProveedor = ({ children }) => {
                 json = res.data;
             }
             dispatch({ type: 'llenarLineaTiempo', payload: { historialMovimientosSolicitudes: json } });
-        } catch (error) {
-            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + error, tipo: 'warning' } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err.response.data.mensaje, tipo: 'warning' } });
         }
     }
 

@@ -315,7 +315,7 @@ export const FormularioProveedor = ({ children }) => {
                 cambioEstadoSolicitud();
             })
             .catch((err) => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err.response.data.mensaje, tipo: 'warning' } })
                 cargarSolicitudPorId();
             })
             .finally(() => {
@@ -338,7 +338,7 @@ export const FormularioProveedor = ({ children }) => {
                 dispatch({ type: 'mostrarModalAgregarProductos', payload: { mostrar: false } })
             })
             .catch((err) => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err.response.data.mensaje, tipo: 'warning' } })
             })
             .finally(() => {
                 // dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
@@ -356,7 +356,7 @@ export const FormularioProveedor = ({ children }) => {
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se realizó correctamente', tipo: 'success' } })
             })
             .catch((err) => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err, tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err.response.data.mensaje, tipo: 'warning' } })
             })
             .finally(() => {
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
@@ -607,7 +607,7 @@ export const FormularioProveedor = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        const cargarListadoProductos = async() => {
+        const cargarListadoProductos = async () => {
             if (state.modalAgregarProductos && state.listadoProductos.length === 0) {
                 dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
                 await cargarProductos();
