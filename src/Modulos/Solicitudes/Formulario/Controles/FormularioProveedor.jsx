@@ -251,7 +251,7 @@ export const FormularioProveedor = ({ children }) => {
             setTimeout(() => {
                 dispatchModalAlerta({ type: 'cerrarModalAlerta' })
                 navegar(quitarFormularioDeLaUrl(formData.pathname))
-            }, 3000);
+            }, 2000);
         }
     }
 

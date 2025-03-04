@@ -168,7 +168,7 @@ export default function BotonesAcciones() {
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnAprobar} onClick={() => confirmarAccion('aprobar')} className="m-1"><Icon.Check /> {' '} Aprobar Solicitud </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnConfirmar} onClick={() => confirmarAccion('confirmar')} className="m-1"><Icon.CheckCircleFill /> {' '}   Confirmar Solicitud </Button>
             <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnEntregar} onClick={() => confirmarAccion('entregar')} className="m-1"><Icon.Floppy2Fill /> {' '} Entregar </Button>
-            <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnTerminar} onClick={() => confirmarAccion('terminada')} className="m-1"><Icon.Floppy2Fill /> {' '}   Registrar </Button>
+            {/* <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnTerminar} onClick={() => confirmarAccion('terminada')} className="m-1"><Icon.Floppy2Fill /> {' '}   Registrar </Button> */}
         </div>
     );
 }
