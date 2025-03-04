@@ -1,12 +1,33 @@
 import React, { useEffect } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useUsuarioFormulario } from '../Controles/useUsuarioFormulario';
+import Select from 'react-select';
 
 export default function FormularioUsuario() {
 
     const { state, dispatch, validarCampoDependiendoPosicion, validarCampoDependiendoPosicionLimite } = useUsuarioFormulario();
     const { id_usuario_ci, id_usuario, nombre_usuario, correo, codigo_sucursal, id_sucursal, codigo_departamento, id_departamento, limite, posicion_id, estado, almacen_id, codigo_almacen } = state.formulario;
     const { campo_id_usuario_ci, campo_id_usuario, campo_nombre_usuario, campo_correo, campo_codigo_sucursal, campo_id_sucursal, campo_codigo_departamento, campo_id_departamento, campo_limite, campo_posicion_id, campo_estado, campo_almacen_id, campo_codigo_almacen } = state.inactivarCampos;
+    const opcionesUsuarios = state.comboUsuarios?.map(usuario => { return { value: usuario.id_usuario, label: usuario.nombre_completo } });
+
+    const estilosSelect = {
+        control: (provided) => ({
+            ...provided,
+            borderColor: '#dee2e6',
+            boxShadow: null,
+            '&:hover': {
+                borderColor: '#006d75', // Change this to your desired hover color
+            },
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected ? '#00b7c3' : state.isFocused ? '#ccf0f3' : '#fff',
+            color: state.isSelected ? '#fff' : '#000',
+            '&:active': {
+                backgroundColor: state.isSelected ? '#00b7c3' : '#ccf0f3',
+            },
+        }),
+    };
 
     const actualizarFormulario = (e) => {
         const { id, value } = e.target
@@ -17,6 +38,14 @@ export default function FormularioUsuario() {
         }
         validarFormulario();
     }
+
+    const obtenerCambiosDelSelectModificado = (combo_id, opcion) => {
+        if (opcion) {
+            dispatch({ type: 'actualizarFormulario', payload: { id: combo_id, value: opcion.value } })
+        } else {
+            dispatch({ type: 'actualizarFormulario', payload: { id: combo_id, value: '' } })
+        }
+    };
 
     const validarFormulario = () => {
         document.getElementById('enviarFormulario').click()
@@ -51,7 +80,7 @@ export default function FormularioUsuario() {
                         />
                     </Form.Group>
 
-                    <Form.Group as={Col} md="5" controlId="id_usuario">
+                    <Form.Group as={Col} md="5" controlId="id_usuario" hidden>
                         <Form.Label>Usuarios</Form.Label>
                         <Form.Select
                             value={id_usuario || ''}
@@ -77,6 +106,25 @@ export default function FormularioUsuario() {
                         <Form.Control.Feedback type="invalid">
                             El código de la usuario es obligatorio.
                         </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="id_usuario1">
+                        <Form.Label>Usuarios</Form.Label>
+                        <div>
+                            <Select
+                                styles={estilosSelect}
+                                value={opcionesUsuarios.find(usuario => usuario.value === id_usuario) || ''}
+                                onChange={(e) => obtenerCambiosDelSelectModificado('id_usuario', e)}
+                                options={opcionesUsuarios}
+                                isSearchable={true}
+                                isClearable={true}
+                                isInvalid={!id_usuario}
+                                isDisabled={campo_id_usuario}
+                                className={'form-control ' + !id_usuario ? 'is-invalid' : 'is-valid'}
+                                placeholder="Por favor seleccione..."
+                            />
+                            {!id_usuario && (<div className="invalid-feedback">Campo requerido</div>)}
+                        </div>
                     </Form.Group>
 
                     <Form.Group as={Col} md="5" controlId="nombre_usuario">
