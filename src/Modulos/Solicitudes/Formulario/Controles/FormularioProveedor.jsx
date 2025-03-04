@@ -607,10 +607,14 @@ export const FormularioProveedor = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        if (state.modalAgregarProductos && state.listadoProductos.length === 0) {
-            cargarProductos();
-            dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
+        const cargarListadoProductos = async() => {
+            if (state.modalAgregarProductos && state.listadoProductos.length === 0) {
+                dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
+                await cargarProductos();
+                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+            }
         }
+        cargarListadoProductos();
     }, [state.modalAgregarProductos])
 
     useEffect(() => {
