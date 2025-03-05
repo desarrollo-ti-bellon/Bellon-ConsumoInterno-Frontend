@@ -171,6 +171,10 @@ export default function BotonesAcciones() {
         setBloquearBotonesAcciones(bloquear);
     }, [state.lineas])
 
+    useEffect(() => {
+        setBloquearBotonesAcciones(state.estadoCambiado);
+    }, [state.estadoCambiado])
+
     return (
         <div style={{ float: 'right' }}>
             {/* <Button disabled={bloquearBotonesAcciones} hidden={!condiciones.btnNuevo} onClick={() => confirmarAccion('nueva')} className="m-1"><Icon.Plus /> {' '}  Nueva Solicitud </Button> */}
