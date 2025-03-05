@@ -10,7 +10,7 @@ import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelectio
 
 export default function ListadoSolicitudes() {
 
-    const { state, dispatch, eliminarSolicitud, imprimirConsumosInternos, buscarConsumosInternos } = useSolicitudes()
+    const { state, dispatch, eliminarSolicitud, imprimirConsumosInternos, cargarSolicitudes } = useSolicitudes()
     const { fechaDesde, fechaHasta } = state.filtros;
     const navegar = useNavigate();
     const { dispatch: dispatchNotas } = useNotas();
@@ -288,7 +288,7 @@ export default function ListadoSolicitudes() {
                                 size='md'
                                 variant='outline-primary'
                                 style={{ marginLeft: 5 }}
-                                onClick={() => buscarConsumosInternos()}>
+                                onClick={() => cargarSolicitudes()}>
                                 <Icon.Search /> Buscar
                             </Button>
                         </div>
