@@ -24,17 +24,7 @@ export const SolicitudesProveedor = ({ children }) => {
         const urlActual = obtenerRutaUrlActual();
 
         if (urlActual === import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES) {
-            try {
-                const res = await obtenerDatos(`HistorialMovimientoSolicitudesCI/Agrupado`, null);
-                let json = [];
-                if (res.status !== 204) {
-                    json = res.data;
-                }
-                dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
-                dispatch({ type: 'combinarEstadosSolicitudes' });
-            } catch (err) {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
-            }
+            buscarHistorialMovimientosSolicitudes();
             return;
         }
 
@@ -44,29 +34,11 @@ export const SolicitudesProveedor = ({ children }) => {
         }
 
         if (locacion.get('estado_solicitud_id')) {
-            // console.log('location =>', location);
-            const estadoSolicitudId = locacion.get('estado_solicitud_id')
-            const res = await obtenerDatos(`Solicitud/EstadoSolicitud?estadoSolicitudId=${estadoSolicitudId}`, null);
-            let json = [];
-            if (res.status !== 204) {
-                json = res.data;
-            }
-            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
-            dispatch({ type: 'combinarEstadosSolicitudes' });
+            buscarTodasSolicitudesActivasPorEstadoSolicitud();
             return;
         }
 
-        try {
-            const res = await obtenerDatos(`Solicitud/Solicitudes`, null);
-            let json = [];
-            if (res.status !== 204) {
-                json = res.data;
-            }
-            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
-            dispatch({ type: 'combinarEstadosSolicitudes' });
-        } catch (err) {
-            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
-        }
+        buscarTodasSolicitudesActivas();
 
     }
 
@@ -150,6 +122,35 @@ export const SolicitudesProveedor = ({ children }) => {
         dispatchModalConfirmacion({ type: 'mostrarModalConfirmacion', payload: { mensaje: 'Realmente desea rechazar la operación?', funcionEjecutar: rechazar(id) } })
     }
 
+    const buscarTodasSolicitudesActivas = async () => {
+        try {
+            const res = await obtenerDatos(`Solicitud/Solicitudes`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
+            dispatch({ type: 'combinarEstadosSolicitudes' });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
+        }
+    }
+
+    const buscarTodasSolicitudesActivasPorEstadoSolicitud = async () => {
+        try {
+            const estadoSolicitudId = locacion.get('estado_solicitud_id')
+            const res = await obtenerDatos(`Solicitud/EstadoSolicitud?estadoSolicitudId=${estadoSolicitudId}`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
+            dispatch({ type: 'combinarEstadosSolicitudes' });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
+        }
+    }
+
     const buscarConsumosInternos = async () => {
         try {
             const res = await enviarDatos('ConsumoInterno', state.filtros);
@@ -164,12 +165,19 @@ export const SolicitudesProveedor = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } });
-        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } });
-        dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
-        cargarDatosIniciales();
-    }, [location]);
+    const buscarHistorialMovimientosSolicitudes = async () => {
+        try {
+            const res = await enviarDatos(`HistorialMovimientoSolicitudesCI/Agrupado`, state.filtros);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
+            dispatch({ type: 'combinarEstadosSolicitudes' });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
+        }
+    }
 
     const imprimirConsumosInternos = async (parametros = {}) => {
 
@@ -347,8 +355,35 @@ export const SolicitudesProveedor = ({ children }) => {
             })
     }
 
+    useEffect(() => {
+        console.log('location =>', location);
+        if (location.pathname === import.meta.env.VITE_APP_BELLON_SOLICITUDES) {
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
+            cargarDatosIniciales();
+        }
+    }, [location]);
+
+    useEffect(() => {
+        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } })
+        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } })
+    }, [])
+
+    useEffect(() => {
+        if (state.filtros.fechaDesde && state.filtros.fechaHasta) {
+            const urlActual = obtenerRutaUrlActual();
+            const urls = [
+                import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES,
+                import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS
+            ]
+            if (urls.includes(urlActual)) {
+                dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
+                cargarDatosIniciales();
+            }
+        }
+    }, [state.filtros, location])
+
     return (
-        <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, imprimirConsumosInternos, buscarConsumosInternos }}>
+        <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, imprimirConsumosInternos, cargarSolicitudes }}>
             {children}
         </SolicitudesContexto.Provider>
     )
