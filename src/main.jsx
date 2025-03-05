@@ -14,6 +14,7 @@ import FormularioSolicitudesPrincipal from './Modulos/Solicitudes/Formulario/For
 import ClasificacionesPrincipal from './Modulos/Clasificaciones/ClasificacionesPrincipal.jsx';
 import UsuariosPrincipal from './Modulos/Usuarios/UsuariosPrincipal.jsx';
 import HistorialMovimientosSolicitudPrincipal from './Modulos/HistorialMovimientosSolicitud/HistorialMovimientosSolicitudPrincipal.jsx';
+import Estado500 from './ComponentesGlobales/Estado500.jsx';
 
 const esProduccion = (window.location.host.split(':')[0]) != 'localhost' ? true : false;
 if (esProduccion) {
@@ -113,6 +114,11 @@ const rutas = createBrowserRouter([
     {
         path: "403",
         element: <Estado403 />,
+        errorElement: <EstadoError />,
+    },
+    {
+        path: "500",
+        element: <Estado500 />,
         errorElement: <EstadoError />,
     }
 ]);

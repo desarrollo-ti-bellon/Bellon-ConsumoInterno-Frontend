@@ -19,7 +19,9 @@ axios.interceptors.response.use(
             }, 500);
         }
         if (error.toJSON().message === 'Network Error') {
-            alert("No hay conexión con el servidor, por favor verifique e intentelo de nuevo")
+            setTimeout(() => {
+                location.href = '/500'
+            }, 500);
         }
         return Promise.reject(error); // Propagar otros errores
     }
