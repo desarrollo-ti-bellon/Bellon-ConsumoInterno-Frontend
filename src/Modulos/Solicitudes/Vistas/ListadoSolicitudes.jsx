@@ -248,7 +248,7 @@ export default function ListadoSolicitudes() {
                         />
                     </Form.Group>
                 </Col>
- 
+
                 <Col hidden={ocultarBotonImprimirCI}>
                     <Form.Group className="mb-3" controlId="fechaHasta">
                         <Form.Label>Fecha Hasta</Form.Label>
