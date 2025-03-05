@@ -39,17 +39,7 @@ export const SolicitudesProveedor = ({ children }) => {
         }
 
         if (urlActual === import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS) {
-            try {
-                const res = await enviarDatos('ConsumoInterno', state.filtros);
-                let json = [];
-                if (res.status !== 204) {
-                    json = res.data;
-                }
-                dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: json } });
-                dispatch({ type: 'combinarEstadosSolicitudes' });
-            } catch (err) {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, cargando solicitudes', tipo: 'warning' } });
-            }
+            buscarConsumosInternos();
             return;
         }
 
@@ -175,14 +165,11 @@ export const SolicitudesProveedor = ({ children }) => {
     }
 
     useEffect(() => {
+        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } });
+        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } });
         dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
         cargarDatosIniciales();
     }, [location]);
-
-    useEffect(() => {
-        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } });
-        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } });
-    }, [])
 
     const imprimirConsumosInternos = async (parametros = {}) => {
 
