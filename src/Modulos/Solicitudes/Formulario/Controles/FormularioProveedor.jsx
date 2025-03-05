@@ -183,7 +183,7 @@ export const FormularioProveedor = ({ children }) => {
 
     const cargarClasificaciones = async () => {
         try {
-            const res = await obtenerDatos(`Clasificacion`, null);
+            const res = await obtenerDatos(`Clasificacion/Activas`, null);
             let json = [];
             if (res.status !== 204) {
                 json = res.data;
