@@ -18,6 +18,7 @@ export default function ListadoSolicitudes() {
     const locacion = useLocation();
     const [ocultarBotonNuevo, setOcultarBotonNuevo] = useState(true);
     const [ocultarBotonImprimirCI, setOcultarBotonImprimirCI] = useState(true);
+    const [ocultarFechaDesdeHasta, setOcultarFechaDesdeHasta] = useState(true);
     const [columnas, setColumnas] = useState([]);
 
     const obtenerReferenciaAgGrid = (ref) => {
@@ -118,6 +119,7 @@ export default function ListadoSolicitudes() {
         )
     }
 
+
     useEffect(() => {
 
         const urlActual = obtenerRutaUrlActual();
@@ -128,6 +130,13 @@ export default function ListadoSolicitudes() {
             import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS
         ];
         setOcultarBotonImprimirCI(!rutas.includes(urlActual));
+
+        // MOSTRAR FECHA DESDE Y HASTA CONSUMOS INTERNOS Y HISTORIAL MOVIMIENTOS
+        rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
+            import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
+        ];
+        setOcultarFechaDesdeHasta(!rutas.includes(urlActual));
 
         setColumnas([
             { headerName: "ID", field: "id_cabecera_solicitud", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
@@ -238,7 +247,7 @@ export default function ListadoSolicitudes() {
                     </Form.Group>
                 </Col>
 
-                <Col hidden={ocultarBotonImprimirCI}>
+                <Col hidden={ocultarFechaDesdeHasta}>
                     <Form.Group className="mb-3" controlId="fechaDesde">
                         <Form.Label>Fecha Inicial</Form.Label>
                         <Form.Control
@@ -249,7 +258,7 @@ export default function ListadoSolicitudes() {
                     </Form.Group>
                 </Col>
 
-                <Col hidden={ocultarBotonImprimirCI}>
+                <Col hidden={ocultarFechaDesdeHasta}>
                     <Form.Group className="mb-3" controlId="fechaHasta">
                         <Form.Label>Fecha Hasta</Form.Label>
                         <Form.Control
@@ -260,19 +269,43 @@ export default function ListadoSolicitudes() {
                     </Form.Group>
                 </Col>
 
-                <Col hidden={ocultarBotonImprimirCI}>
+                <Col>
                     <Form.Group className="mb-3">
-                        <Form.Label>Acciones</Form.Label>
+                        <Form.Label hidden={ocultarBotonImprimirCI && ocultarFechaDesdeHasta} >Acciones</Form.Label>
                         <div>
-                            <Button title="Imprimir consumos internos" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => imprimirConsumosInternos(state.filtros)}> <Icon.PrinterFill />  Imprimir </Button>
-                            <Button title="Buscar" size='md' variant='outline-primary' style={{ marginLeft: 5 }} onClick={() => buscarConsumosInternos()}> <Icon.Search /> Buscar </Button>
+                            <Button
+                                hidden={ocultarBotonImprimirCI}
+                                title="Imprimir consumos internos"
+                                size='md'
+                                variant='outline-primary'
+                                style={{ marginLeft: 5 }}
+                                onClick={() => imprimirConsumosInternos(state.filtros)}>
+                                <Icon.PrinterFill /> Imprimir
+                            </Button>
+                            <Button
+                                hidden={ocultarFechaDesdeHasta}
+                                title="Buscar"
+                                size='md'
+                                variant='outline-primary'
+                                style={{ marginLeft: 5 }}
+                                onClick={() => buscarConsumosInternos()}>
+                                <Icon.Search /> Buscar
+                            </Button>
                         </div>
                     </Form.Group>
                 </Col>
 
                 <Col>
-                    <div style={{ float: 'right' }}>
-                        <Button hidden={ocultarBotonNuevo} size='md' variant='primary' className='mb-2' onClick={() => navegar('formulario', { state: null })}><Icon.Plus />Nuevo</Button>
+                    <div style={{ float: 'right',paddingTop: '30px' }}>
+                        <Button
+                            hidden={ocultarBotonNuevo}
+                            size='md'
+                            variant='primary'
+                            className='mb-2'
+                            onClick={() => navegar('formulario', { state: null })}
+                        >
+                            <Icon.Plus />Nuevo
+                        </Button>
                     </div>
                 </Col>
 
