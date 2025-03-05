@@ -50,6 +50,18 @@ export default function BotonesAcciones() {
             return;
         }
 
+        // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDO SI EL DOCUMENTO TIENE UN ESTADO DE SOLICITUD DIFERENTE
+        if (state.formulario.id_estado_solicitud === estadoSolicitud) {
+            return;
+        }
+
+        // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDIENDO EL ESTADO DE LAS SOLICITUDES Y SI EL DOCUMENTO TIENE UN ID
+        ocultarBotones();
+
+    }, [estadoSolicitud, state.formulario.id_cabecera_solicitud]); // Actualizamos cuando cambien estos valores
+
+    const ocultarBotones = () => {
+
         // CONTROLANDO CONDICIONES PARA OCULTAR BOTONES DEPENDIENDO EL ESTADO DE LAS SOLICITUDES 
         const tieneSolicitudValida = state.formulario.id_cabecera_solicitud !== null;
         const estadoPermiteEnvio = [import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA, import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA].includes(estadoSolicitud.toString());
@@ -71,7 +83,7 @@ export default function BotonesAcciones() {
         //CONDICIONES NECESARIAS 
         const noNostrarBtnRechazarSolicitanteAprobada = !(
             estadoSolicitud === import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA &&
-            posicionId.toString() === import.meta.env.VITE_APP_POSICION_SOLICITANTE 
+            posicionId.toString() === import.meta.env.VITE_APP_POSICION_SOLICITANTE
         )
 
         // ESTA ES LA CONFIGURACION DE LOS BOTONES USUANDO LAS CONDICIONES ANTERIORES
@@ -85,8 +97,7 @@ export default function BotonesAcciones() {
         };
 
         setCondiciones(botonesCondiciones);
-
-    }, [estadoSolicitud, state.formulario.id_cabecera_solicitud]); // Actualizamos cuando cambien estos valores
+    }
 
     const ejecutarAcciones = (accion = '') => {
 
