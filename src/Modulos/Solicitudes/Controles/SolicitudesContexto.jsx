@@ -356,7 +356,6 @@ export const SolicitudesProveedor = ({ children }) => {
     }
 
     useEffect(() => {
-        console.log('location =>', location);
         if (location.pathname === import.meta.env.VITE_APP_BELLON_SOLICITUDES) {
             dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
             cargarDatosIniciales();
