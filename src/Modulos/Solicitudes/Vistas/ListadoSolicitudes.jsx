@@ -270,8 +270,8 @@ export default function ListadoSolicitudes() {
                 </Col>
 
                 <Col>
-                    <Form.Group className="mb-3">
-                        <Form.Label hidden={ocultarBotonImprimirCI && ocultarFechaDesdeHasta} >Acciones</Form.Label>
+                    <Form.Group hidden={ocultarBotonImprimirCI} className="mb-3">
+                        <Form.Label>Acciones</Form.Label>
                         <div>
                             <Button
                                 hidden={ocultarBotonImprimirCI}
@@ -282,7 +282,7 @@ export default function ListadoSolicitudes() {
                                 onClick={() => imprimirConsumosInternos(state.filtros)}>
                                 <Icon.PrinterFill /> Imprimir
                             </Button>
-                            <Button
+                            {/* <Button
                                 hidden={ocultarFechaDesdeHasta}
                                 title="Buscar"
                                 size='md'
@@ -290,7 +290,7 @@ export default function ListadoSolicitudes() {
                                 style={{ marginLeft: 5 }}
                                 onClick={() => cargarSolicitudes()}>
                                 <Icon.Search /> Buscar
-                            </Button>
+                            </Button> */}
                         </div>
                     </Form.Group>
                 </Col>
