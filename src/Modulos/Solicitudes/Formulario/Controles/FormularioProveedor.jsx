@@ -289,16 +289,17 @@ export const FormularioProveedor = ({ children }) => {
             }
         }
 
-        if (state.lineas.length > 0) {
-            let totalCreditado = state.limiteAprobacion ? parseFloat(state.limiteAprobacion) : 0;
-            if (state.formulario.total > totalCreditado) {
-                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: left;">El total de la solicitud supera el límite de aprobación, por favor delega la solicitud a otra persona.</b>', mostrar: true, tamano: 'md' } })
-                cargarSolicitudPorId();
-                noValidarFormulario();
-                return;
+        if(state.cambiarEstadoSolicitud) {
+            if (state.lineas.length > 0) {
+                let totalCreditado = state.limiteAprobacion ? parseFloat(state.limiteAprobacion) : 0;
+                if (state.formulario.total > totalCreditado) {
+                    dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: left;">El total de la solicitud supera el límite de aprobación, por favor delega la solicitud a otra persona.</b>', mostrar: true, tamano: 'md' } })
+                    cargarSolicitudPorId();
+                    noValidarFormulario();
+                    return;
+                }
             }
         }
-
         // console.log('guardar', state.formulario)
         // dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Solicitud/Cabecera', state.formulario)

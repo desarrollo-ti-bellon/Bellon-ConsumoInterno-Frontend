@@ -139,14 +139,26 @@ export default function BotonesAcciones() {
 
         setAccion(accionBoton);
 
-        if (state.lineas.length === 0 || state.formulario.total === 0) {
-            dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: 'No hay productos disponibles para enviar, o los productos no tienen precio unitario definidos, por favor verifique.', mostrar: true, tamano: 'sm' } })
-            return;
-        }
+        const usuario_aprobador_id = state.formulario.id_usuario_responsable;
+        const validarUsuarioResponsable = state.comboUsuariosAprobadores.find(usuario => usuario.id_usuario_ci === usuario_aprobador_id)
 
-        if ((state.lineas.length > 0) && (state.formulario.total > state.limiteAprobacion)) {
-            dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El total del consumo supera al limite que puede aprobar el usuario aprobador. Por favor delegue su solicitud a otra persona.</b>', mostrar: true, tamano: 'md' } })
-            return;
+        if(accionBoton !== 'rechazar') {
+
+            if (!validarUsuarioResponsable) {
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El usuario responsable podría estar inhabilitado. Por favor, comuníquese con el administrador o rechaze la solicitud.</div>', mostrar: true, tamano: 'md' } })
+                return;
+            }
+    
+            if (state.lineas.length === 0 || state.formulario.total === 0) {
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">No hay productos disponibles para enviar, o los productos no tienen precio unitario definidos, por favor verifique.</div>', mostrar: true, tamano: 'sm' } })
+                return;
+            }
+    
+            if ((state.lineas.length > 0) && (state.formulario.total > state.limiteAprobacion)) {
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El total del consumo supera al limite que puede aprobar el usuario aprobador. Por favor delegue su solicitud a otra persona.</div>', mostrar: true, tamano: 'md' } })
+                return;
+            }
+
         }
 
         // MOSTRAR NOTAS CUANDO SE VA A RECHAZAR LAS SOLICITUDES
