@@ -54,6 +54,7 @@ export function InicioProveedor({ children }) {
                 case 5: // 'Solicitante'
                     estados = [
                         'Nueva',
+                        'Pendiente',
                         'Rechazada',
                         'Entregada',
                         'Aprobada'
