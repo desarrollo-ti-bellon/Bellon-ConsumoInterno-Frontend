@@ -315,6 +315,12 @@ export const FormularioProveedor = ({ children }) => {
                 cambioEstadoSolicitud();
             })
             .catch((err) => {
+                if (err.response.data.mensaje.includes('<li> Producto:')) {
+                    dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: `<div style="font-size: 20px; font-weight: 600; text-align: left;">Hubo un error al realizar el ajustes de inventarios en el LS Central: </br> <ul>${err.response.data.mensaje} </ul> </div>`, mostrar: true, tamano: 'lg' } })
+                    cargarSolicitudPorId();
+                    cambiarEstadoSolicitud(false);
+                    return;
+                }
                 dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'hubo un error =>' + err.response.data.mensaje, tipo: 'warning' } })
                 cargarSolicitudPorId();
             })
