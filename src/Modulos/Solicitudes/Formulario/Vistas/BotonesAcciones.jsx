@@ -82,7 +82,10 @@ export default function BotonesAcciones() {
 
         //CONDICIONES NECESARIAS 
         const noNostrarBtnRechazarSolicitanteAprobada = !(
-            estadoSolicitud === import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA &&
+            (
+                estadoSolicitud === import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA ||
+                estadoSolicitud === import.meta.env.VITE_APP_ESTADO_SOLICITUD_PENDIENTE
+            ) &&
             posicionId.toString() === import.meta.env.VITE_APP_POSICION_SOLICITANTE
         )
 
