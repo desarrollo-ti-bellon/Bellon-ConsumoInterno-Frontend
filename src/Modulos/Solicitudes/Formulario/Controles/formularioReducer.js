@@ -105,6 +105,27 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
 
     }
 
+    if (action.type === 'actualizarCantidadExistenciaDelListadoProductos') {
+
+        const copiaListadoProductos = [...state.listadoProductos];
+        const listadoProductosDelAlmacen = [...action.payload.productos];
+
+        const listadoProductosActualizadosOrdenadosPorCantidad = copiaListadoProductos.map(producto => {
+            let productoTieneExistencia = listadoProductosDelAlmacen.find(el => el.no_producto === producto.no);
+            if (productoTieneExistencia) {
+                return { ...producto, cantidad: productoTieneExistencia.cantidad };
+            }
+            return { ...producto, cantidad: 0 };
+        })
+        // .sort((a, b) => b.cantidad - a.cantidad);
+
+        return {
+            ...state,
+            listadoProductos: listadoProductosActualizadosOrdenadosPorCantidad,
+            listadoProductosTemp: [...listadoProductosActualizadosOrdenadosPorCantidad]
+        };
+    }
+
     if (action.type === 'llenarComboEstadosSolicitudes') {
         return { ...state, comboEstadoSolicitudes: action.payload.estadosSolicitudes }
     }
