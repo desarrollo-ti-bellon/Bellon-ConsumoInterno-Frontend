@@ -289,7 +289,7 @@ export const FormularioProveedor = ({ children }) => {
             }
         }
 
-        if(state.cambiarEstadoSolicitud) {
+        if (state.cambiarEstadoSolicitud) {
             if (state.lineas.length > 0) {
                 let totalCreditado = !isNaN(state.limiteAprobacion) ? parseFloat(state.limiteAprobacion) : 0;
                 if (state.formulario.total > totalCreditado) {

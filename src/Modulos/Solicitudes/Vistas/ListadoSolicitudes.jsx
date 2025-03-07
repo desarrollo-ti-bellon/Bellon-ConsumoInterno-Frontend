@@ -4,7 +4,7 @@ import * as Icon from 'react-bootstrap-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useNotas } from '../../../ControlesGlobales/Notas/useNotas';
-import { formateadorDeFechas, formateadorDeHora, formatoMoneda, obtenerDatosDelLocalStorage, obtenerFechaActual, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
+import { formateadorDeFechas, formateadorDeHora, formatoMoneda, obtenerDatosDelLocalStorage, obtenerRutaUrlActual, verDocumento } from '../../../FuncionesGlobales';
 import { useSolicitudes } from '../Controles/useSolicitudes';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialSolicitudes';
 

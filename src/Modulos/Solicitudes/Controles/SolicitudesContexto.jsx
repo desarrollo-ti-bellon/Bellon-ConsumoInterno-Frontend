@@ -3,7 +3,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { useAlerta } from "../../../ControlesGlobales/Alertas/useAlerta";
 import { useCargandoInformacion } from "../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion";
 import { useModalConfirmacion } from "../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
-import { enviarDatos, formateadorDeFechas, formatoMoneda, obtenerDatos, obtenerDatosConId, obtenerFechaActual, obtenerFechaYHoraActual, obtenerRutaUrlActual } from "../../../FuncionesGlobales";
+import { enviarDatos, formateadorDeFechas, formatoMoneda, obtenerDatos, obtenerFechaActual, obtenerFechaYHoraActual, obtenerRutaUrlActual } from "../../../FuncionesGlobales";
 import { EstadoInicialSolicitudes } from "../Modelos/EstadoInicialSolicitudes";
 import { solicitudesReducer } from "./solicitudesReducer";
 

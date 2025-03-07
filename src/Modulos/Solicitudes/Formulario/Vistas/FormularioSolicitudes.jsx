@@ -3,7 +3,7 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import { useSearchParams } from "react-router-dom";
 import { useModalConfirmacion } from "../../../../ControlesGlobales/ModalConfirmacion/useModalConfirmacion";
-import { formateadorDeFechas, formatoCantidad, formatoMoneda } from "../../../../FuncionesGlobales";
+import { formatoCantidad, formatoMoneda } from "../../../../FuncionesGlobales";
 import { useFormulario } from "../Controles/useFormulario";
 
 export default function FormularioSolicitudes() {
@@ -74,7 +74,7 @@ export default function FormularioSolicitudes() {
                                 <Form.Label>Fecha Creado</Form.Label>
                                 <Form.Control
                                     type="date"
-                                    defaultValue={formateadorDeFechas(fecha_creado)}
+                                    defaultValue={fecha_creado}
                                     disabled={campo_fecha_creado}
                                 />
                             </Form.Group>
