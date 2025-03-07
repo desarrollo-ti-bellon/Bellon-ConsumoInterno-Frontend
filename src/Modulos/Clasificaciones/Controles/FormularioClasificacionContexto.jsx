@@ -63,14 +63,14 @@ export const FormularioClasificacionProveedor = ({ children }) => {
 
         console.log('guardar', state.formulario)
         if (state.formulario.id_clasificacion === null) {
-            const existeClasificacion = state.lineas.find(linea => linea.id_grupo_cont_producto_general === state.formulario.id_grupo_cont_producto_general)
+            const existeClasificacion = state.lineas.find(linea => linea.codigo_clasificacion === state.formulario.codigo_clasificacion)
             console.log('existeClasificacion=>', existeClasificacion);
             if (existeClasificacion) {
-                dispatchModalAlerta({ type: 'mostrarAlerta', payload: { mensaje: 'No se puede agregar esta clasificación porque ha sido agregada con esta decripción.<hr/> <ul>' + existeClasificacion.descripcion + '</ul>', tamano: 'md' } })
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: 'No se puede agregar esta clasificación porque ha sido agregada con esta decripción.<hr/> <ul>' + existeClasificacion.descripcion + '</ul>', tamano: 'md', mostrar: true } })
                 return;
             }
         }
-
+        
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Clasificacion', state.formulario)
             .then((res) => {
