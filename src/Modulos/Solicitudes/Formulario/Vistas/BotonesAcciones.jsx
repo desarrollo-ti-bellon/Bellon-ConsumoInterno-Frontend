@@ -145,7 +145,7 @@ export default function BotonesAcciones() {
             const clasificacionId = state.formulario.id_clasificacion;
 
             const validarUsuarioResponsable = state.comboUsuariosAprobadores.find(usuario => usuario.id_usuario_ci === usuarioAprobadorId)
-            // const validarClasificacion = state.comboClasificacion.find(clasificacion => clasificacion.id_clasificacion === clasificacionId);
+            // const validarClasificacion = state.comboClasificaciones.find(clasificacion => clasificacion.id_clasificacion === clasificacionId);
 
             if (!state.formulario.comentario) {
                 dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El comentario es obligatorio.</div>', mostrar: true, tamano: 'md' } })
