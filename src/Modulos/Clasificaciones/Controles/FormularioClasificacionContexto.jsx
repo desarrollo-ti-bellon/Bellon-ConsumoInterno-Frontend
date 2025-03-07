@@ -57,7 +57,7 @@ export const FormularioClasificacionProveedor = ({ children }) => {
     const guardar = () => {
 
         if (!state.validadoFormulario) {
-            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } })
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes llenar los campos requeridos.', tipo: 'warning' } });
             return;
         }
 
@@ -70,7 +70,7 @@ export const FormularioClasificacionProveedor = ({ children }) => {
                 return;
             }
         }
-        
+
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Clasificacion', state.formulario)
             .then((res) => {
