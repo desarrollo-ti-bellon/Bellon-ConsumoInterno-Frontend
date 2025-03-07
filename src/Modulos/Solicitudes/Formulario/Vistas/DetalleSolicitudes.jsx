@@ -19,9 +19,9 @@ export default function DetalleSolicitudes() {
     const [bloquearBotonBorraLinea, setBloquearBotonBorraLinea] = useState(true); 
 
     useEffect(() => {
-        const condicion2 = locacion.get('accion') !== 'ver' && state.formulario.id_cabecera_solicitud !== null ;
+        const condicion2 = locacion.get('accion') !== 'ver' && state.formulario.id_cabecera_solicitud !== null && !state.estadoCambiado ;
         setActivarBotonAgregarProductos(condicion2)
-    }, [state.formulario])
+    }, [state])
 
     useEffect(() => {
 
