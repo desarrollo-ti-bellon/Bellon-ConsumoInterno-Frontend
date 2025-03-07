@@ -144,6 +144,16 @@ export default function BotonesAcciones() {
 
         if(accionBoton !== 'rechazar') {
 
+            if (!state.formulario.comentario) {
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El comentario es obligatorio.</div>', mostrar: true, tamano: 'md' } })
+                return;
+            }
+
+            if (state.formulario.comentario.length < 10) {
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">Por favor, ingresa un comentario de al menos 10 carácteres.</div>', mostrar: true, tamano: 'md' } })
+                return;
+            }
+
             if (!validarUsuarioResponsable) {
                 dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El usuario responsable podría estar inhabilitado. Por favor, comuníquese con el administrador o rechaze la solicitud.</div>', mostrar: true, tamano: 'md' } })
                 return;
@@ -188,7 +198,7 @@ export default function BotonesAcciones() {
 
     useEffect(() => {
         setBloquearBotonesAcciones(state.estadoCambiado);
-    }, [state.estadoCambiado])
+    }, [state])
 
     return (
         <div style={{ float: 'right' }}>
