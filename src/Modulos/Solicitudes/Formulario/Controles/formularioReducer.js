@@ -1,4 +1,4 @@
-import { obtenerDatosDelLocalStorage } from "../../../../FuncionesGlobales"
+import { formateadorDeFechas, obtenerDatosDelLocalStorage } from "../../../../FuncionesGlobales"
 import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 
 export const formularioReducer = (state = EstadoInicialFormulario, action) => {
@@ -24,7 +24,11 @@ export const formularioReducer = (state = EstadoInicialFormulario, action) => {
     }
 
     if (action.type === 'llenarFormulario') {
-        return { ...state, formulario: action.payload.formulario }
+        let actualizarFormulario = {
+            ...action.payload.formulario,
+            fecha_creado: formateadorDeFechas(action.payload.formulario.fecha_creado),
+        }
+        return { ...state, formulario: actualizarFormulario }
     }
 
     if (action.type === 'llenarLineas') {
