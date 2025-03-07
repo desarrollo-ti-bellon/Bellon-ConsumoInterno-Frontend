@@ -574,7 +574,7 @@ export const FormularioProveedor = ({ children }) => {
                     requerido_fecha_modificado: false,
                     requerido_modificado_por: false,
                     requerido_total: false,
-                    requerido_comentario: false,
+                    requerido_comentario: true,
                     requerido_creado_por: false,
                     requerido_usuario_responsable: false,
                     requerido_id_usuario_responsable: false,
