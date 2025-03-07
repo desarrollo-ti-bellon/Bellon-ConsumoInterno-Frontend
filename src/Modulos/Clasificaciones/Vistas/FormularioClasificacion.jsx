@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useClasificacionFormulario } from '../Controles/useClasificacionFormulario';
+import Select from 'react-select';
 
 export default function FormularioClasificacion() {
 
@@ -45,6 +46,35 @@ export default function FormularioClasificacion() {
         }
     }
 
+    const estilosSelect = {
+        control: (provided) => ({
+            ...provided,
+            borderColor: '#dee2e6',
+            boxShadow: null,
+            '&:hover': {
+                borderColor: '#006d75', // Change this to your desired hover color
+            },
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected ? '#00b7c3' : state.isFocused ? '#ccf0f3' : '#fff',
+            color: state.isSelected ? '#fff' : '#000',
+            '&:active': {
+                backgroundColor: state.isSelected ? '#00b7c3' : '#ccf0f3',
+            },
+        }),
+    };
+
+    const obtenerCambiosDelSelectModificado = (combo_id, opcion) => {
+        if (opcion) {
+            dispatch({ type: 'actualizarFormulario', payload: { id: combo_id, value: opcion.value } })
+        } else {
+            dispatch({ type: 'actualizarFormulario', payload: { id: combo_id, value: '' } })
+        }
+    };
+
+    const opcionesClasificaciones = state.comboClasificaciones?.map(clasificacion => { return { value: clasificacion.codigo, label: `[${clasificacion.codigo}] - ${clasificacion.descripcion}` } });
+
     useEffect(() => {
         validarFormulario();
     }, [state.formulario])
@@ -65,7 +95,7 @@ export default function FormularioClasificacion() {
                         />
                     </Form.Group>
 
-                    <Form.Group as={Col} md="4" controlId="codigo_clasificacion">
+                    <Form.Group as={Col} md="4" controlId="codigo_clasificacion" hidden>
                         <Form.Label>Clasificacion</Form.Label>
                         <Form.Select
                             value={codigo_clasificacion || ''}
@@ -89,6 +119,25 @@ export default function FormularioClasificacion() {
                         <Form.Control.Feedback type="invalid">
                             El campo de clasificacion es obligatorio.
                         </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group as={Col} md="4" controlId="codigo_clasificacion1">
+                        <Form.Label>Clasificacion</Form.Label>
+                        <div>
+                            <Select
+                                styles={estilosSelect}
+                                value={opcionesClasificaciones.find(clasificacion => clasificacion.value === codigo_clasificacion) || ''}
+                                onChange={(e) => obtenerCambiosDelSelectModificado('codigo_clasificacion', e)}
+                                options={opcionesClasificaciones}
+                                isSearchable={true}
+                                isClearable={true}
+                                isInvalid={!codigo_clasificacion}
+                                isDisabled={campo_codigo_clasificacion}
+                                className={'form-control ' + !codigo_clasificacion ? 'is-invalid' : 'is-valid'}
+                                placeholder="Por favor seleccione..."
+                            />
+                            {!codigo_clasificacion && (<div className="invalid-feedback">Campo requerido</div>)}
+                        </div>
                     </Form.Group>
 
                     <Form.Group as={Col} md="4" controlId="descripcion">

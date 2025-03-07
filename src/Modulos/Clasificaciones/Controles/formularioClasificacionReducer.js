@@ -5,8 +5,8 @@ export const formularioClasificacionReducer = (state = EstadoInicialClasificacio
     if (action.type === 'actualizarFormulario') {
         const { id, value } = action.payload;
         if (id === 'codigo_clasificacion') {
-            const clasificacion = state.comboClasificaciones.find(clasificacion => clasificacion.codigo === value);
-            return { ...state, formulario: { ...state.formulario, [id]: value, ['id_grupo_cont_producto_general']: clasificacion.id_grupo_cont_producto_general ?? null, descripcion: clasificacion.descripcion }, validadoFormulario: false }
+            const clasificacion = state.comboClasificaciones.find(clasificacion => clasificacion.codigo === value) ?? null;
+            return { ...state, formulario: { ...state.formulario, [id]: value, ['id_grupo_cont_producto_general']: clasificacion?.id_grupo_cont_producto_general ?? '', descripcion: clasificacion?.descripcion ?? '' }, validadoFormulario: false }
         }
         return { ...state, formulario: { ...state.formulario, [id]: value } }
     }
