@@ -21,7 +21,7 @@ export default function ModalAlerta() {
         >
             <Modal.Header>
                 <Modal.Title id="example-modal-sizes-title-sm">
-                    Alertas!
+                    Alerta!
                 </Modal.Title>
             </Modal.Header>
 
