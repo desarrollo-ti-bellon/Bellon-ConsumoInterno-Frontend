@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import { useAlerta } from "../../../../ControlesGlobales/Alertas/useAlerta"
 import { useCargandoInformacion } from "../../../../ControlesGlobales/CargandoInformacion/useCargandoInformacion"
 import { useModalAlerta } from "../../../../ControlesGlobales/ModalAlerta/useModalAlerta"
-import { eliminarDatosConId, enviarDatos, obtenerDatos, obtenerDatosConId, obtenerDatosDelLocalStorage, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, obtenerRutaUrlActual, quitarFormularioDeLaUrl } from "../../../../FuncionesGlobales"
+import { eliminarDatosConId, enviarDatos, obtenerDatos, obtenerDatosConId, obtenerDatosDelLocalStorage, obtenerFechaActual, obtenerFechaYHoraActual, obtenerNombreUsuarioLoggeado, quitarFormularioDeLaUrl } from "../../../../FuncionesGlobales"
 import { EstadoInicialFormulario } from "../Modelos/EstadoInicialFormulario"
 import { formularioReducer } from "./formularioReducer"
 
@@ -94,6 +94,20 @@ export const FormularioProveedor = ({ children }) => {
                 json = res.data;
             }
             dispatch({ type: 'llenarProductos', payload: { productos: json } });
+        } catch (err) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando los Productos`, tipo: 'warning' } });
+        }
+    }
+
+    const cargarProductosDisponibles = async () => {
+        try {
+            const usuarioDatos = obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE_PERFIL_USUARIO);
+            const res = await obtenerDatos(`Productos/DisponibilidadProducto?codigoAlmacen=${usuarioDatos?.codigo_almacen}`, null);
+            let json = [];
+            if (res.status !== 204) {
+                json = res.data;
+            }
+            dispatch({ type: 'actualizarCantidadExistenciaDelListadoProductos', payload: { productos: json } });
         } catch (err) {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: `Error, cargando los Productos`, tipo: 'warning' } });
         }
@@ -299,7 +313,14 @@ export const FormularioProveedor = ({ children }) => {
                     return;
                 }
             }
+            dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         }
+
+        if (!state.formulario.id_usuario_responsable && !state.formulario.usuario_responsable) {
+            dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: left;">Parece que no hay usuarios responsables asignados a este proceso. Por favor, póngase en contacto con el administrador del sistema para resolver este inconveniente.</b>', mostrar: true, tamano: 'md' } })
+            return;
+        }
+
         // console.log('guardar', state.formulario)
         // dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Solicitud/Cabecera', state.formulario)
@@ -327,7 +348,7 @@ export const FormularioProveedor = ({ children }) => {
                 cargarSolicitudPorId();
             })
             .finally(() => {
-                // dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
             })
         noValidarFormulario();
     }
@@ -395,6 +416,32 @@ export const FormularioProveedor = ({ children }) => {
                 costo_unitario: producto.costo_unitario,
             }
         })
+
+        const verificarLineasSinExistencia = state.productosSeleccionados.filter(producto => producto.cantidad <= 0);
+        if (verificarLineasSinExistencia.length > 0) {
+            let contenido = '';
+            verificarLineasSinExistencia.forEach(producto => {
+                contenido += `<li> Producto:  [${producto.no}] ${producto.descripcion} | Existencia:  ${producto.cantidad}</li>`;
+            });
+            dispatchModalAlerta({
+                type: 'mostrarModalAlerta', payload: {
+                    mensaje:
+                        `
+                        <div style="font-size: 20px; font-weight: 600; text-align: left;">
+                            No se pueden incluir estos productos, tienen existencias invalidas.
+                            <br/>
+                            <br/>
+                        </div>
+                        <ul> 
+                            ${contenido} 
+                        </ul>
+                    `,
+                    mostrar: true,
+                    tamano: 'lg'
+                }
+            })
+            return;
+        }
 
         guardarLineas(lineas);
     }
@@ -619,6 +666,7 @@ export const FormularioProveedor = ({ children }) => {
             if (state.modalAgregarProductos && state.listadoProductos.length === 0) {
                 dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
                 await cargarProductos();
+                await cargarProductosDisponibles();
                 dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
             }
         }
@@ -658,7 +706,6 @@ export const FormularioProveedor = ({ children }) => {
         if (usuarioAprobador) {
             definirLimiteAprobacion(usuarioAprobador.limite);
         } else {
-            console.log('Usuario aprobador no encontrado');
             definirLimiteAprobacion(0);
         }
     }, [state.formulario])
