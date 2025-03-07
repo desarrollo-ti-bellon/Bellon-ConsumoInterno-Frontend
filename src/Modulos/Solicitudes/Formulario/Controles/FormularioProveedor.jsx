@@ -353,8 +353,8 @@ export const FormularioProveedor = ({ children }) => {
         noValidarFormulario();
     }
 
-    const guardarLineas = async (parametros) => {
-        console.log('guardar Lineas', state.productosSeleccionados)
+    const guardarLineas = async (parametros = []) => {
+        // console.log('guardar Lineas', state.productosSeleccionados)
         // dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Solicitud/Linea', parametros)
             .then((res) => {
