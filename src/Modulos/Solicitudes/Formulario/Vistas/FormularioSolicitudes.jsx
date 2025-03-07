@@ -17,7 +17,7 @@ export default function FormularioSolicitudes() {
     const [locacion] = useSearchParams();
 
     useEffect(() => {
-        const condicion = state.formulario.id_cabecera_solicitud === null || (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') === 'ver');
+        const condicion = state.formulario.id_cabecera_solicitud === null || (state.formulario.id_cabecera_solicitud !== null && locacion.get('accion') === 'ver') || state.estadoCambiado;
         setBloquearBotonDelegar(condicion);
     }, [state])
 
@@ -309,13 +309,14 @@ export default function FormularioSolicitudes() {
                                         actualizarFormulario(e.target.id, e.target.value);
                                         enviar();
                                     }}
-                                    isValid={comentario}
-                                    isInvalid={requerido_comentario && !comentario}
+                                    isValid={comentario} 
+                                    isInvalid={requerido_comentario && (!comentario || comentario.length < 10)}
                                     disabled={campo_comentario}
                                     required={requerido_comentario}
                                 />
                                 <Form.Control.Feedback type="invalid">
-                                    El comentario es obligatorio.
+                                    El comentario es obligatorio, <br />
+                                    El comentario debe tener al menos 10 carácteres
                                 </Form.Control.Feedback>
                             </Form.Group>
 
