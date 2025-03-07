@@ -12,8 +12,8 @@ export const formularioUsuarioReducer = (state = EstadoInicialUsuarioFormulario,
             return { ...state, formulario: { ...state.formulario, [id]: value, nombre_usuario: datoUsuario?.nombre_completo ?? '', correo: datoUsuario?.correo_electronico ?? '' } }
         }
         if (id === 'codigo_sucursal') {
-            const datoSucursal = state.comboSucursales.find(sucursal => sucursal.codigo === value);
-            return { ...state, formulario: { ...state.formulario, [id]: value, id_sucursal: datoSucursal.id_valor_dimension ?? '' } }
+            const datoSucursal = state.comboSucursales.find(sucursal => sucursal.codigo === value) ?? null;
+            return { ...state, formulario: { ...state.formulario, [id]: value, id_sucursal: datoSucursal?.id_valor_dimension ?? '' } }
         }
         if (id === 'codigo_departamento') {
             const datoDepartamento = state.comboDepartamentos.find(departamento => departamento.codigo === value) ?? null;
