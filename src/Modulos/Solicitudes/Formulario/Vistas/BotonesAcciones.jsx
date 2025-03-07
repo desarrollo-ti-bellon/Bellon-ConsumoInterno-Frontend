@@ -138,11 +138,14 @@ export default function BotonesAcciones() {
     const confirmarAccion = (accionBoton) => {
 
         setAccion(accionBoton);
-
-        const usuario_aprobador_id = state.formulario.id_usuario_responsable;
-        const validarUsuarioResponsable = state.comboUsuariosAprobadores.find(usuario => usuario.id_usuario_ci === usuario_aprobador_id)
-
+        
         if(accionBoton !== 'rechazar') {
+            
+            const usuarioAprobadorId = state.formulario.id_usuario_responsable;
+            const clasificacionId = state.formulario.id_clasificacion;
+
+            const validarUsuarioResponsable = state.comboUsuariosAprobadores.find(usuario => usuario.id_usuario_ci === usuarioAprobadorId)
+            // const validarClasificacion = state.comboClasificacion.find(clasificacion => clasificacion.id_clasificacion === clasificacionId);
 
             if (!state.formulario.comentario) {
                 dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El comentario es obligatorio.</div>', mostrar: true, tamano: 'md' } })
@@ -158,6 +161,11 @@ export default function BotonesAcciones() {
                 dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">El usuario responsable podría estar inhabilitado. Por favor, comuníquese con el administrador o rechaze la solicitud.</div>', mostrar: true, tamano: 'md' } })
                 return;
             }
+
+            // if (!validarClasificacion) {
+            //     dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">La clasificación puede estar inhabilitado. Por favor, comuníquese con el administrador o rechaze la solicitud.</div>', mostrar: true, tamano: 'md' } })
+            //     return;
+            // }
     
             if (state.lineas.length === 0 || state.formulario.total === 0) {
                 dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">No hay productos disponibles para enviar, o los productos no tienen precio unitario definidos, por favor verifique.</div>', mostrar: true, tamano: 'sm' } })
