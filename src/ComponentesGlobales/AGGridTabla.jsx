@@ -6,7 +6,7 @@ import { ListGroup } from "react-bootstrap";
 import '../ComponentesEstilos/ListadoGrupoDelPopup.css'
 import { useAlerta } from "../ControlesGlobales/Alertas/useAlerta";
 
-export default function AGGridTabla({ obtenerReferenciaAgGrid, colDefs, rowData, rowSelection, pagination, paginationPageSize, paginationPageSizeSelector, onCellClicked, onSelectionChanged, onCellValueChanged, altura = 500, datosPieTabla, rowValueChanged, cellEditingStarted, cellEditingStopped, onColumnMoved }) {
+export default function AGGridTabla({ obtenerReferenciaAgGrid, colDefs, rowData, rowSelection, pagination, paginationPageSize, paginationPageSizeSelector, onCellClicked, onSelectionChanged, onCellValueChanged, altura = 500, datosPieTabla, rowValueChanged, cellEditingStarted, cellEditingStopped, onColumnMoved, onCellDoubleClicked }) {
 
     const referenciaAgGrid = useRef(null);
     const divReferencia = useRef(null);
@@ -172,6 +172,7 @@ export default function AGGridTabla({ obtenerReferenciaAgGrid, colDefs, rowData,
                     animateRows={true}
                     onColumnMoved={onColumnMoved}
                     onCellContextMenu={celdaSeleccionada}
+                    onCellDoubleClicked={onCellDoubleClicked}
                 />
                 {/* Popup contextual con opciones */}
                 {popupVisible && valorSeleccionado && (
