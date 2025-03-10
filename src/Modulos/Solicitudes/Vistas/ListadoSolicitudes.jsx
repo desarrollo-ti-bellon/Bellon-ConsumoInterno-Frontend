@@ -238,6 +238,13 @@ export default function ListadoSolicitudes() {
             return;
         }
 
+        rutas = [import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS];
+        validandoRuta = rutas.includes(ruta)
+        if (validandoRuta) {
+            navegar('formulario?accion=ver', { state: parametros.data })
+            return;
+        }
+
         rutas = [import.meta.env.VITE_APP_BELLON_SOLICITUDES];
         validandoRuta = rutas.includes(ruta)
         if (validandoRuta) {
