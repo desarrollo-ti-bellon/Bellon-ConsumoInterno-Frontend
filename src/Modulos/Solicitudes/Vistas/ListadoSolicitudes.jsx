@@ -119,7 +119,6 @@ export default function ListadoSolicitudes() {
         )
     }
 
-
     useEffect(() => {
 
         const urlActual = obtenerRutaUrlActual();
@@ -226,6 +225,28 @@ export default function ListadoSolicitudes() {
 
     }, [locacion])
 
+    const verDocumentoConDblClick = (parametros) => {
+
+        let rutas = [];
+        let validandoRuta = "";
+        const ruta = obtenerRutaUrlActual();
+
+        rutas = [import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES]
+        validandoRuta = rutas.includes(ruta)
+        if (validandoRuta) {
+            navegar(import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES_HISTORICO, { state: parametros.data })
+            return;
+        }
+
+        rutas = [import.meta.env.VITE_APP_BELLON_SOLICITUDES];
+        validandoRuta = rutas.includes(ruta)
+        if (validandoRuta) {
+            navegar('formulario?accion=ver', { state: parametros.data })
+            return;
+        }
+
+    }
+
     return (
         <Container fluid>
             <Row>
@@ -296,7 +317,7 @@ export default function ListadoSolicitudes() {
                 </Col>
 
                 <Col>
-                    <div style={{ float: 'right',paddingTop: '30px' }}>
+                    <div style={{ float: 'right', paddingTop: '30px' }}>
                         <Button
                             hidden={ocultarBotonNuevo}
                             size='md'
@@ -321,6 +342,7 @@ export default function ListadoSolicitudes() {
                         paginationPageSize={paginationPageSize}
                         paginationPageSizeSelector={paginationPageSizeSelector}
                         altura={window.innerHeight - 250}
+                        onCellDoubleClicked={verDocumentoConDblClick}
                     />
                 </Col>
             </Row>
