@@ -421,20 +421,35 @@ export const FormularioProveedor = ({ children }) => {
         if (verificarLineasSinExistencia.length > 0) {
             let contenido = '';
             verificarLineasSinExistencia.forEach(producto => {
-                contenido += `<li> Producto:  [${producto.no}] ${producto.descripcion} | Existencia:  ${producto.cantidad}</li>`;
+                contenido += `  <tr> 
+                                    <td style="text-align: left;">  
+                                        [${producto.no}] ${producto.descripcion} 
+                                    </td> 
+                                    <td style="text-align: right;"> 
+                                        ${producto.cantidad} 
+                                    </td> 
+                                </tr>`;
             });
             dispatchModalAlerta({
                 type: 'mostrarModalAlerta', payload: {
                     mensaje:
-                        `
+                    `
                         <div style="font-size: 20px; font-weight: 600; text-align: left;">
-                            No se pueden incluir estos productos, tienen existencias invalidas.
+                            No se pueden incluir estos productos, no tienen existencias válidas.
                             <br/>
                             <br/>
                         </div>
-                        <ul> 
-                            ${contenido} 
-                        </ul>
+                        <table class="table table-light">
+                            <thead >
+                                <tr>
+                                    <th style="text-align: left;">  Producto   </th>
+                                    <th style="text-align: right;"> Existencia </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${contenido} 
+                            </tbody>
+                        </table>
                     `,
                     mostrar: true,
                     tamano: 'lg'
