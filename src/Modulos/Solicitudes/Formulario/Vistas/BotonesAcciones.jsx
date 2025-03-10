@@ -168,7 +168,7 @@ export default function BotonesAcciones() {
             // }
     
             if (state.lineas.length === 0 || state.formulario.total === 0) {
-                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">No hay productos disponibles para enviar, o los productos no tienen precio unitario definidos, por favor verifique.</div>', mostrar: true, tamano: 'sm' } })
+                dispatchModalAlerta({ type: 'mostrarModalAlerta', payload: { mensaje: '<div style="font-size: 20px; font-weight: 600; text-align: center;">No hay productos disponibles para enviar, o los productos no tienen precio unitario definidos, por favor verifique.</div>', mostrar: true, tamano: 'md' } })
                 return;
             }
     
