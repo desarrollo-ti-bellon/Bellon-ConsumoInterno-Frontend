@@ -35,7 +35,7 @@ export default function ModalProductos() {
         { headerName: "Producto", field: "no", flex: 1, filter: true },
         { headerName: "Descripcion", field: "descripcion", flex: 5, filter: true },
         { headerName: "Unidad", field: "codigo_unidad_medida", flex: 2, filter: true },
-        { headerName: "Cant. Existencia", field: "cantidad", valueFormatter: (e) => formatoMoneda(e.value, 0, ''), flex: 2, filter: true },
+        { headerName: "Cant. Existencia", field: "cantidad", flex: 2, filter: true },
         { headerName: "Precio Unitario", field: "precio_unitario", valueFormatter: (e) => formatoMoneda(e.value, 1, '$'), flex: 2, filter: true }
     ]);
 
