@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Badge, Button } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useAlerta } from '../../../ControlesGlobales/Alertas/useAlerta';
@@ -22,11 +22,18 @@ export default function DetalleClasificacion() {
         )
     }
 
+    const BadgedEstadosUsuarios = (parametros) => {
+        const estado = parametros.data.estado;
+        return (
+            estado ? <Badge bg="primary">Activo</Badge> : <Badge bg="primary">Inactivo</Badge>
+        )
+    }
+
     const [columnasProductos] = useState([
         { headerName: 'ID', field: "id_clasificacion", flex: 1 },
         { headerName: 'Codigo Clasificacion', field: "codigo_clasificacion", flex: 2 },
         { headerName: 'Descripción', field: "descripcion", flex: 8 },
-        { headerName: 'Estado', field: "estado", flex: 1, },
+        { headerName: 'Estado', field: "estado", cellRenderer: BadgedEstadosUsuarios, flex: 1, },
         // { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
 

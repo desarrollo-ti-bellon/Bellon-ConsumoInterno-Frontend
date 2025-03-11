@@ -3,7 +3,7 @@ import AGGridTabla from '../../../ComponentesGlobales/AGGridTabla';
 import { useUsuarioFormulario } from '../Controles/useUsuarioFormulario';
 import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelection } from '../Modelos/EstadoInicialUsuarioFormulario';
 import { formatoMoneda } from '../../../FuncionesGlobales';
-import { Button } from 'react-bootstrap';
+import { Badge, Button } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons'
 
 export default function DetalleUsuario() {
@@ -19,6 +19,13 @@ export default function DetalleUsuario() {
         )
     }
 
+    const BadgedEstadosUsuarios = (parametros) => {
+        const estado = parametros.data.estado;
+        return (
+            estado ? <Badge bg="primary">Activo</Badge> : <Badge bg="primary">Inactivo</Badge>
+        )
+    }
+
     const [columnasProductos] = useState([
         { headerName: "ID", field: "id_usuario_ci", flex: 1 },
         { headerName: "Nombre", field: "nombre_usuario", flex: 2 },
@@ -27,7 +34,7 @@ export default function DetalleUsuario() {
         { headerName: "Sucursal", field: "codigo_sucursal", flex: 1 },
         { headerName: "Departamento", field: "codigo_departamento", flex: 1 },
         { headerName: "Limite", field: "limite", valueFormatter: (e) => formatoMoneda(e.value, 0, '$'), flex: 1 },
-        { headerName: "Estado", field: "estado", flex: 1 },
+        { headerName: "Estado", field: "estado", cellRenderer: BadgedEstadosUsuarios, flex: 1 },
         // { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
 
