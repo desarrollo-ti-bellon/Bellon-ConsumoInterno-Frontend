@@ -433,23 +433,25 @@ export const FormularioProveedor = ({ children }) => {
             dispatchModalAlerta({
                 type: 'mostrarModalAlerta', payload: {
                     mensaje:
-                    `
+                        `
                         <div style="font-size: 20px; font-weight: 600; text-align: left;">
                             No se pueden incluir estos productos, no tienen existencias válidas.
                             <br/>
                             <br/>
                         </div>
-                        <table class="table table-light">
-                            <thead >
-                                <tr>
-                                    <th style="text-align: left;">  Producto   </th>
-                                    <th style="text-align: right;"> Existencia </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${contenido} 
-                            </tbody>
-                        </table>
+                        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; margin-top: 20px;">
+                            <table class="table" style="max-height: 300px;style="position: absolute;"">
+                                <thead style="position: sticky; top: 0; background-color: #fafafb; z-index: 1;">
+                                    <tr>
+                                        <th style="text-align: left;">  Producto   </th>
+                                        <th style="text-align: right;"> Existencia </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="overflow-y: auto; border: 1px solid #ddd; margin-top: 20px;">
+                                    ${contenido} 
+                                </tbody>
+                            </table>
+                        </div>
                     `,
                     mostrar: true,
                     tamano: 'lg'
