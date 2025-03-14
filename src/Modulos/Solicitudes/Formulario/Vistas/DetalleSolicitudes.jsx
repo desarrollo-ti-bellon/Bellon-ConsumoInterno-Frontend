@@ -44,8 +44,8 @@ export default function DetalleSolicitudes() {
             { headerName: 'Descripcion', field: "descripcion", flex: 4, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
             { headerName: 'Cantidad', field: "cantidad", editable: activarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
             { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-            { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$'), wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-            { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$'), wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, ''), wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+            { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, ''), wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
             { headerName: 'Nota', field: "nota", editable: activarCamposEditablesTabla, cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 4, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
             { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
         ]);
