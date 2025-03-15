@@ -16,10 +16,10 @@ export default function DetalleSolicitudes() {
     const [locacion] = useSearchParams();
     const [activarCamposEditablesTabla, setActivarCamposEditablesTabla] = useState(false);
     const [activarBotonAgregarProductos, setActivarBotonAgregarProductos] = useState(false);
-    const [bloquearBotonBorraLinea, setBloquearBotonBorraLinea] = useState(true); 
+    const [bloquearBotonBorraLinea, setBloquearBotonBorraLinea] = useState(true);
 
     useEffect(() => {
-        const condicion2 = locacion.get('accion') !== 'ver' && state.formulario.id_cabecera_solicitud !== null && !state.estadoCambiado ;
+        const condicion2 = locacion.get('accion') !== 'ver' && state.formulario.id_cabecera_solicitud !== null && !state.estadoCambiado;
         setActivarBotonAgregarProductos(condicion2)
     }, [state])
 
@@ -82,8 +82,8 @@ export default function DetalleSolicitudes() {
         { headerName: 'Descripcion', field: "descripcion", flex: 4 },
         { headerName: 'Cantidad', field: "cantidad", editable: activarCamposEditablesTabla, valueFormatter: (e) => formatoCantidad(e.value), cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 1, },
         { headerName: 'Unidad', field: "codigo_unidad_medida", flex: 1 },
-        { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
-        { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '$') },
+        { headerName: 'Precio Unitario', field: "precio_unitario", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '') },
+        { headerName: 'Total', field: "total", flex: 1, valueFormatter: (e) => formatoMoneda(e.value, 2, '') },
         { headerName: 'Nota', field: "nota", editable: activarCamposEditablesTabla, cellStyle: activarCamposEditablesTabla ? quitarStylosColumnaFooter : '', flex: 4 },
         { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);

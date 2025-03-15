@@ -33,7 +33,7 @@ export default function DetalleUsuario() {
         { headerName: "Correo", field: "correo", flex: 2 },
         { headerName: "Sucursal", field: "codigo_sucursal", flex: 1 },
         { headerName: "Departamento", field: "codigo_departamento", flex: 1 },
-        { headerName: "Limite", field: "limite", valueFormatter: (e) => formatoMoneda(e.value, 0, '$'), flex: 1 },
+        { headerName: "Limite", field: "limite", valueFormatter: (e) => formatoMoneda(e.value, 0, ''), flex: 1 },
         { headerName: "Estado", field: "estado", cellRenderer: BadgedEstadosUsuarios, flex: 1 },
         // { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
