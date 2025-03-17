@@ -25,12 +25,31 @@ export default function AGGridTabla({ obtenerReferenciaAgGrid, colDefs, rowData,
     const manejarClicDerecho = (event) => {
         event.preventDefault();
         const { x, y } = event
+
+        const modalContainerActive = document.querySelector('.modal-open');
+        if (modalContainerActive) {
+            const modalBody = document.querySelector('.modal-body');
+            if (modalBody) {
+                // Obtener las coordenadas usando getBoundingClientRect()
+                const { top, left } = modalBody.getBoundingClientRect();
+                if (divReferencia.current) {
+                    // Calcular las coordenadas absolutas (agregar desplazamiento si es necesario)
+                    const posX = x - left;   // Ajusta según el scroll horizontal
+                    const posY = y - top;    // Ajusta según el scroll vertical
+                    setPopupPosition({ x: posX, y: posY });
+                    setPopupVisible(true);
+                }
+            }
+            return;
+        }
+
         if (divReferencia.current) {
             const posX = x + window.scrollX;
             const posY = y + window.scrollY - 90;
             setPopupPosition({ x: posX + 10, y: posY + 10 });
             setPopupVisible(true);
         }
+
     };
 
     const manejarScroll = () => {
