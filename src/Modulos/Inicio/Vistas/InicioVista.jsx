@@ -49,12 +49,12 @@ export default function InicioVista() {
     }
 
     const columnas = [
-        { headerName: "ID", field: "id_nota", flex: 1 },
-        { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), flex: 2 },
-        { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, flex: 2 },
-        { headerName: "Nota", field: "descripcion", flex: 2 },
-        { headerName: "Creado Por", field: "creado_por", valueFormatter: (e) => e.value?.toLowerCase(), flex: 2 },
-        { headerName: "Dirigido A", field: "usuario_destino", valueFormatter: (e) => e.value?.toLowerCase(), flex: 2 },
+        { headerName: "ID", field: "id_nota", filter: true, flex: 1 },
+        { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechaYHoraEspanol(e.value), filter: true, flex: 2 },
+        { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, filter: true, flex: 2 },
+        { headerName: "Nota", field: "descripcion", filter: true, flex: 2 },
+        { headerName: "Creado Por", field: "creado_por", valueFormatter: (e) => e.value?.toLowerCase(), filter: true, flex: 2 },
+        { headerName: "Dirigido A", field: "usuario_destino", valueFormatter: (e) => e.value?.toLowerCase(), filter: true, flex: 2 },
         { headerName: "Acciones", cellRenderer: BotonesAccionesTabla, flex: 1 },
     ];
 

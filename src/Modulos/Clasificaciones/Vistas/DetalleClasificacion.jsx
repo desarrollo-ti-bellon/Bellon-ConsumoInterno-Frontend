@@ -30,10 +30,10 @@ export default function DetalleClasificacion() {
     }
 
     const [columnasProductos] = useState([
-        { headerName: 'ID', field: "id_clasificacion", flex: 1, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: 'Codigo Clasificacion', field: "codigo_clasificacion", flex: 2, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: 'Descripción', field: "descripcion", flex: 8, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: 'Estado', field: "estado", cellRenderer: BadgedEstadosUsuarios, flex: 1, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: 'ID', field: "id_clasificacion", filter: true, flex: 1, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: 'Codigo Clasificacion', field: "codigo_clasificacion", filter: true, flex: 2, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: 'Descripción', field: "descripcion", filter: true, flex: 8, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: 'Estado', field: "estado", cellRenderer: BadgedEstadosUsuarios, filter: true, flex: 1, autoHeaderHeight: true, minWidth: 100 },
         // { headerName: 'Acciones', field: "Accion", cellRenderer: BotonesAcciones, flex: 1 },
     ]);
 
