@@ -67,6 +67,7 @@ export default function ListadoSolicitudes() {
 
         // OCULTANDO BOTON NUEVO
         if (!mostrarBotonHistorico) {
+
             // MOSTRAR BOTON EDITAR
             arrEstadosSolicitudes = [
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_NUEVA,
@@ -82,7 +83,8 @@ export default function ListadoSolicitudes() {
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_RECHAZADA,
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA,
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
-                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_CANCELAR
             ];
             mostrarBotonVer = arrEstadosSolicitudes.includes(estadoSolicitudId.toString());
 

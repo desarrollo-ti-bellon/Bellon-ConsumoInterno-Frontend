@@ -57,7 +57,8 @@ export default function CambiarAccionFormulario() {
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_APROBADA,
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_ENTREGADA,
                 import.meta.env.VITE_APP_ESTADO_SOLICITUD_CONFIRMADA,
-                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_TERMINADA,
+                import.meta.env.VITE_APP_ESTADO_SOLICITUD_CANCELAR
             ]
             const condicionOcultarBotones = arrEstadoSolicitudes.includes(locacion.state.id_estado_solicitud.toString());
             if (condicionOcultarBotones) {
