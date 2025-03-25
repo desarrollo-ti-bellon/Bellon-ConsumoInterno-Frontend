@@ -310,13 +310,13 @@ export default function FormularioSolicitudes() {
                                         enviar();
                                     }}
                                     isValid={comentario} 
-                                    isInvalid={requerido_comentario && (!comentario || comentario.length < 10)}
+                                    isInvalid={requerido_comentario && (!comentario || comentario.length < 20)}
                                     disabled={campo_comentario}
                                     required={requerido_comentario}
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     El comentario es obligatorio, <br />
-                                    El comentario debe tener al menos 10 carácteres
+                                    El comentario debe tener al menos 20 carácteres
                                 </Form.Control.Feedback>
                             </Form.Group>
 
