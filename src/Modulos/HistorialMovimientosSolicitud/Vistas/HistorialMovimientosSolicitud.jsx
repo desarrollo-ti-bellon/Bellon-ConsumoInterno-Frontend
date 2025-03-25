@@ -47,7 +47,7 @@ export default function HistorialMovimientosSolicitud() {
         { headerName: "ID", field: "indice", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "No Documento", field: "no_documento", cellRenderer: hypervinculoDocumento, filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Fecha", field: "fecha_creado", valueFormatter: (e) => formateadorDeFechas(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
-        { headerName: "Hora", field: "fecha_creado", valueFormatter: (e) => formateadorDeHora(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
+        { headerName: "Hora", field: "fecha_modificado", valueFormatter: (e) => formateadorDeHora(e.value), filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Creado Por", field: "nombre_creado_por", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Responsable", field: "usuario_responsable", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
         { headerName: "Despachador", field: "usuario_despacho", filter: true, flex: 1, wrapHeaderText: true, autoHeaderHeight: true, minWidth: 100 },
