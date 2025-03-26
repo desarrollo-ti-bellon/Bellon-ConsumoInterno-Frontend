@@ -368,21 +368,12 @@ export const SolicitudesProveedor = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        if (state.filtros.fechaDesde && state.filtros.fechaHasta) {
-            const urlActual = obtenerRutaUrlActual();
-            const urls = [
-                import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES,
-                import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS
-            ]
-            if (urls.includes(urlActual)) {
-                dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
-                cargarDatosIniciales();
-            }
-        }
-    }, [state.filtros, location])
+        dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
+        cargarDatosIniciales();
+    }, [location])
 
     return (
-        <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, imprimirConsumosInternos, cargarSolicitudes }}>
+        <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, imprimirConsumosInternos, cargarSolicitudes, cargarDatosIniciales }}>
             {children}
         </SolicitudesContexto.Provider>
     )
