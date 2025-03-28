@@ -59,15 +59,21 @@ export function NotasProveedor({ children }) {
                 if (res.status === 204) {
                     json = []
                 }
-                dispatch({ type: 'llenarNotas', payload: { notas: json } })
+                dispatch({ type: 'llenarNotas', payload: { notas: json } });
             }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar las notas', tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al intentar cargar las notas', tipo: 'warning' } });
             }).finally(() => {
-                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' });
             })
     }
 
     const guardar = (nota) => {
+
+        if (nota.descripcion.length < 20) {
+            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'La cantidad de cararteres debe de ser mayor a 20', tipo: 'warning' } });
+            return;
+        }
+
         dispatchCargandoInformacion({ type: 'mostrarCargandoInformacion' })
         enviarDatos('Notas', nota)
             .then((res) => {
@@ -75,13 +81,14 @@ export function NotasProveedor({ children }) {
                 if (json.status !== 204) {
                     json = res.data;
                 }
-                dispatch({ type: 'limpiarFormulario' })
-                dispatch({ type: 'mostrarFormularioNotas', payload: { mostrarFormulario: false } })
-                dispatch({ type: 'llenarNotas', payload: { notas: json } })
+                dispatch({ type: 'limpiarFormulario' });
+                dispatch({ type: 'mostrarFormularioNotas', payload: { mostrarFormulario: false } });
+                dispatch({ type: 'llenarNotas', payload: { notas: json } });
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se guardó correctamente la nota', tipo: 'success' } });
             }).catch(() => {
-                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al [guardar/actualizar] nota', tipo: 'warning' } })
+                dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Error, al [guardar/actualizar] nota', tipo: 'warning' } });
             }).finally(() => {
-                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' })
+                dispatchCargandoInformacion({ type: 'limpiarCargandoInformacion' });
             })
     }
 

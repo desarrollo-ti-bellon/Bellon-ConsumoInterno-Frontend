@@ -62,8 +62,7 @@ export const Notas = () => {
         const form = e.currentTarget;
         console.log('submit =>', form.checkValidity())
         if (form.checkValidity()) {
-            guardar(state.formulario)
-            dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'se guardó correctamente la nota', tipo: 'success' } })
+            guardar(state.formulario);
         } else {
             dispatchAlerta({ type: 'mostrarAlerta', payload: { mostrar: true, mensaje: 'Debes de llenar los campos requeridos', tipo: 'danger' } })
         }
@@ -193,8 +192,8 @@ export const Notas = () => {
                                         <Form.Select
                                             value={usuario_destino || ''}
                                             onChange={(e) => actualizarFormulario(e)}
-                                            // isValid={usuario_destino}
-                                            // isInvalid={!usuario_destino || usuario_destino === ''}
+                                        // isValid={usuario_destino}
+                                        // isInvalid={!usuario_destino || usuario_destino === ''}
                                         // required
                                         >
                                             <option value={''}>Por favor seleccione...</option>
@@ -240,12 +239,13 @@ export const Notas = () => {
                                             value={descripcion || ''}
                                             rows={2}
                                             onChange={(e) => actualizarFormulario(e)}
-                                            isInvalid={!descripcion && descripcion === ''}
+                                            isInvalid={(!descripcion && descripcion === '') || (descripcion.length < 20)}
                                             required
                                             disabled={bloquearAccionesYCampos}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            Campo requerido
+                                            {!descripcion && <span>Campo requerido.<br /></span>}
+                                            {descripcion.length < 20 && <span>Debe tener al menos 20 caracteres</span>}
                                         </Form.Control.Feedback>
                                     </Form.Group>
 

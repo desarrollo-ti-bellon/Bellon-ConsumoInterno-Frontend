@@ -10,12 +10,13 @@ import { pagination, paginationPageSize, paginationPageSizeSelector, rowSelectio
 
 export default function ListadoSolicitudes() {
 
-    const { state, dispatch, eliminarSolicitud, imprimirConsumosInternos, cargarSolicitudes } = useSolicitudes()
+    const { state, dispatch, eliminarSolicitud, imprimirConsumosInternos, cargarDatosIniciales } = useSolicitudes()
     const { fechaDesde, fechaHasta } = state.filtros;
     const navegar = useNavigate();
     const { dispatch: dispatchNotas } = useNotas();
     const gridRef = useRef(null);
     const locacion = useLocation();
+    const [ocultarAcciones, setOcultarAcciones] = useState(true);
     const [ocultarBotonNuevo, setOcultarBotonNuevo] = useState(true);
     const [ocultarBotonImprimirCI, setOcultarBotonImprimirCI] = useState(true);
     const [ocultarFechaDesdeHasta, setOcultarFechaDesdeHasta] = useState(true);
@@ -125,6 +126,13 @@ export default function ListadoSolicitudes() {
 
         const urlActual = obtenerRutaUrlActual();
         let rutas = [];
+
+        // MOSTRAR ACCIONES 
+        rutas = [
+            import.meta.env.VITE_APP_BELLON_SOLICITUDES_CONSUMOS_INTERNOS,
+            import.meta.env.VITE_APP_BELLON_HISTORIAL_MOVIMIENTOS_SOLICITUDES
+        ];
+        setOcultarAcciones(!rutas.includes(urlActual));
 
         // MOSTRAR IMPRIMIR CONSUMOS INTERNOS
         rutas = [
@@ -300,7 +308,7 @@ export default function ListadoSolicitudes() {
                 </Col>
 
                 <Col>
-                    <Form.Group hidden={ocultarBotonImprimirCI} className="mb-3">
+                    <Form.Group hidden={ocultarAcciones} className="mb-2">
                         <Form.Label>Acciones</Form.Label>
                         <div>
                             <Button
@@ -308,19 +316,18 @@ export default function ListadoSolicitudes() {
                                 title="Imprimir consumos internos"
                                 size='md'
                                 variant='outline-primary'
-                                style={{ marginLeft: 5 }}
+                                style={{ marginRight: 5 }}
                                 onClick={() => imprimirConsumosInternos(state.filtros)}>
                                 <Icon.PrinterFill /> Imprimir
                             </Button>
-                            {/* <Button
-                                hidden={ocultarFechaDesdeHasta}
+                            <Button
                                 title="Buscar"
                                 size='md'
                                 variant='outline-primary'
-                                style={{ marginLeft: 5 }}
-                                onClick={() => cargarSolicitudes()}>
+                                style={{ marginRight: 5 }}
+                                onClick={() => cargarDatosIniciales()}>
                                 <Icon.Search /> Buscar
-                            </Button> */}
+                            </Button>
                         </div>
                     </Form.Group>
                 </Col>
