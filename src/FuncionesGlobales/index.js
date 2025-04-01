@@ -2,11 +2,24 @@ import axios from 'axios';
 import currency from 'currency.js';
 import moment from 'moment-timezone';
 import { LOGIN_REQUEST, PUBLIC_CLIENT_APPLICATION, TOKEN_REQUEST } from '../Archivos/Configuracion/msalConfig';
+import { generarEvento } from './EmisorEventos';
 moment.locale(import.meta.env.VITE_APP_LOCALE_MOMENT);
 
 // INTERCEPTOR PARA MANEJAR TOKEN EXPIRADO Y ERRORES
 axios.interceptors.response.use(
-    (response) => response, // Pasar las respuestas exitosas directamente
+    // (response) => response, // Pasar las respuestas exitosas directamente
+    (response) => {
+        if (response.status === 200) {
+            if (response.data) {
+                const { exito, mensaje } = response.data;
+                if (exito == false) {
+                    generarEvento.emit('redireccionar', { path: '/500', state: { mensaje: mensaje } });
+                    return;
+                }
+            }
+        }
+        return response;
+    },
     async (error) => {
         if (error.response && error.response.status === 401) {
             console.log(error.response)
@@ -23,6 +36,7 @@ axios.interceptors.response.use(
                 location.href = '/500'
             }, 500);
         }
+        console.log(error.response);
         return Promise.reject(error); // Propagar otros errores
     }
 );
