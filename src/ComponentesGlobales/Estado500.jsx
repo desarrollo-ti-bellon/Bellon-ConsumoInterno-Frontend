@@ -4,7 +4,7 @@ import Logo from "../Archivos/Logos/BellonLogoPrincipal.png";
 import LogoIcon from "../Archivos/Logos/BellonLogoSinFondo.png";
 import { cerrarAcceso } from "../FuncionesGlobales";
 import PiePagina from "./PiePagina";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Estado500() {
 
@@ -20,6 +20,9 @@ export default function Estado500() {
         second: "numeric",
         hour12: true,
     };
+
+    const location = useLocation();
+    const { mensaje } = location.state || {};
 
     return (
         <>
@@ -67,9 +70,22 @@ export default function Estado500() {
                             </p>
 
                             {/* Error Description */}
-                            <p className="mt-3 text-black fs-5">
+                            {/* <p className="mt-3 text-black fs-5">
                                 <b>Descripción:</b> La aplicación no ha podido conectarse al servidor. Esto puede ser debido a un problema en el servidor o una conexión interrumpida.
+                            </p> */}
+
+                            {/* Error Description */}
+                            <p className="mt-3 text-black fs-5">
+                                <b>Descripción:</b> Lamentamos informarle que hemos
+                                experimentado una pérdida de conexión con el servidor. Esto
+                                puede deberse a problemas técnicos temporales o a un
+                                mantenimiento programado.
                             </p>
+                            {mensaje && (
+                                <p className="mt-3 text-black fs-5">
+                                    <b>Detalles:</b> {mensaje}
+                                </p>
+                            )}
 
                             {/* Close Session Button */}
                             <div className="mt-4 m-3 text-center">
