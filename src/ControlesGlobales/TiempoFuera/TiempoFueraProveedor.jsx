@@ -2,6 +2,8 @@ import React, { createContext, useEffect, useRef, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { autoAcceso, obtenerDatosDelLocalStorage } from '../../FuncionesGlobales';
+import { useNavigate } from 'react-router-dom';
+import { generarEvento } from '../../FuncionesGlobales/EmisorEventos';
 
 export const tiempoFueraContext = createContext(null)
 
@@ -11,15 +13,15 @@ export function TiempoFueraProveedor({ children }) {
     const [mostrarModalTiempoFuera, setMostrarModalTiempoFuera] = useState(false);
 
     useEffect(() => {
-        const handleWindowEvents = async() => {
+        const handleWindowEvents = async () => {
             clearTimeout(timeoutRef.current);
             timeoutRef.current = setTimeout(() => {
                 // muestra el modal de refrescar la página.
                 setMostrarModalTiempoFuera(true);
             }, 300000); // 5 minutos de inactividad
 
-            if(!obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE)) {
-                await autoAcceso().finally(()=>{
+            if (!obtenerDatosDelLocalStorage(import.meta.env.VITE_APP_LOCALSTORAGE_NOMBRE)) {
+                await autoAcceso().finally(() => {
                     console.log('hubo un error, se perdió la sesión, intentando restaurar.')
                 })
             }
@@ -39,6 +41,20 @@ export function TiempoFueraProveedor({ children }) {
             window.removeEventListener("scroll", handleWindowEvents);
         };
     }, []);
+
+    const navigate = useNavigate();  // React Router's useNavigate hook
+    useEffect(() => {
+        // ESCUCHANDO EL EVENTO REDIRECT
+        generarEvento.on('redireccionar', ({ path, state }) => {
+            console.log('redireccionar => ', state);
+            navigate(path, { state }); // Perform navigation with the passed state
+        });
+
+        // LIMPIANDO EL EMISOR DE EVENTOS
+        return () => {
+            generarEvento.off('redireccionar');
+        };
+    }, [generarEvento]);
 
     const refrescarAplicacion = async () => {
         await autoAcceso().finally(() => {
