@@ -356,21 +356,30 @@ export const SolicitudesProveedor = ({ children }) => {
     }
 
     useEffect(() => {
-        if (location.pathname === import.meta.env.VITE_APP_BELLON_SOLICITUDES) {
+        //CARGAR AUTOMATICAMENTE SI ESTAMOS EN LAS SOLICITUDES ACTIVAS
+        if (location.pathname === import.meta.env.VITE_APP_BELLON_SOLICITUDES) { 
             dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
-            cargarDatosIniciales();
+            cargarDatosIniciales(); 
+        } else { //LIMPIAR TABLA Y LLENAR LOS FILTROS DE FECHAS CUANDO NO SON SOLICITUDES ACTIVAS
+            dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } })
+            dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } })
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
         }
     }, [location]);
 
     useEffect(() => {
-        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } })
-        dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } })
+        if (location.pathname === import.meta.env.VITE_APP_BELLON_SOLICITUDES) {
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
+            cargarDatosIniciales();
+        } else {
+            dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } })
+            dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } })
+            dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
+            if (location.pathname === import.meta.env.VITE_APP_BELLON_SOLICITUDES) {
+                cargarDatosIniciales();
+            }
+        }
     }, [])
-
-    useEffect(() => {
-        dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
-        cargarDatosIniciales();
-    }, [location])
 
     return (
         <SolicitudesContexto.Provider value={{ state, dispatch, eliminarSolicitud, imprimirConsumosInternos, cargarSolicitudes, cargarDatosIniciales }}>
