@@ -88,14 +88,14 @@ export default function Estado500() {
                             )}
 
                             {/* Close Session Button */}
-                            <div className="mt-4 m-3 text-center">
+                            {/* <div className="mt-4 m-3 text-center">
                                 <Button className="m-3" onClick={() => cerrarAcceso()} variant="primary">
                                     Cerrar Sesión
                                 </Button>
                                 <Button className="m-3" onClick={() => navegar(-1)} variant="primary">
                                     Volver atrás
                                 </Button>
-                            </div>
+                            </div> */}
                         </Card.Body>
                     </Card>
                 </Container>
