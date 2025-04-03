@@ -75,17 +75,22 @@ export default function Estado500() {
                             </p> */}
 
                             {/* Error Description */}
-                            <p className="mt-3 text-black fs-5">
-                                <b>Descripción:</b> Lamentamos informarle que hemos
-                                experimentado una pérdida de conexión con el servidor. Esto
-                                puede deberse a problemas técnicos temporales o a un
-                                mantenimiento programado.
-                            </p>
-                            {mensaje && (
-                                <p className="mt-3 text-black fs-5">
-                                    <b>Detalles:</b> {mensaje}
-                                </p>
-                            )}
+                            {
+                                    mensaje ?
+                                    (
+                                        <p className="mt-3 text-black fs-5">
+                                            <b>Detalles:</b> {mensaje}
+                                        </p>
+                                    ) :
+                                    (
+                                        <p className="mt-3 text-black fs-5">
+                                            <b>Descripción:</b> Lamentamos informarle que hemos
+                                            experimentado una pérdida de conexión con el servidor. Esto
+                                            puede deberse a problemas técnicos temporales o a un
+                                            mantenimiento programado.
+                                        </p>
+                                    )
+                            }
 
                             {/* Close Session Button */}
                             {/* <div className="mt-4 m-3 text-center">
