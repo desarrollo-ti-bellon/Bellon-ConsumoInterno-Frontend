@@ -14,9 +14,9 @@ export const alertaReducer = (state = EstadoInicialAlerta, action) => {
     if (action.type === "limpiarAlerta") {
         return {
             ...state,
-            mostrar: '',
-            mensaje: '',
-            tipo: false
+            mostrar: false,
+            mensaje: "",
+            tipo: ""
         }
     }
 

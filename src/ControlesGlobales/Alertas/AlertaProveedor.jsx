@@ -22,9 +22,9 @@ export default function AlertaProveedor({ children }) {
         if (tiempoFuera.current) {
             clearTimeout(tiempoFuera.current);
         }
-        tiempoFuera.current = setTimeout(() => {
-            dispatch({ type: 'limpiarAlerta' })
-        }, 3000);
+        // tiempoFuera.current = setTimeout(() => {
+        //     dispatch({ type: 'limpiarAlerta' })
+        // }, 3000);
     }, [state.mostrar])
 
     return (
