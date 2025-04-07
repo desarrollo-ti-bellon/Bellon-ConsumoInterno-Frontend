@@ -357,14 +357,15 @@ export const SolicitudesProveedor = ({ children }) => {
 
     useEffect(() => {
         //CARGAR AUTOMATICAMENTE SI ESTAMOS EN LAS SOLICITUDES ACTIVAS
-        if (location.pathname === import.meta.env.VITE_APP_BELLON_SOLICITUDES) { 
+        if (location.pathname === import.meta.env.VITE_APP_BELLON_SOLICITUDES) {
             dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
-            cargarDatosIniciales(); 
+            cargarDatosIniciales();
         } else { //LIMPIAR TABLA Y LLENAR LOS FILTROS DE FECHAS CUANDO NO SON SOLICITUDES ACTIVAS
             dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaDesde', value: obtenerFechaActual() } })
             dispatch({ type: 'actualizarFiltros', payload: { id: 'fechaHasta', value: obtenerFechaActual() } })
             dispatch({ type: 'llenarSolicitudes', payload: { solicitudes: [] } });
         }
+        dispatchAlerta({ type: 'limpiarAlerta' });
     }, [location]);
 
     useEffect(() => {
